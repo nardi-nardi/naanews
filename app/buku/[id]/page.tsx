@@ -1,0 +1,165 @@
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ShareButton } from "@/app/components/share-button";
+import { BookCard } from "@/app/components/book-card";
+import { getBooks, getBookById } from "@/app/lib/data";
+
+export const dynamic = "force-dynamic";
+
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function ReadBookPage({ params }: PageProps) {
+  const { id } = await params;
+  const bookId = Number(id);
+
+  if (Number.isNaN(bookId)) {
+    notFound();
+  }
+
+  const book = await getBookById(bookId);
+  if (!book) {
+    notFound();
+  }
+
+  const allBooks = await getBooks();
+  const otherBooks = allBooks
+    .filter((item) => item.id !== book.id)
+    .slice(0, 3);
+
+  return (
+    <div className="bg-canvas min-h-screen px-3 py-4 text-slate-100 md:px-5 md:py-6">
+      <div className="mx-auto w-full max-w-4xl">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <Link
+            href="/buku"
+            className="rounded-full border border-slate-400/40 bg-slate-900/40 px-4 py-2 text-sm text-slate-100 transition hover:border-cyan-300/50"
+          >
+            ← Semua Buku
+          </Link>
+          <div className="flex items-center gap-2">
+            <ShareButton title={book.title} />
+            <span className="rounded-full border border-cyan-300/40 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-200">
+              {book.genre}
+            </span>
+          </div>
+        </div>
+
+        {/* Book Hero */}
+        <section className="glass-panel overflow-hidden rounded-3xl">
+          <div className="flex flex-col items-center gap-6 p-6 sm:flex-row sm:items-start md:p-8">
+            <div className="relative h-64 w-44 shrink-0 overflow-hidden rounded-2xl shadow-2xl sm:h-72 sm:w-48">
+              <Image
+                src={book.cover}
+                alt={book.title}
+                fill
+                className="object-cover"
+                sizes="192px"
+                priority
+              />
+            </div>
+
+            <div className="flex-1 text-center sm:text-left">
+              <h1 className="text-2xl font-bold text-slate-50 md:text-3xl">{book.title}</h1>
+              <p className="mt-2 text-sm text-slate-400">oleh {book.author}</p>
+
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+                <div className="flex items-center gap-1 text-amber-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                    <path fillRule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm font-semibold">{book.rating}</span>
+                </div>
+                <span className="text-slate-600">•</span>
+                <span className="text-sm text-slate-400">{book.chapters.length} bab</span>
+                <span className="text-slate-600">•</span>
+                <span className="text-sm text-slate-400">{book.pages} halaman</span>
+              </div>
+
+              <p className="mt-4 text-sm leading-relaxed text-slate-300">{book.description}</p>
+
+              <div className="mt-5">
+                <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300">Daftar Isi</p>
+                <div className="mt-2 space-y-1.5">
+                  {book.chapters.map((chapter, i) => (
+                    <a
+                      key={i}
+                      href={`#chapter-${i}`}
+                      className="block rounded-lg border border-slate-700/50 bg-slate-900/30 px-3 py-2 text-sm text-slate-200 transition hover:border-cyan-300/40 hover:bg-cyan-500/5"
+                    >
+                      {chapter.title}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Chapters */}
+        <div className="mt-6 space-y-6">
+          {book.chapters.map((chapter, chapterIndex) => (
+            <section
+              key={chapterIndex}
+              id={`chapter-${chapterIndex}`}
+              className="glass-panel rounded-3xl p-5 md:p-7"
+            >
+              <header className="mb-5 border-b border-slate-700/70 pb-4">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-cyan-300">
+                  Bab {chapterIndex + 1} dari {book.chapters.length}
+                </p>
+                <h2 className="mt-1 text-xl font-bold text-slate-50 md:text-2xl">{chapter.title}</h2>
+              </header>
+
+              <div className="flex flex-col gap-3">
+                {chapter.lines.map((line, lineIndex) => (
+                  <div
+                    key={lineIndex}
+                    className={`flex ${line.role === "q" ? "justify-start" : "justify-end"}`}
+                  >
+                    <div
+                      className={`max-w-[92%] rounded-2xl px-4 py-3 text-sm leading-relaxed text-slate-100 md:max-w-[86%] ${
+                        line.role === "q" ? "chat-bubble-left" : "chat-bubble-right"
+                      }`}
+                    >
+                      <span className="mr-1 text-[11px] font-semibold text-slate-300">
+                        {line.role === "q" ? "Q:" : "A:"}
+                      </span>
+                      {line.text}
+                      {line.image ? (
+                        <div className="mt-2 max-w-[240px] overflow-hidden rounded-xl">
+                          <Image
+                            src={line.image}
+                            alt=""
+                            width={240}
+                            height={160}
+                            className="h-auto w-full rounded-xl object-cover"
+                            unoptimized
+                          />
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+
+        {/* Other Books */}
+        {otherBooks.length > 0 ? (
+          <section className="mt-8">
+            <h2 className="mb-4 text-lg font-semibold text-slate-100">Buku Lainnya</h2>
+            <div className="grid gap-4">
+              {otherBooks.map((item, i) => (
+                <BookCard key={item.id} book={item} index={i} />
+              ))}
+            </div>
+          </section>
+        ) : null}
+      </div>
+    </div>
+  );
+}
