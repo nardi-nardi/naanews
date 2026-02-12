@@ -40,11 +40,13 @@ export function SiteShell({ activePath, children }: SiteShellProps) {
                       key={item.href}
                       href={item.href}
                       className={`nav-pill block w-full rounded-xl px-3 py-2 text-left transition hover:border-cyan-300/50 hover:bg-cyan-500/10 ${
-                        isActive ? "border-cyan-300/60 bg-cyan-500/12" : ""
+                        isActive
+                          ? "border-cyan-400/70 bg-cyan-500/15 ring-1 ring-cyan-400/30"
+                          : ""
                       }`}
                     >
-                      <p className="text-sm font-medium text-slate-100">{item.title}</p>
-                      <p className="text-xs text-slate-400">{item.note}</p>
+                      <p className={`text-sm font-medium ${isActive ? "text-cyan-200" : "text-slate-100"}`}>{item.title}</p>
+                      <p className={`text-xs ${isActive ? "text-cyan-300/70" : "text-slate-400"}`}>{item.note}</p>
                     </Link>
                   );
                 })}
@@ -148,11 +150,13 @@ export function SiteShell({ activePath, children }: SiteShellProps) {
                   href={item.href}
                   onClick={() => setIsDrawerOpen(false)}
                   className={`nav-pill block rounded-xl px-3 py-2 transition hover:border-cyan-300/50 hover:bg-cyan-500/10 ${
-                    isActive ? "border-cyan-300/65 bg-cyan-500/12" : ""
+                    isActive
+                      ? "border-cyan-400/70 bg-cyan-500/15 ring-1 ring-cyan-400/30"
+                      : ""
                   }`}
                 >
-                  <p className="text-sm font-medium text-slate-100">{item.title}</p>
-                  <p className="text-xs text-slate-400">{item.note}</p>
+                  <p className={`text-sm font-medium ${isActive ? "text-cyan-200" : "text-slate-100"}`}>{item.title}</p>
+                  <p className={`text-xs ${isActive ? "text-cyan-300/70" : "text-slate-400"}`}>{item.note}</p>
                 </Link>
               );
             })}

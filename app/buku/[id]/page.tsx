@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ChatImage } from "@/app/components/chat-image";
 import { ShareButton } from "@/app/components/share-button";
 import { BookCard } from "@/app/components/book-card";
 import { getBooks, getBookById } from "@/app/lib/data";
@@ -128,18 +129,7 @@ export default async function ReadBookPage({ params }: PageProps) {
                         {line.role === "q" ? "Q:" : "A:"}
                       </span>
                       {line.text}
-                      {line.image ? (
-                        <div className="mt-2 max-w-[240px] overflow-hidden rounded-xl">
-                          <Image
-                            src={line.image}
-                            alt=""
-                            width={240}
-                            height={160}
-                            className="h-auto w-full rounded-xl object-cover"
-                            unoptimized
-                          />
-                        </div>
-                      ) : null}
+                      {line.image ? <ChatImage src={line.image} /> : null}
                     </div>
                   </div>
                 ))}

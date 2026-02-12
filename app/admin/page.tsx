@@ -79,6 +79,7 @@ export default function AdminPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
+  const [fetchingNews, setFetchingNews] = useState(false);
   const [message, setMessage] = useState("");
 
   // Feed form
@@ -139,6 +140,27 @@ export default function AdminPage() {
       flash("❌ Seed gagal: network error");
     }
     setSeeding(false);
+  }
+
+  // ──── FETCH REAL NEWS ────
+  async function handleFetchNews() {
+    setFetchingNews(true);
+    try {
+      const res = await fetch("/api/fetch-news", { method: "POST" });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        const sourceInfo = (data.sources as { name: string; count: number; error?: string }[])
+          .map((s) => `${s.name}: ${s.count}${s.error ? " ⚠️" : ""}`)
+          .join(", ");
+        flash(`📡 ${data.message} (${sourceInfo})`);
+        fetchData();
+      } else {
+        flash(`❌ ${data.message || data.error || "Gagal fetch news"}`);
+      }
+    } catch {
+      flash("❌ Gagal mengambil berita: network error");
+    }
+    setFetchingNews(false);
   }
 
   // ──── FEED CRUD ────
@@ -425,13 +447,20 @@ export default function AdminPage() {
             <h1 className="text-3xl font-bold">🛠️ Admin Panel</h1>
             <p className="mt-1 text-sm text-slate-400">Kelola feeds, stories, dan buku NAA News</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Link
               href="/"
               className="rounded-xl border border-slate-600/50 px-4 py-2 text-sm text-slate-300 transition hover:border-cyan-400/50 hover:text-cyan-200"
             >
               ← Kembali ke Home
             </Link>
+            <button
+              onClick={handleFetchNews}
+              disabled={fetchingNews}
+              className="rounded-xl bg-emerald-600/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:opacity-50"
+            >
+              {fetchingNews ? "⏳ Mengambil..." : "📡 Ambil Berita Terbaru"}
+            </button>
             <button
               onClick={handleSeed}
               disabled={seeding}
