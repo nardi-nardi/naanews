@@ -525,23 +525,23 @@ export default function AdminPage() {
           <div className="flex flex-wrap gap-2">
             <Link
               href="/"
-              className="rounded-xl border border-slate-600/50 px-4 py-2 text-sm text-slate-300 transition hover:border-cyan-400/50 hover:text-cyan-200"
+              className="rounded-xl border border-slate-600/50 px-3 py-2 text-xs sm:text-sm text-slate-300 transition hover:border-cyan-400/50 hover:text-cyan-200"
             >
-              ← Kembali ke Home
+              ← Home
             </Link>
             <button
               onClick={handleFetchNews}
               disabled={fetchingNews}
-              className="rounded-xl bg-emerald-600/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:opacity-50"
+              className="rounded-xl bg-emerald-600/80 px-3 py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:opacity-50"
             >
-              {fetchingNews ? "⏳ Mengambil..." : "📡 Ambil Berita Terbaru"}
+              {fetchingNews ? "⏳ Ambil..." : "📡 Ambil Berita"}
             </button>
             <button
               onClick={handleSeed}
               disabled={seeding}
-              className="rounded-xl bg-amber-600/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-500 disabled:opacity-50"
+              className="rounded-xl bg-amber-600/80 px-3 py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-amber-500 disabled:opacity-50"
             >
-              {seeding ? "Seeding..." : "🌱 Seed Database"}
+              {seeding ? "⏳ Seed..." : "🌱 Seed DB"}
             </button>
           </div>
         </div>
@@ -554,10 +554,10 @@ export default function AdminPage() {
         ) : null}
 
         {/* Tabs */}
-        <div className="mb-6 flex gap-2">
+        <div className="mb-6 flex flex-wrap gap-2">
           <button
             onClick={() => setTab("feeds")}
-            className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
+            className={`rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition ${
               tab === "feeds"
                 ? "bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-500/40"
                 : "text-slate-400 hover:text-slate-200"
@@ -567,7 +567,7 @@ export default function AdminPage() {
           </button>
           <button
             onClick={() => setTab("stories")}
-            className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
+            className={`rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition ${
               tab === "stories"
                 ? "bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-500/40"
                 : "text-slate-400 hover:text-slate-200"
@@ -577,7 +577,7 @@ export default function AdminPage() {
           </button>
           <button
             onClick={() => setTab("books")}
-            className={`rounded-xl px-5 py-2.5 text-sm font-semibold transition ${
+            className={`rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition ${
               tab === "books"
                 ? "bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-500/40"
                 : "text-slate-400 hover:text-slate-200"
@@ -594,18 +594,18 @@ export default function AdminPage() {
             {/* ──── FEEDS TAB ──── */}
             {tab === "feeds" ? (
               <div>
-                <div className="mb-4 flex items-center justify-between gap-2">
-                  <h2 className="text-lg font-semibold">Daftar Feed</h2>
-                  <div className="flex gap-2">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="text-base sm:text-lg font-semibold">Daftar Feed</h2>
+                  <div className="flex flex-wrap gap-2">
                     <button
                       onClick={() => setShowFeedImport(!showFeedImport)}
-                      className="rounded-xl border border-cyan-600/50 bg-cyan-600/20 px-4 py-2 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-600/30"
+                      className="rounded-lg sm:rounded-xl border border-cyan-600/50 bg-cyan-600/20 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-cyan-200 transition hover:bg-cyan-600/30"
                     >
                       📋 Paste JSON
                     </button>
                     <button
                       onClick={openFeedCreate}
-                      className="rounded-xl bg-cyan-600/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500"
+                      className="rounded-lg sm:rounded-xl bg-cyan-600/80 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-cyan-500"
                     >
                       + Tambah Feed
                     </button>
@@ -836,18 +836,18 @@ export default function AdminPage() {
             {/* ──── STORIES TAB ──── */}
             {tab === "stories" ? (
               <div>
-                <div className="mb-4 flex items-center justify-between gap-2">
-                  <h2 className="text-lg font-semibold">Daftar Story</h2>
-                  <div className="flex gap-2">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="text-base sm:text-lg font-semibold">Daftar Story</h2>
+                  <div className="flex flex-wrap gap-2">
                     <button
                       onClick={() => setShowStoryImport(!showStoryImport)}
-                      className="rounded-xl border border-cyan-600/50 bg-cyan-600/20 px-4 py-2 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-600/30"
+                      className="rounded-lg sm:rounded-xl border border-cyan-600/50 bg-cyan-600/20 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-cyan-200 transition hover:bg-cyan-600/30"
                     >
                       📋 Paste JSON
                     </button>
                     <button
                       onClick={openStoryCreate}
-                      className="rounded-xl bg-cyan-600/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500"
+                      className="rounded-lg sm:rounded-xl bg-cyan-600/80 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-cyan-500"
                     >
                       + Tambah Story
                     </button>
@@ -1017,18 +1017,18 @@ export default function AdminPage() {
             {/* ──── BOOKS TAB ──── */}
             {tab === "books" ? (
               <div>
-                <div className="mb-4 flex items-center justify-between gap-2">
-                  <h2 className="text-lg font-semibold">Daftar Buku</h2>
-                  <div className="flex gap-2">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="text-base sm:text-lg font-semibold">Daftar Buku</h2>
+                  <div className="flex flex-wrap gap-2">
                     <button
                       onClick={() => setShowBookImport(!showBookImport)}
-                      className="rounded-xl border border-cyan-600/50 bg-cyan-600/20 px-4 py-2 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-600/30"
+                      className="rounded-lg sm:rounded-xl border border-cyan-600/50 bg-cyan-600/20 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-cyan-200 transition hover:bg-cyan-600/30"
                     >
                       📋 Paste JSON
                     </button>
                     <button
                       onClick={openBookCreate}
-                      className="rounded-xl bg-cyan-600/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500"
+                      className="rounded-lg sm:rounded-xl bg-cyan-600/80 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-cyan-500"
                     >
                       + Tambah Buku
                     </button>

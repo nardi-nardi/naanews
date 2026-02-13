@@ -100,19 +100,6 @@ export function FeedPage({
 
   return (
     <SiteShell activePath={activePath}>
-      {isHome ? (
-        <div className="mb-4 flex flex-col gap-4">
-          {showStories && !loading && stories.length > 0 ? (
-            <section className="glass-panel order-1 rounded-3xl p-5 xl:hidden">
-              <StatusViralSection stories={stories} feeds={feeds} standalone />
-            </section>
-          ) : null}
-          <div className="order-2">
-            <GlobalSearchForm />
-          </div>
-        </div>
-      ) : null}
-
       <section className="glass-panel rounded-3xl p-5 md:p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -128,6 +115,19 @@ export function FeedPage({
           </div>
         ) : null}
       </section>
+
+      {isHome ? (
+        <div className="mt-4 flex flex-col gap-4">
+          {showStories && !loading && stories.length > 0 ? (
+            <section className="glass-panel rounded-3xl p-5 xl:hidden">
+              <StatusViralSection stories={stories} feeds={feeds} standalone />
+            </section>
+          ) : null}
+          <div>
+            <GlobalSearchForm />
+          </div>
+        </div>
+      ) : null}
 
       {/* Category filter buttons — only on home */}
       {isHome ? (
