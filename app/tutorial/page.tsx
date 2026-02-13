@@ -2,7 +2,7 @@ import { SiteShell } from "@/app/components/site-shell";
 import { TutorialCard } from "@/app/components/tutorial-card";
 import { getFeeds } from "@/app/lib/data";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function TutorialPage() {
   const tutorialFeeds = await getFeeds("Tutorial");

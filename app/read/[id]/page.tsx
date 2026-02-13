@@ -1,15 +1,49 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChatImage } from "@/app/components/chat-image";
 import { ShareButton } from "@/app/components/share-button";
-import { getFeeds, getFeedById } from "@/app/lib/data";
+import { getFeedIds, getFeeds } from "@/app/lib/data";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
+
+export async function generateStaticParams() {
+  const ids = await getFeedIds();
+  return ids.map((id) => ({ id: String(id) }));
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const feedId = Number(id);
+
+  if (Number.isNaN(feedId)) {
+    return { title: "Konten tidak ditemukan | NAA Newsroom" };
+  }
+
+  const feeds = await getFeeds();
+  const feed = feeds.find((item) => item.id === feedId);
+
+  if (!feed) {
+    return { title: "Konten tidak ditemukan | NAA Newsroom" };
+  }
+
+  return {
+    title: `${feed.title} | NAA Newsroom`,
+    description: feed.takeaway,
+    openGraph: {
+      title: feed.title,
+      description: feed.takeaway,
+      images: [feed.image],
+      type: "article",
+    },
+    alternates: { canonical: `/read/${feed.id}` },
+  };
+}
 
 export default async function ReadPage({ params }: PageProps) {
   const { id } = await params;
@@ -19,12 +53,12 @@ export default async function ReadPage({ params }: PageProps) {
     notFound();
   }
 
-  const feed = await getFeedById(feedId);
+  const allFeeds = await getFeeds();
+  const feed = allFeeds.find((item) => item.id === feedId) ?? null;
   if (!feed) {
     notFound();
   }
 
-  const allFeeds = await getFeeds();
   const similarFeeds = allFeeds
     .filter((item) => item.category === feed.category && item.id !== feed.id)
     .sort((a, b) => b.popularity - a.popularity)

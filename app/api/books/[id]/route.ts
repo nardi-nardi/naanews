@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { getDb } from "@/app/lib/mongodb";
+
+export const dynamic = "force-dynamic";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -61,6 +64,8 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }
 
+    revalidateTag("books");
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _id: _removedId, ...book } = result;
     return NextResponse.json(book);
@@ -85,6 +90,8 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
     if (result.deletedCount === 0) {
       return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }
+
+    revalidateTag("books");
 
     return NextResponse.json({ success: true });
   } catch (error) {

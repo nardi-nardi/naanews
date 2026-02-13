@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { getDb } from "@/app/lib/mongodb";
+import { books as dummyBooks } from "@/app/data/content";
+
+export const dynamic = "force-dynamic";
 
 // GET /api/books — list all books, optional ?q= search
 export async function GET(request: NextRequest) {
   try {
     const db = await getDb();
+    
+    if (!db) {
+      console.warn("MongoDB not available, using dummy data");
+      return NextResponse.json(dummyBooks);
+    }
+
     const { searchParams } = new URL(request.url);
     const q = searchParams.get("q");
 
@@ -30,7 +40,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(books);
   } catch (error) {
     console.error("GET /api/books error:", error);
-    return NextResponse.json({ error: "Failed to fetch books" }, { status: 500 });
+    return NextResponse.json(dummyBooks, { status: 200 });
   }
 }
 
@@ -57,6 +67,7 @@ export async function POST(request: NextRequest) {
     };
 
     await db.collection("books").insertOne(newBook);
+    revalidateTag("books");
     return NextResponse.json(newBook, { status: 201 });
   } catch (error) {
     console.error("POST /api/books error:", error);

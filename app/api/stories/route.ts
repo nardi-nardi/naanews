@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { getDb } from "@/app/lib/mongodb";
 import type { Story } from "@/app/data/content";
+import { stories as dummyStories } from "@/app/data/content";
+
+export const dynamic = "force-dynamic";
 
 // GET all stories
 export async function GET() {
   try {
     const db = await getDb();
+    
+    if (!db) {
+      console.warn("MongoDB not available, using dummy data");
+      return NextResponse.json(dummyStories);
+    }
+
     const stories = await db.collection("stories").find().sort({ id: 1 }).toArray();
 
     const mapped = stories.map((s) => ({
@@ -21,7 +31,7 @@ export async function GET() {
     return NextResponse.json(mapped);
   } catch (error) {
     console.error("GET /api/stories error:", error);
-    return NextResponse.json({ error: "Failed to fetch stories" }, { status: 500 });
+    return NextResponse.json(dummyStories, { status: 200 });
   }
 }
 
@@ -36,6 +46,8 @@ export async function POST(req: NextRequest) {
 
     const newStory = { ...body, id: nextId };
     await db.collection("stories").insertOne(newStory);
+
+    revalidateTag("stories");
 
     return NextResponse.json({ ...newStory, id: nextId }, { status: 201 });
   } catch (error) {

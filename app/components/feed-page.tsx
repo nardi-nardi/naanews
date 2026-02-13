@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BookCard } from "@/app/components/book-card";
 import { FeedTitleCard } from "@/app/components/feed-title-card";
 import { GlobalSearchForm } from "@/app/components/global-search-form";
@@ -23,10 +23,8 @@ type FeedPageProps = {
   badge: string;
   title: string;
   description: string;
-  feeds: Feed[];
+  category?: string;
   showStories?: boolean;
-  storiesData?: Story[];
-  booksData?: Book[];
 };
 
 export function FeedPage({
@@ -34,75 +32,129 @@ export function FeedPage({
   badge,
   title,
   description,
-  feeds,
+  category,
   showStories = false,
-  storiesData = [],
-  booksData = [],
 }: FeedPageProps) {
   const isHome = activePath === "/";
-  const [isSearching, setIsSearching] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<HomeCategory | null>("Berita");
+  const [activeCategory, setActiveCategory] = useState<HomeCategory | null>(isHome ? "Berita" : null);
+  const [feeds, setFeeds] = useState<Feed[]>([]);
+  const [stories, setStories] = useState<Story[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Filter content based on selected category
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      try {
+        const feedsUrl = category ? `/api/feeds?category=${category}` : "/api/feeds";
+        const [feedsRes, storiesRes, booksRes] = await Promise.all([
+          fetch(feedsUrl),
+          showStories ? fetch("/api/stories") : Promise.resolve(null),
+          isHome ? fetch("/api/books") : Promise.resolve(null),
+        ]);
+
+        const feedsData = await feedsRes.json();
+        if (Array.isArray(feedsData)) {
+          setFeeds(feedsData);
+        } else {
+          console.error("Feeds response is not an array:", feedsData);
+          setFeeds([]);
+        }
+
+        if (storiesRes) {
+          const storiesData = await storiesRes.json();
+          if (Array.isArray(storiesData)) {
+            setStories(storiesData);
+          } else {
+            setStories([]);
+          }
+        }
+
+        if (booksRes) {
+          const booksData = await booksRes.json();
+          if (Array.isArray(booksData)) {
+            setBooks(booksData);
+          } else {
+            setBooks([]);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+        setFeeds([]);
+        setStories([]);
+        setBooks([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, [category, showStories, isHome]);
+
   const filteredFeeds = activeCategory === null || activeCategory === "Buku"
     ? feeds
     : feeds.filter((f) => f.category === activeCategory);
 
-  const showBooks = activeCategory === null || activeCategory === "Buku";
+  const showBooks = isHome && (activeCategory === null || activeCategory === "Buku");
   const showFeeds = activeCategory !== "Buku";
 
   return (
     <SiteShell activePath={activePath}>
       {isHome ? (
         <div className="mb-4 flex flex-col gap-4">
-          {showStories ? (
+          {showStories && !loading && stories.length > 0 ? (
             <section className="glass-panel order-1 rounded-3xl p-5 xl:hidden">
-              <StatusViralSection stories={storiesData} feeds={feeds} standalone />
+              <StatusViralSection stories={stories} feeds={feeds} standalone />
             </section>
           ) : null}
           <div className="order-2">
-            <GlobalSearchForm feeds={feeds} onSearchActive={setIsSearching} />
+            <GlobalSearchForm />
           </div>
         </div>
       ) : null}
 
-      {!isSearching ? (
+      <section className="glass-panel rounded-3xl p-5 md:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">{badge}</p>
+            <h1 className="mt-2 text-2xl font-bold text-slate-50 md:text-3xl">{title}</h1>
+            <p className="mt-2 max-w-xl text-sm text-slate-300">{description}</p>
+          </div>
+        </div>
+
+        {showStories && !loading && stories.length > 0 ? (
+          <div className="hidden xl:block">
+            <StatusViralSection stories={stories} feeds={feeds} />
+          </div>
+        ) : null}
+      </section>
+
+      {/* Category filter buttons — only on home */}
+      {isHome ? (
+        <div className="mt-5 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+          {categoryButtons.map((cat) => (
+            <button
+              key={cat.key}
+              onClick={() => setActiveCategory(activeCategory === cat.key ? null : cat.key)}
+              className={`shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold transition-all duration-200 ${
+                activeCategory === cat.key
+                  ? cat.activeColor
+                  : "border border-slate-700/50 text-slate-400 hover:border-slate-600 hover:text-slate-200"
+              }`}
+            >
+              {cat.icon} {cat.key}
+            </button>
+          ))}
+        </div>
+      ) : null}
+
+      {loading ? (
+        <div className="glass-panel mt-4 rounded-2xl p-8 text-center text-sm text-slate-300">
+          <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-slate-400 border-t-cyan-400"></div>
+          <p className="mt-3">Memuat konten...</p>
+        </div>
+      ) : (
         <>
-          <section className="glass-panel rounded-3xl p-5 md:p-6">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">{badge}</p>
-                <h1 className="mt-2 text-2xl font-bold text-slate-50 md:text-3xl">{title}</h1>
-                <p className="mt-2 max-w-xl text-sm text-slate-300">{description}</p>
-              </div>
-            </div>
-
-            {showStories ? (
-              <div className="hidden xl:block">
-                <StatusViralSection stories={storiesData} feeds={feeds} />
-              </div>
-            ) : null}
-          </section>
-
-          {/* Category filter buttons — only on home */}
-          {isHome ? (
-            <div className="mt-5 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
-              {categoryButtons.map((cat) => (
-                <button
-                  key={cat.key}
-                  onClick={() => setActiveCategory(activeCategory === cat.key ? null : cat.key)}
-                  className={`shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold transition-all duration-200 ${
-                    activeCategory === cat.key
-                      ? cat.activeColor
-                      : "border border-slate-700/50 text-slate-400 hover:border-slate-600 hover:text-slate-200"
-                  }`}
-                >
-                  {cat.icon} {cat.key}
-                </button>
-              ))}
-            </div>
-          ) : null}
-
           {/* Feed cards */}
           {isHome && showFeeds && filteredFeeds.length > 0 ? (
             <section className="mt-4 grid gap-4">
@@ -132,7 +184,7 @@ export function FeedPage({
           ) : null}
 
           {/* Book cards */}
-          {isHome && showBooks && booksData.length > 0 ? (
+          {showBooks && books.length > 0 ? (
             <section className={showFeeds && filteredFeeds.length > 0 ? "mt-6" : "mt-4"}>
               {activeCategory === null ? (
                 <div className="mb-4 flex items-center gap-3">
@@ -148,7 +200,7 @@ export function FeedPage({
                 </div>
               ) : null}
               <div className="grid gap-4">
-                {booksData.map((book, index) => (
+                {books.map((book, index) => (
                   <BookCard key={book.id} book={book} index={index} />
                 ))}
               </div>
@@ -156,13 +208,13 @@ export function FeedPage({
           ) : null}
 
           {/* Home empty state */}
-          {isHome && showFeeds && filteredFeeds.length === 0 && !(showBooks && booksData.length > 0) ? (
+          {isHome && showFeeds && filteredFeeds.length === 0 && !(showBooks && books.length > 0) ? (
             <div className="glass-panel mt-4 rounded-2xl p-5 text-sm text-slate-300">
               Belum ada konten untuk kategori ini.
             </div>
           ) : null}
         </>
-      ) : null}
+      )}
     </SiteShell>
   );
 }

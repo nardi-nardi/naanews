@@ -1,8 +1,19 @@
+import { unstable_cache } from "next/cache";
 import { getDb } from "@/app/lib/mongodb";
 import type { Book, BookChapter, ChatLine, Feed, Story } from "@/app/data/content";
 import { books as dummyBooks, feeds as dummyFeeds, stories as dummyStories } from "@/app/data/content";
 
-export async function getFeeds(category?: string): Promise<Feed[]> {
+export const CONTENT_REVALIDATE_SECONDS = 300;
+
+export const CACHE_TAGS = {
+  feeds: "feeds",
+  stories: "stories",
+  books: "books",
+} as const;
+
+/* ── internal loaders (hit DB, fallback to dummy) ── */
+
+async function loadFeeds(category?: Feed["category"]): Promise<Feed[]> {
   try {
     const db = await getDb();
     const filter: Record<string, unknown> = {};
@@ -15,7 +26,6 @@ export async function getFeeds(category?: string): Promise<Feed[]> {
       .toArray();
 
     if (docs.length === 0 && !category) {
-      // Fallback to dummy data if DB is empty
       return dummyFeeds;
     }
 
@@ -30,7 +40,6 @@ export async function getFeeds(category?: string): Promise<Feed[]> {
       takeaway: d.takeaway as string,
     }));
   } catch {
-    // If MongoDB is unreachable, fallback to dummy data
     const filtered = category
       ? dummyFeeds.filter((f) => f.category === category)
       : dummyFeeds;
@@ -38,39 +47,12 @@ export async function getFeeds(category?: string): Promise<Feed[]> {
   }
 }
 
-export async function getFeedById(id: number): Promise<Feed | null> {
-  try {
-    const db = await getDb();
-    const doc = await db.collection("feeds").findOne({ id });
-
-    if (!doc) {
-      // Fallback to dummy data
-      return dummyFeeds.find((f) => f.id === id) ?? null;
-    }
-
-    return {
-      id: doc.id as number,
-      title: doc.title as string,
-      category: doc.category as Feed["category"],
-      time: doc.time as string,
-      popularity: doc.popularity as number,
-      image: doc.image as string,
-      lines: doc.lines as Feed["lines"],
-      takeaway: doc.takeaway as string,
-    };
-  } catch {
-    return dummyFeeds.find((f) => f.id === id) ?? null;
-  }
-}
-
-export async function getStories(): Promise<Story[]> {
+async function loadStories(): Promise<Story[]> {
   try {
     const db = await getDb();
     const docs = await db.collection("stories").find().sort({ id: 1 }).toArray();
 
-    if (docs.length === 0) {
-      return dummyStories;
-    }
+    if (docs.length === 0) return dummyStories;
 
     return docs.map((d) => ({
       id: d.id as number,
@@ -85,14 +67,12 @@ export async function getStories(): Promise<Story[]> {
   }
 }
 
-export async function getBooks(): Promise<Book[]> {
+async function loadBooks(): Promise<Book[]> {
   try {
     const db = await getDb();
     const docs = await db.collection("books").find().sort({ id: 1 }).toArray();
 
-    if (docs.length === 0) {
-      return dummyBooks;
-    }
+    if (docs.length === 0) return dummyBooks;
 
     return docs.map((d) => ({
       id: d.id as number,
@@ -113,30 +93,56 @@ export async function getBooks(): Promise<Book[]> {
   }
 }
 
+/* ── cached wrappers (ISR-friendly, tagged for on-demand revalidation) ── */
+
+const getFeedsCached = unstable_cache(
+  async (category?: Feed["category"]) => loadFeeds(category),
+  ["cached-feeds"],
+  { revalidate: CONTENT_REVALIDATE_SECONDS, tags: [CACHE_TAGS.feeds] },
+);
+
+const getStoriesCached = unstable_cache(
+  async () => loadStories(),
+  ["cached-stories"],
+  { revalidate: CONTENT_REVALIDATE_SECONDS, tags: [CACHE_TAGS.stories] },
+);
+
+const getBooksCached = unstable_cache(
+  async () => loadBooks(),
+  ["cached-books"],
+  { revalidate: CONTENT_REVALIDATE_SECONDS, tags: [CACHE_TAGS.books] },
+);
+
+/* ── public API used by pages ── */
+
+export async function getFeeds(category?: Feed["category"]): Promise<Feed[]> {
+  return getFeedsCached(category);
+}
+
+export async function getFeedById(id: number): Promise<Feed | null> {
+  const feeds = await getFeeds();
+  return feeds.find((f) => f.id === id) ?? null;
+}
+
+export async function getFeedIds(): Promise<number[]> {
+  const feeds = await getFeeds();
+  return feeds.map((f) => f.id);
+}
+
+export async function getStories(): Promise<Story[]> {
+  return getStoriesCached();
+}
+
+export async function getBooks(): Promise<Book[]> {
+  return getBooksCached();
+}
+
 export async function getBookById(id: number): Promise<Book | null> {
-  try {
-    const db = await getDb();
-    const doc = await db.collection("books").findOne({ id });
+  const books = await getBooks();
+  return books.find((b) => b.id === id) ?? null;
+}
 
-    if (!doc) {
-      return dummyBooks.find((b) => b.id === id) ?? null;
-    }
-
-    return {
-      id: doc.id as number,
-      title: doc.title as string,
-      author: doc.author as string,
-      cover: doc.cover as string,
-      genre: doc.genre as string,
-      pages: doc.pages as number,
-      rating: doc.rating as number,
-      description: doc.description as string,
-      chapters: (doc.chapters as BookChapter[]).map((ch) => ({
-        title: ch.title,
-        lines: ch.lines as ChatLine[],
-      })),
-    };
-  } catch {
-    return dummyBooks.find((b) => b.id === id) ?? null;
-  }
+export async function getBookIds(): Promise<number[]> {
+  const books = await getBooks();
+  return books.map((b) => b.id);
 }

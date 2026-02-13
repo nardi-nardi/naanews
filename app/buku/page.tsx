@@ -2,7 +2,7 @@ import { BookCard } from "@/app/components/book-card";
 import { SiteShell } from "@/app/components/site-shell";
 import { getBooks } from "@/app/lib/data";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function BukuPage() {
   const books = await getBooks();

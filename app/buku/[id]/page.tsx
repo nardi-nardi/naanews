@@ -1,16 +1,50 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChatImage } from "@/app/components/chat-image";
 import { ShareButton } from "@/app/components/share-button";
 import { BookCard } from "@/app/components/book-card";
-import { getBooks, getBookById } from "@/app/lib/data";
+import { getBookIds, getBooks } from "@/app/lib/data";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
+
+export async function generateStaticParams() {
+  const ids = await getBookIds();
+  return ids.map((id) => ({ id: String(id) }));
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const bookId = Number(id);
+
+  if (Number.isNaN(bookId)) {
+    return { title: "Buku tidak ditemukan | NAA Newsroom" };
+  }
+
+  const books = await getBooks();
+  const book = books.find((item) => item.id === bookId);
+
+  if (!book) {
+    return { title: "Buku tidak ditemukan | NAA Newsroom" };
+  }
+
+  return {
+    title: `${book.title} | NAA Newsroom`,
+    description: book.description,
+    openGraph: {
+      title: book.title,
+      description: book.description,
+      images: [book.cover],
+      type: "book",
+    },
+    alternates: { canonical: `/buku/${book.id}` },
+  };
+}
 
 export default async function ReadBookPage({ params }: PageProps) {
   const { id } = await params;
@@ -20,12 +54,12 @@ export default async function ReadBookPage({ params }: PageProps) {
     notFound();
   }
 
-  const book = await getBookById(bookId);
+  const allBooks = await getBooks();
+  const book = allBooks.find((item) => item.id === bookId) ?? null;
   if (!book) {
     notFound();
   }
 
-  const allBooks = await getBooks();
   const otherBooks = allBooks
     .filter((item) => item.id !== book.id)
     .slice(0, 3);

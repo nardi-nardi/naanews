@@ -11,7 +11,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "fastly.picsum.photos",
       },
+      {
+        protocol: "https",
+        hostname: "akcdn.detik.net.id",
+      },
     ],
+  },
+  env: {
+    MONGODB_URI: process.env.MONGODB_URI || "mongodb+srv://naanews:1x1NtEwVzaimURIP@naanews.fwjwrgo.mongodb.net/?appName=Naanews",
   },
 };
 

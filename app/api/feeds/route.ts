@@ -1,11 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { getDb } from "@/app/lib/mongodb";
 import type { Feed } from "@/app/data/content";
+import { feeds as dummyFeeds } from "@/app/data/content";
+
+export const dynamic = "force-dynamic";
 
 // GET all feeds, optionally filter by category
 export async function GET(req: NextRequest) {
   try {
     const db = await getDb();
+    
+    if (!db) {
+      console.warn("MongoDB not available, using dummy data");
+      const category = req.nextUrl.searchParams.get("category");
+      const filtered = category 
+        ? dummyFeeds.filter((f) => f.category === category)
+        : dummyFeeds;
+      return NextResponse.json(filtered);
+    }
+
     const category = req.nextUrl.searchParams.get("category");
     const query = req.nextUrl.searchParams.get("q");
 
@@ -44,7 +58,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(mapped);
   } catch (error) {
     console.error("GET /api/feeds error:", error);
-    return NextResponse.json({ error: "Failed to fetch feeds" }, { status: 500 });
+    return NextResponse.json(dummyFeeds, { status: 200 });
   }
 }
 
@@ -60,6 +74,8 @@ export async function POST(req: NextRequest) {
 
     const newFeed = { ...body, id: nextId };
     await db.collection("feeds").insertOne(newFeed);
+
+    revalidateTag("feeds");
 
     return NextResponse.json({ ...newFeed, id: nextId }, { status: 201 });
   } catch (error) {
