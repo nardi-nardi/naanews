@@ -14,6 +14,7 @@ type FeedForm = {
   image: string;
   takeaway: string;
   lines: ChatLine[];
+  source?: { title: string; url: string };
 };
 
 type StoryForm = {
@@ -115,6 +116,7 @@ export default function AdminPage() {
         image: json.image || "",
         takeaway: json.takeaway || "",
         lines: Array.isArray(json.lines) ? json.lines : [{ role: "q", text: "" }, { role: "a", text: "" }],
+        source: json.source ? { title: json.source.title || "", url: json.source.url || "" } : undefined,
       });
       setEditingFeedId(null);
       setShowFeedImport(false);
@@ -254,6 +256,7 @@ export default function AdminPage() {
       image: feed.image,
       takeaway: feed.takeaway,
       lines: [...feed.lines],
+      source: feed.source ? { ...feed.source } : undefined,
     });
     setEditingFeedId(feed.id);
     setShowFeedForm(true);
@@ -597,18 +600,12 @@ export default function AdminPage() {
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                   <h2 className="text-base sm:text-lg font-semibold">Daftar Feed</h2>
                   <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => setShowFeedImport(!showFeedImport)}
-                      className="rounded-lg sm:rounded-xl border border-cyan-600/50 bg-cyan-600/20 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-cyan-200 transition hover:bg-cyan-600/30"
-                    >
-                      📋 Paste JSON
-                    </button>
-                    <button
-                      onClick={openFeedCreate}
+                    <Link
+                      href="/admin/feed/new"
                       className="rounded-lg sm:rounded-xl bg-cyan-600/80 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-cyan-500"
                     >
                       + Tambah Feed
-                    </button>
+                    </Link>
                   </div>
                 </div>
 
@@ -619,7 +616,7 @@ export default function AdminPage() {
                     <textarea
                       value={jsonInput}
                       onChange={(e) => setJsonInput(e.target.value)}
-                      placeholder='{"title": "...", "category": "Berita", "time": "...", "popularity": 50, "image": "...", "takeaway": "...", "lines": [...]}'
+                      placeholder='{"title": "...", "category": "Berita", "time": "...", "popularity": 50, "image": "...", "takeaway": "...", "source": {"title": "Kompas.com", "url": "https://..."}, "lines": [...]}'
                       className="mb-3 w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 font-mono text-xs text-slate-200 outline-none focus:border-cyan-400/60"
                       rows={8}
                     />
@@ -712,6 +709,25 @@ export default function AdminPage() {
                           rows={2}
                           className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
                         />
+                      </div>
+                      
+                      {/* Source */}
+                      <div className="sm:col-span-2">
+                        <label className="mb-1 block text-xs text-slate-400">Sumber (Opsional)</label>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          <input
+                            value={feedForm.source?.title || ""}
+                            onChange={(e) => setFeedForm((p) => ({ ...p, source: { title: e.target.value, url: p.source?.url || "" } }))}
+                            placeholder="Nama sumber (contoh: Kompas.com)"
+                            className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
+                          />
+                          <input
+                            value={feedForm.source?.url || ""}
+                            onChange={(e) => setFeedForm((p) => ({ ...p, source: { title: p.source?.title || "", url: e.target.value } }))}
+                            placeholder="URL sumber (contoh: https://...)"
+                            className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
+                          />
+                        </div>
                       </div>
                     </div>
 
@@ -809,12 +825,12 @@ export default function AdminPage() {
                         <p className="truncate text-xs text-slate-400">{feed.time} · {feed.lines.length} lines</p>
                       </div>
                       <div className="flex shrink-0 gap-2">
-                        <button
-                          onClick={() => openFeedEdit(feed)}
+                        <Link
+                          href={`/admin/feed/${feed.id}`}
                           className="rounded-lg bg-slate-700/60 px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-600"
                         >
                           Edit
-                        </button>
+                        </Link>
                         <button
                           onClick={() => deleteFeed(feed.id)}
                           className="rounded-lg bg-red-900/40 px-3 py-1.5 text-xs text-red-300 hover:bg-red-800/50"
@@ -1020,18 +1036,12 @@ export default function AdminPage() {
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                   <h2 className="text-base sm:text-lg font-semibold">Daftar Buku</h2>
                   <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => setShowBookImport(!showBookImport)}
-                      className="rounded-lg sm:rounded-xl border border-cyan-600/50 bg-cyan-600/20 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-cyan-200 transition hover:bg-cyan-600/30"
-                    >
-                      📋 Paste JSON
-                    </button>
-                    <button
-                      onClick={openBookCreate}
-                      className="rounded-lg sm:rounded-xl bg-cyan-600/80 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-cyan-500"
+                    <Link
+                      href="/admin/book/new"
+                      className="rounded-lg sm:rounded-xl bg-amber-600/80 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-amber-500"
                     >
                       + Tambah Buku
-                    </button>
+                    </Link>
                   </div>
                 </div>
 
@@ -1264,12 +1274,12 @@ export default function AdminPage() {
                         </p>
                       </div>
                       <div className="flex shrink-0 gap-2">
-                        <button
-                          onClick={() => openBookEdit(book)}
+                        <Link
+                          href={`/admin/book/${book.id}`}
                           className="rounded-lg bg-slate-700/60 px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-600"
                         >
                           Edit
-                        </button>
+                        </Link>
                         <button
                           onClick={() => deleteBook(book.id)}
                           className="rounded-lg bg-red-900/40 px-3 py-1.5 text-xs text-red-300 hover:bg-red-800/50"
