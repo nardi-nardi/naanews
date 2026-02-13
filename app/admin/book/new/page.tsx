@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { BookChapter, ChatLine } from "@/app/data/content";
+import { ImageUpload } from "@/app/components/image-upload";
 
 type BookForm = {
   title: string;
@@ -242,13 +243,21 @@ export default function NewBookPage() {
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs text-slate-400">Cover URL</label>
-              <input
-                value={form.cover}
-                onChange={(e) => setForm((p) => ({ ...p, cover: e.target.value }))}
-                placeholder="https://picsum.photos/seed/book/400/600"
-                className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-amber-400/60"
+              <ImageUpload
+                currentImageUrl={form.cover}
+                onUploadComplete={(url) => setForm((p) => ({ ...p, cover: url }))}
+                label="Cover Image"
+                buttonText="Upload Cover Buku"
               />
+              <div className="mt-2">
+                <label className="mb-1 block text-xs text-slate-400">Atau masukkan URL manual</label>
+                <input
+                  value={form.cover}
+                  onChange={(e) => setForm((p) => ({ ...p, cover: e.target.value }))}
+                  placeholder="https://picsum.photos/seed/book/400/600"
+                  className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-amber-400/60"
+                />
+              </div>
             </div>
             <div className="sm:col-span-2">
               <label className="mb-1 block text-xs text-slate-400">Description</label>

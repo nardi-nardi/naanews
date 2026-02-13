@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import type { ChatLine, Feed } from "@/app/data/content";
+import { ImageUpload } from "@/app/components/image-upload";
 
 type FeedForm = {
   title: string;
@@ -177,13 +178,21 @@ export default function EditFeedPage() {
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs text-slate-400">Image URL</label>
-              <input
-                value={form.image}
-                onChange={(e) => setForm((p) => p ? ({ ...p, image: e.target.value }) : p)}
-                placeholder="https://picsum.photos/seed/your-seed/800/400"
-                className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
+              <ImageUpload
+                currentImageUrl={form.image}
+                onUploadComplete={(url) => setForm((p) => p ? ({ ...p, image: url }) : p)}
+                label="Cover Image"
+                buttonText="Upload Gambar"
               />
+              <div className="mt-2">
+                <label className="mb-1 block text-xs text-slate-400">Atau masukkan URL manual</label>
+                <input
+                  value={form.image}
+                  onChange={(e) => setForm((p) => p ? ({ ...p, image: e.target.value }) : p)}
+                  placeholder="https://picsum.photos/seed/your-seed/800/400"
+                  className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
+                />
+              </div>
             </div>
             <div className="sm:col-span-2">
               <label className="mb-1 block text-xs text-slate-400">Takeaway</label>
