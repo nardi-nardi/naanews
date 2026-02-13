@@ -65,6 +65,9 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const db = await getDb();
+    if (!db) {
+      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    }
     const body = (await req.json()) as Omit<Feed, "id">;
 
     // Auto-increment id

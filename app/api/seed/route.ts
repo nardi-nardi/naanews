@@ -7,6 +7,10 @@ export async function POST() {
   try {
     const db = await getDb();
 
+    if (!db) {
+      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    }
+
     // Clear existing data
     await db.collection("feeds").deleteMany({});
     await db.collection("stories").deleteMany({});

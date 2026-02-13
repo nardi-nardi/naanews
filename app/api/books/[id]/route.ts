@@ -15,6 +15,9 @@ export async function GET(_request: NextRequest, context: RouteContext) {
     }
 
     const db = await getDb();
+    if (!db) {
+      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    }
     const doc = await db.collection("books").findOne({ id: bookId });
 
     if (!doc) {
@@ -40,6 +43,9 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     }
 
     const db = await getDb();
+    if (!db) {
+      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    }
     const body = await request.json();
 
     const result = await db.collection("books").findOneAndUpdate(
@@ -82,6 +88,9 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
     }
 
     const db = await getDb();
+    if (!db) {
+      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    }
     const result = await db.collection("books").deleteOne({ id: bookId });
 
     if (result.deletedCount === 0) {

@@ -6,43 +6,37 @@ if (!MONGODB_URI) {
   console.warn("⚠️ MONGODB_URI is not defined — DB features will be unavailable");
 }
 
-const globalForMongo = globalThis as unknown as {
-  _mongoClient?: MongoClient;
-  _mongoClientPromise?: Promise<MongoClient>;
-};
+let client: MongoClient | null = null;
+let clientPromise: Promise<MongoClient> | null = null;
 
-function getClientPromise(): Promise<MongoClient> {
+async function connectToDatabase(): Promise<MongoClient | null> {
   if (!MONGODB_URI) {
-    return Promise.reject(new Error("MONGODB_URI is not defined"));
+    return null;
   }
 
-  if (process.env.NODE_ENV === "development") {
-    // In dev, reuse across HMR
-    if (!globalForMongo._mongoClientPromise) {
-      const client = new MongoClient(MONGODB_URI, {
-        connectTimeoutMS: 10_000,
-        serverSelectionTimeoutMS: 10_000,
-      });
-      globalForMongo._mongoClientPromise = client.connect();
+  try {
+    if (!client) {
+      client = new MongoClient(MONGODB_URI);
+      clientPromise = client.connect();
     }
-    return globalForMongo._mongoClientPromise;
+    return await clientPromise;
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error);
+    client = null;
+    clientPromise = null;
+    return null;
   }
-
-  // In production, also reuse via global to avoid new connections per request
-  if (!globalForMongo._mongoClientPromise) {
-    const client = new MongoClient(MONGODB_URI, {
-      connectTimeoutMS: 10_000,
-      serverSelectionTimeoutMS: 10_000,
-    });
-    globalForMongo._mongoClientPromise = client.connect();
-  }
-  return globalForMongo._mongoClientPromise;
 }
 
-const clientPromise = getClientPromise();
-export default clientPromise;
-
-export async function getDb(): Promise<Db> {
-  const client = await clientPromise;
-  return client.db("naanews");
+export async function getDb(): Promise<Db | null> {
+  try {
+    const mongoClient = await connectToDatabase();
+    if (!mongoClient) return null;
+    return mongoClient.db("naanews");
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error);
+    return null;
+  }
 }
+
+export default connectToDatabase;

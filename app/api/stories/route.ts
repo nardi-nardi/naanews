@@ -38,6 +38,9 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const db = await getDb();
+    if (!db) {
+      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    }
     const body = (await req.json()) as Omit<Story, "id">;
 
     const last = await db.collection("stories").find().sort({ id: -1 }).limit(1).toArray();

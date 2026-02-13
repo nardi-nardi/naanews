@@ -18,6 +18,9 @@ export async function GET(_req: NextRequest, context: RouteContext) {
     }
 
     const db = await getDb();
+    if (!db) {
+      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    }
     const feed = await db.collection("feeds").findOne({ id: feedId });
 
     if (!feed) {
@@ -51,6 +54,9 @@ export async function PUT(req: NextRequest, context: RouteContext) {
     }
 
     const db = await getDb();
+    if (!db) {
+      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    }
     const body = (await req.json()) as Partial<Feed>;
 
     // Don't allow changing the id
@@ -94,6 +100,9 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
     }
 
     const db = await getDb();
+    if (!db) {
+      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    }
     const result = await db.collection("feeds").deleteOne({ id: feedId });
 
     if (result.deletedCount === 0) {

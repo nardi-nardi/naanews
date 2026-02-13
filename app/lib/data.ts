@@ -16,6 +16,8 @@ export const CACHE_TAGS = {
 async function loadFeeds(category?: Feed["category"]): Promise<Feed[]> {
   try {
     const db = await getDb();
+    if (!db) return dummyFeeds;
+    
     const filter: Record<string, unknown> = {};
     if (category) filter.category = category;
 
@@ -50,6 +52,8 @@ async function loadFeeds(category?: Feed["category"]): Promise<Feed[]> {
 async function loadStories(): Promise<Story[]> {
   try {
     const db = await getDb();
+    if (!db) return dummyStories;
+    
     const docs = await db.collection("stories").find().sort({ id: 1 }).toArray();
 
     if (docs.length === 0) return dummyStories;
@@ -70,6 +74,8 @@ async function loadStories(): Promise<Story[]> {
 async function loadBooks(): Promise<Book[]> {
   try {
     const db = await getDb();
+    if (!db) return dummyBooks;
+    
     const docs = await db.collection("books").find().sort({ id: 1 }).toArray();
 
     if (docs.length === 0) return dummyBooks;

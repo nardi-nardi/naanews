@@ -18,6 +18,9 @@ export async function GET(_req: NextRequest, context: RouteContext) {
     }
 
     const db = await getDb();
+    if (!db) {
+      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    }
     const story = await db.collection("stories").findOne({ id: storyId });
 
     if (!story) {
@@ -49,6 +52,9 @@ export async function PUT(req: NextRequest, context: RouteContext) {
     }
 
     const db = await getDb();
+    if (!db) {
+      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    }
     const body = (await req.json()) as Partial<Story>;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: _removedId, ...updateData } = body;
@@ -88,6 +94,9 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
     }
 
     const db = await getDb();
+    if (!db) {
+      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    }
     const result = await db.collection("stories").deleteOne({ id: storyId });
 
     if (result.deletedCount === 0) {
