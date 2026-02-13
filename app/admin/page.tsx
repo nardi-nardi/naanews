@@ -97,6 +97,81 @@ export default function AdminPage() {
   const [editingBookId, setEditingBookId] = useState<number | null>(null);
   const [showBookForm, setShowBookForm] = useState(false);
 
+  // Import JSON states
+  const [showFeedImport, setShowFeedImport] = useState(false);
+  const [showStoryImport, setShowStoryImport] = useState(false);
+  const [showBookImport, setShowBookImport] = useState(false);
+  const [jsonInput, setJsonInput] = useState("");
+
+  // Import JSON handlers
+  function handleImportFeedJSON() {
+    try {
+      const json = JSON.parse(jsonInput);
+      setFeedForm({
+        title: json.title || "",
+        category: json.category || "Berita",
+        time: json.time || "",
+        popularity: json.popularity || 50,
+        image: json.image || "",
+        takeaway: json.takeaway || "",
+        lines: Array.isArray(json.lines) ? json.lines : [{ role: "q", text: "" }, { role: "a", text: "" }],
+      });
+      setEditingFeedId(null);
+      setShowFeedImport(false);
+      setShowFeedForm(true);
+      setJsonInput("");
+      flash("✅ JSON berhasil diimport ke form");
+    } catch (err) {
+      flash("❌ Format JSON tidak valid: " + (err instanceof Error ? err.message : "Unknown error"));
+    }
+  }
+
+  function handleImportStoryJSON() {
+    try {
+      const json = JSON.parse(jsonInput);
+      setStoryForm({
+        name: json.name || "",
+        label: json.label || "",
+        type: json.type || "Berita",
+        palette: json.palette || "from-sky-400 to-blue-500",
+        viral: json.viral || false,
+      });
+      setEditingStoryId(null);
+      setShowStoryImport(false);
+      setShowStoryForm(true);
+      setJsonInput("");
+      flash("✅ JSON berhasil diimport ke form");
+    } catch (err) {
+      flash("❌ Format JSON tidak valid: " + (err instanceof Error ? err.message : "Unknown error"));
+    }
+  }
+
+  function handleImportBookJSON() {
+    try {
+      const json = JSON.parse(jsonInput);
+      setBookForm({
+        title: json.title || "",
+        author: json.author || "",
+        cover: json.cover || "",
+        genre: json.genre || "",
+        pages: json.pages || 0,
+        rating: json.rating || 0,
+        description: json.description || "",
+        chapters: Array.isArray(json.chapters) ? json.chapters : [{
+          title: "",
+          lines: [{ role: "q", text: "" }, { role: "a", text: "" }],
+        }],
+      });
+      setEditingBookId(null);
+      setShowBookImport(false);
+      setShowBookForm(true);
+      setJsonInput("");
+      flash("✅ JSON berhasil diimport ke form");
+    } catch (err) {
+      flash("❌ Format JSON tidak valid: " + (err instanceof Error ? err.message : "Unknown error"));
+    }
+  }
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
@@ -519,15 +594,54 @@ export default function AdminPage() {
             {/* ──── FEEDS TAB ──── */}
             {tab === "feeds" ? (
               <div>
-                <div className="mb-4 flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between gap-2">
                   <h2 className="text-lg font-semibold">Daftar Feed</h2>
-                  <button
-                    onClick={openFeedCreate}
-                    className="rounded-xl bg-cyan-600/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500"
-                  >
-                    + Tambah Feed
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setShowFeedImport(!showFeedImport)}
+                      className="rounded-xl border border-cyan-600/50 bg-cyan-600/20 px-4 py-2 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-600/30"
+                    >
+                      📋 Paste JSON
+                    </button>
+                    <button
+                      onClick={openFeedCreate}
+                      className="rounded-xl bg-cyan-600/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500"
+                    >
+                      + Tambah Feed
+                    </button>
+                  </div>
                 </div>
+
+                {/* JSON Import Box */}
+                {showFeedImport && (
+                  <div className="mb-4 rounded-2xl border border-cyan-500/30 bg-slate-900/90 p-5">
+                    <h3 className="mb-3 text-sm font-semibold text-cyan-200">Paste JSON Feed</h3>
+                    <textarea
+                      value={jsonInput}
+                      onChange={(e) => setJsonInput(e.target.value)}
+                      placeholder='{"title": "...", "category": "Berita", "time": "...", "popularity": 50, "image": "...", "takeaway": "...", "lines": [...]}'
+                      className="mb-3 w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 font-mono text-xs text-slate-200 outline-none focus:border-cyan-400/60"
+                      rows={8}
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleImportFeedJSON}
+                        className="rounded-lg bg-cyan-600/80 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-500"
+                      >
+                        Import ke Form
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowFeedImport(false);
+                          setJsonInput("");
+                        }}
+                        className="rounded-lg border border-slate-600/50 px-4 py-2 text-sm text-slate-300 hover:border-slate-500"
+                      >
+                        Batal
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Feed form modal */}
                 {showFeedForm ? (
@@ -722,15 +836,54 @@ export default function AdminPage() {
             {/* ──── STORIES TAB ──── */}
             {tab === "stories" ? (
               <div>
-                <div className="mb-4 flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between gap-2">
                   <h2 className="text-lg font-semibold">Daftar Story</h2>
-                  <button
-                    onClick={openStoryCreate}
-                    className="rounded-xl bg-cyan-600/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500"
-                  >
-                    + Tambah Story
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setShowStoryImport(!showStoryImport)}
+                      className="rounded-xl border border-cyan-600/50 bg-cyan-600/20 px-4 py-2 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-600/30"
+                    >
+                      📋 Paste JSON
+                    </button>
+                    <button
+                      onClick={openStoryCreate}
+                      className="rounded-xl bg-cyan-600/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500"
+                    >
+                      + Tambah Story
+                    </button>
+                  </div>
                 </div>
+
+                {/* JSON Import Box */}
+                {showStoryImport && (
+                  <div className="mb-4 rounded-2xl border border-cyan-500/30 bg-slate-900/90 p-5">
+                    <h3 className="mb-3 text-sm font-semibold text-cyan-200">Paste JSON Story</h3>
+                    <textarea
+                      value={jsonInput}
+                      onChange={(e) => setJsonInput(e.target.value)}
+                      placeholder='{"name": "...", "label": "...", "type": "Berita", "palette": "from-sky-400 to-blue-500", "viral": false}'
+                      className="mb-3 w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 font-mono text-xs text-slate-200 outline-none focus:border-cyan-400/60"
+                      rows={6}
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleImportStoryJSON}
+                        className="rounded-lg bg-cyan-600/80 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-500"
+                      >
+                        Import ke Form
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowStoryImport(false);
+                          setJsonInput("");
+                        }}
+                        className="rounded-lg border border-slate-600/50 px-4 py-2 text-sm text-slate-300 hover:border-slate-500"
+                      >
+                        Batal
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Story form */}
                 {showStoryForm ? (
@@ -864,15 +1017,54 @@ export default function AdminPage() {
             {/* ──── BOOKS TAB ──── */}
             {tab === "books" ? (
               <div>
-                <div className="mb-4 flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between gap-2">
                   <h2 className="text-lg font-semibold">Daftar Buku</h2>
-                  <button
-                    onClick={openBookCreate}
-                    className="rounded-xl bg-cyan-600/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500"
-                  >
-                    + Tambah Buku
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setShowBookImport(!showBookImport)}
+                      className="rounded-xl border border-cyan-600/50 bg-cyan-600/20 px-4 py-2 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-600/30"
+                    >
+                      📋 Paste JSON
+                    </button>
+                    <button
+                      onClick={openBookCreate}
+                      className="rounded-xl bg-cyan-600/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500"
+                    >
+                      + Tambah Buku
+                    </button>
+                  </div>
                 </div>
+
+                {/* JSON Import Box */}
+                {showBookImport && (
+                  <div className="mb-4 rounded-2xl border border-cyan-500/30 bg-slate-900/90 p-5">
+                    <h3 className="mb-3 text-sm font-semibold text-cyan-200">Paste JSON Buku</h3>
+                    <textarea
+                      value={jsonInput}
+                      onChange={(e) => setJsonInput(e.target.value)}
+                      placeholder='{"title": "...", "author": "...", "cover": "...", "genre": "...", "pages": 0, "rating": 0, "description": "...", "chapters": [...]}'
+                      className="mb-3 w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 font-mono text-xs text-slate-200 outline-none focus:border-cyan-400/60"
+                      rows={8}
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleImportBookJSON}
+                        className="rounded-lg bg-cyan-600/80 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-500"
+                      >
+                        Import ke Form
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowBookImport(false);
+                          setJsonInput("");
+                        }}
+                        className="rounded-lg border border-slate-600/50 px-4 py-2 text-sm text-slate-300 hover:border-slate-500"
+                      >
+                        Batal
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Book form */}
                 {showBookForm ? (
