@@ -172,9 +172,13 @@ export function FeedPage({
           {!isHome ? (
             <section className="mt-5 grid gap-4">
               {feeds.length > 0 ? (
-                feeds.map((feed, index) => (
-                  <FeedTitleCard key={feed.id} feed={feed} index={index} />
-                ))
+                feeds.map((feed, index) =>
+                  category === "Tutorial" ? (
+                    <TutorialCard key={feed.id} feed={feed} index={index} />
+                  ) : (
+                    <FeedTitleCard key={feed.id} feed={feed} index={index} />
+                  ),
+                )
               ) : (
                 <div className="glass-panel rounded-2xl p-5 text-sm text-slate-300">
                   Belum ada konten untuk kategori ini.

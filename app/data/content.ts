@@ -22,6 +22,7 @@ export type Feed = {
   image: string;
   lines: ChatLine[];
   takeaway: string;
+  source?: { title: string; url: string };
 };
 
 export type BookChapter = {

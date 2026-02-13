@@ -2,9 +2,9 @@
 
 import { FeedPage } from "@/app/components/feed-page";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 
-export default function HomePage() {
+function HomePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -58,5 +58,13 @@ export default function HomePage() {
       description="Baca topik panjang jadi lebih santai: pertanyaan singkat, jawaban padat, dan inti cepat per konten."
       showStories
     />
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
+      <HomePageContent />
+    </Suspense>
   );
 }

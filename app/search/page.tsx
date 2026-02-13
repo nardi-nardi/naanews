@@ -4,10 +4,10 @@ import { FeedTitleCard } from "@/app/components/feed-title-card";
 import { BookCard } from "@/app/components/book-card";
 import { SiteShell } from "@/app/components/site-shell";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import type { Feed, Book } from "@/app/data/content";
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialQuery = searchParams.get("q") || "";
@@ -160,5 +160,13 @@ export default function SearchPage() {
         </section>
       ) : null}
     </SiteShell>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
+      <SearchPageContent />
+    </Suspense>
   );
 }
