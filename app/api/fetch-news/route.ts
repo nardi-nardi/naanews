@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
 import { getDb } from "@/app/lib/mongodb";
 import { fetchRealNews } from "@/app/lib/news-fetcher";
 
@@ -40,9 +39,6 @@ export async function POST() {
 
     // Insert into MongoDB
     await db.collection("feeds").insertMany(feeds.map((f) => ({ ...f })));
-
-    // Invalidate cache
-    revalidateTag("feeds");
 
     return NextResponse.json({
       success: true,

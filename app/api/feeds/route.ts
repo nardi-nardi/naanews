@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
 import { getDb } from "@/app/lib/mongodb";
 import type { Feed } from "@/app/data/content";
 import { feeds as dummyFeeds } from "@/app/data/content";
@@ -74,8 +73,6 @@ export async function POST(req: NextRequest) {
 
     const newFeed = { ...body, id: nextId };
     await db.collection("feeds").insertOne(newFeed);
-
-    revalidateTag("feeds");
 
     return NextResponse.json({ ...newFeed, id: nextId }, { status: 201 });
   } catch (error) {

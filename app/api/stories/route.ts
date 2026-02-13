@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
 import { getDb } from "@/app/lib/mongodb";
 import type { Story } from "@/app/data/content";
 import { stories as dummyStories } from "@/app/data/content";
@@ -46,8 +45,6 @@ export async function POST(req: NextRequest) {
 
     const newStory = { ...body, id: nextId };
     await db.collection("stories").insertOne(newStory);
-
-    revalidateTag("stories");
 
     return NextResponse.json({ ...newStory, id: nextId }, { status: 201 });
   } catch (error) {

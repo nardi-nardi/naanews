@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
 import { getDb } from "@/app/lib/mongodb";
 import type { Feed } from "@/app/data/content";
 
@@ -68,8 +67,6 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Feed not found" }, { status: 404 });
     }
 
-    revalidateTag("feeds");
-
     return NextResponse.json({
       id: result.id,
       title: result.title,
@@ -102,8 +99,6 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
     if (result.deletedCount === 0) {
       return NextResponse.json({ error: "Feed not found" }, { status: 404 });
     }
-
-    revalidateTag("feeds");
 
     return NextResponse.json({ success: true });
   } catch (error) {

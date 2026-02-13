@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
 import { getDb } from "@/app/lib/mongodb";
 import { books as dummyBooks } from "@/app/data/content";
 
@@ -67,7 +66,6 @@ export async function POST(request: NextRequest) {
     };
 
     await db.collection("books").insertOne(newBook);
-    revalidateTag("books");
     return NextResponse.json(newBook, { status: 201 });
   } catch (error) {
     console.error("POST /api/books error:", error);
