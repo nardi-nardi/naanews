@@ -722,13 +722,12 @@ export default function AdminPage() {
                                 ✕
                               </button>
                             </div>
-                            <div className="mt-1.5 flex items-center gap-2 pl-[42px]">
-                              <span className="text-[10px] text-slate-500">🖼️</span>
-                              <input
-                                value={line.image ?? ""}
-                                onChange={(e) => updateLine(i, "image", e.target.value)}
-                                placeholder="Image URL (opsional)"
-                                className="min-w-0 flex-1 rounded-md border border-slate-700/40 bg-slate-800/40 px-2.5 py-1.5 text-[12px] text-slate-300 outline-none placeholder:text-slate-600 focus:border-cyan-400/40"
+                            <div className="mt-2 pl-[42px]">
+                              <ImageUpload
+                                label="Gambar (opsional)"
+                                buttonText={line.image ? "Ganti Image" : "Tambahkan Image"}
+                                currentImageUrl={line.image || undefined}
+                                onUploadComplete={(url) => updateLine(i, "image", url)}
                               />
                             </div>
                           </div>
@@ -1196,13 +1195,12 @@ export default function AdminPage() {
                                       ✕
                                     </button>
                                   </div>
-                                  <div className="mt-1 flex items-center gap-1.5 pl-[34px]">
-                                    <span className="text-[10px] text-slate-500">🖼️</span>
-                                    <input
-                                      value={line.image ?? ""}
-                                      onChange={(e) => updateChapterLine(ci, li, "image", e.target.value)}
-                                      placeholder="Image URL (opsional)"
-                                      className="min-w-0 flex-1 rounded-md border border-slate-700/40 bg-slate-800/40 px-2 py-1 text-[11px] text-slate-300 outline-none placeholder:text-slate-600 focus:border-cyan-400/40"
+                                  <div className="mt-2 pl-[34px]">
+                                    <ImageUpload
+                                      label="Gambar (opsional)"
+                                      buttonText={line.image ? "Ganti Image" : "Tambahkan Image"}
+                                      currentImageUrl={line.image || undefined}
+                                      onUploadComplete={(url) => updateChapterLine(ci, li, "image", url)}
                                     />
                                   </div>
                                 </div>

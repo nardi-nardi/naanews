@@ -24,6 +24,7 @@ export type Feed = {
   lines: ChatLine[];
   takeaway: string;
   source?: { title: string; url: string };
+  storyId?: number | null;
 };
 
 export type BookChapter = {
@@ -41,12 +42,13 @@ export type Book = {
   rating: number;
   description: string;
   chapters: BookChapter[];
+  storyId?: number | null;
 };
 
 export type NavItem = {
   title: string;
   note: string;
-  href: "/" | "/berita" | "/tutorial" | "/riset" | "/buku" | "/analytics";
+  href: "/" | "/berita" | "/tutorial" | "/riset" | "/buku" | "/tentang" | "/analytics";
 };
 
 export const stories: Story[] = [
@@ -453,6 +455,7 @@ export const navItems: NavItem[] = [
   { title: "Tutorial", note: "Step-by-step praktis", href: "/tutorial" },
   { title: "Riset", note: "Hasil eksperimen tim", href: "/riset" },
   { title: "Buku", note: "Belajar lewat Q&A", href: "/buku" },
+  { title: "Tentang", note: "Misi, tim, kontak", href: "/tentang" },
   { title: "Analytics", note: "Pantau konten viral", href: "/analytics" },
 ];
 

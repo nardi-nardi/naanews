@@ -111,7 +111,7 @@ export function FeedPage({
 
         {showStories && !loading && stories.length > 0 ? (
           <div className="hidden xl:block">
-            <StatusViralSection stories={stories} feeds={feeds} />
+            <StatusViralSection stories={stories} feeds={feeds} books={books} />
           </div>
         ) : null}
       </section>
@@ -120,7 +120,7 @@ export function FeedPage({
         <div className="mt-4 flex flex-col gap-4">
           {showStories && !loading && stories.length > 0 ? (
             <section className="glass-panel rounded-3xl p-5 xl:hidden">
-              <StatusViralSection stories={stories} feeds={feeds} standalone />
+              <StatusViralSection stories={stories} feeds={feeds} books={books} standalone />
             </section>
           ) : null}
           <div>

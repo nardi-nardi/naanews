@@ -41,6 +41,7 @@ async function loadFeeds(category?: Feed["category"]): Promise<Feed[]> {
       lines: d.lines as Feed["lines"],
       takeaway: d.takeaway as string,
       source: d.source as Feed["source"],
+      storyId: (d.storyId as number | null | undefined) ?? null,
     }));
   } catch {
     const filtered = category
@@ -95,6 +96,7 @@ async function loadBooks(): Promise<Book[]> {
         title: ch.title,
         lines: ch.lines as ChatLine[],
       })),
+      storyId: (d.storyId as number | null | undefined) ?? null,
     }));
   } catch {
     return dummyBooks;

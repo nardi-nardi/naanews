@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import type { BookChapter, ChatLine } from "@/app/data/content";
+import { useEffect, useState } from "react";
+import type { BookChapter, ChatLine, Story } from "@/app/data/content";
 import { ImageUpload } from "@/app/components/image-upload";
 
 type BookForm = {
@@ -15,6 +15,7 @@ type BookForm = {
   rating: number;
   description: string;
   chapters: BookChapter[];
+  storyId?: number | null;
 };
 
 const emptyForm: BookForm = {
@@ -34,14 +35,23 @@ const emptyForm: BookForm = {
       ],
     },
   ],
+  storyId: null,
 };
 
 export default function NewBookPage() {
   const router = useRouter();
   const [form, setForm] = useState<BookForm>(emptyForm);
+  const [stories, setStories] = useState<Story[]>([]);
   const [message, setMessage] = useState("");
   const [jsonInput, setJsonInput] = useState("");
   const [showImport, setShowImport] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/stories")
+      .then((res) => res.json())
+      .then((data: Story[]) => setStories(data))
+      .catch(() => setStories([]));
+  }, []);
 
   function flash(msg: string) {
     setMessage(msg);
@@ -62,6 +72,7 @@ export default function NewBookPage() {
         chapters: Array.isArray(json.chapters) && json.chapters.length > 0
           ? json.chapters
           : [{ title: "", lines: [{ role: "q", text: "" }, { role: "a", text: "" }] }],
+        storyId: json.storyId ?? null,
       });
       setShowImport(false);
       setJsonInput("");
@@ -205,6 +216,26 @@ export default function NewBookPage() {
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-amber-400/60"
               />
             </div>
+            <div className="sm:col-span-2">
+              <label className="mb-1 block text-xs text-slate-400">Assign ke Story (opsional)</label>
+              <select
+                value={form.storyId ?? ""}
+                onChange={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    storyId: e.target.value === "" ? null : Number(e.target.value),
+                  }))
+                }
+                className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
+              >
+                <option value="">— Tidak di-assign —</option>
+                {stories.map((story) => (
+                  <option key={story.id} value={story.id}>
+                    {story.name} ({story.type})
+                  </option>
+                ))}
+              </select>
+            </div>
             <div>
               <label className="mb-1 block text-xs text-slate-400">Author</label>
               <input
@@ -335,13 +366,12 @@ export default function NewBookPage() {
                             ✕
                           </button>
                         </div>
-                        <div className="mt-1 flex items-center gap-2 pl-[38px]">
-                          <span className="text-[10px] text-slate-500">🖼️</span>
-                          <input
-                            value={line.image ?? ""}
-                            onChange={(e) => updateChapterLine(chIdx, lineIdx, "image", e.target.value)}
-                            placeholder="Image URL (opsional)"
-                            className="min-w-0 flex-1 rounded-md border border-slate-700/40 bg-slate-800/40 px-2 py-1 text-xs text-slate-300 outline-none placeholder:text-slate-600 focus:border-amber-400/40"
+                        <div className="mt-2 pl-[38px]">
+                          <ImageUpload
+                            label="Gambar (opsional)"
+                            buttonText={line.image ? "Ganti Image" : "Tambahkan Image"}
+                            currentImageUrl={line.image || undefined}
+                            onUploadComplete={(url) => updateChapterLine(chIdx, lineIdx, "image", url)}
                           />
                         </div>
                       </div>

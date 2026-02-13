@@ -52,6 +52,7 @@ export async function GET(req: NextRequest) {
       lines: f.lines,
       takeaway: f.takeaway,
       source: f.source,
+      storyId: f.storyId ?? null,
       _id: f._id.toString(),
     }));
 
@@ -79,7 +80,8 @@ export async function POST(req: NextRequest) {
       ...body, 
       id: nextId,
       createdAt: Date.now(), // Auto-assign current timestamp
-      popularity: 0 // Start with 0 views
+      popularity: 0, // Start with 0 views
+      storyId: body.storyId ?? null,
     };
     await db.collection("feeds").insertOne(newFeed);
 

@@ -37,6 +37,7 @@ export async function GET(_req: NextRequest, context: RouteContext) {
       lines: feed.lines,
       takeaway: feed.takeaway,
       source: feed.source,
+      storyId: feed.storyId ?? null,
       _id: feed._id.toString(),
     });
   } catch (error) {
@@ -83,6 +84,7 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       image: result.image,
       lines: result.lines,
       takeaway: result.takeaway,
+      storyId: result.storyId ?? null,
       _id: result._id.toString(),
     });
   } catch (error) {

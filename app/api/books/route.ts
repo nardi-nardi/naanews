@@ -66,6 +66,7 @@ export async function POST(request: NextRequest) {
       rating: body.rating ?? 0,
       description: body.description ?? "",
       chapters: body.chapters ?? [],
+      storyId: body.storyId ?? null,
     };
 
     await db.collection("books").insertOne(newBook);

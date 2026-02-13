@@ -24,6 +24,7 @@ export async function POST() {
         // Generate varied timestamps: newest feeds get recent dates
         // Spread them across the last 7 days
         createdAt: now - (index * 6 * 60 * 60 * 1000), // 6 hours apart
+        storyId: f.storyId ?? null,
       }));
       await db.collection("feeds").insertMany(feedsWithTimestamps);
     }
@@ -38,7 +39,11 @@ export async function POST() {
     // Insert books
     if (books.length > 0) {
       await db.collection("books").insertMany(
-        books.map((b) => ({ ...b, chapters: b.chapters.map((ch) => ({ ...ch, lines: [...ch.lines] })) })),
+        books.map((b) => ({
+          ...b,
+          storyId: b.storyId ?? null,
+          chapters: b.chapters.map((ch) => ({ ...ch, lines: [...ch.lines] })),
+        })),
       );
     }
 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import type { ChatLine, Feed } from "@/app/data/content";
+import type { ChatLine, Feed, Story } from "@/app/data/content";
 import { ImageUpload } from "@/app/components/image-upload";
 
 type FeedForm = {
@@ -13,6 +13,7 @@ type FeedForm = {
   takeaway: string;
   lines: ChatLine[];
   source?: { title: string; url: string };
+  storyId?: number | null;
 };
 
 export default function EditFeedPage() {
@@ -21,6 +22,7 @@ export default function EditFeedPage() {
   const feedId = Number(params.id);
   
   const [form, setForm] = useState<FeedForm | null>(null);
+  const [stories, setStories] = useState<Story[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
 
@@ -39,6 +41,7 @@ export default function EditFeedPage() {
             takeaway: feed.takeaway,
             lines: [...feed.lines],
             source: feed.source ? { ...feed.source } : undefined,
+            storyId: feed.storyId ?? null,
           });
         }
       } catch {
@@ -48,6 +51,10 @@ export default function EditFeedPage() {
       }
     }
     loadFeed();
+    fetch("/api/stories")
+      .then((res) => res.json())
+      .then((data: Story[]) => setStories(data))
+      .catch(() => setStories([]));
   }, [feedId]);
 
   function flash(msg: string) {
@@ -156,6 +163,27 @@ export default function EditFeedPage() {
               </select>
             </div>
             <div className="sm:col-span-2">
+              <label className="mb-1 block text-xs text-slate-400">Assign ke Story (opsional)</label>
+              <select
+                value={form.storyId ?? ""}
+                onChange={(e) =>
+                  setForm((p) =>
+                    p
+                      ? { ...p, storyId: e.target.value === "" ? null : Number(e.target.value) }
+                      : p,
+                  )
+                }
+                className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
+              >
+                <option value="">— Tidak di-assign —</option>
+                {stories.map((story) => (
+                  <option key={story.id} value={story.id}>
+                    {story.name} ({story.type})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-2">
               <ImageUpload
                 currentImageUrl={form.image}
                 onUploadComplete={(url) => setForm((p) => p ? ({ ...p, image: url }) : p)}
@@ -238,13 +266,12 @@ export default function EditFeedPage() {
                       ✕
                     </button>
                   </div>
-                  <div className="mt-1.5 flex items-center gap-2 pl-[42px]">
-                    <span className="text-[10px] text-slate-500">🖼️</span>
-                    <input
-                      value={line.image ?? ""}
-                      onChange={(e) => updateLine(i, "image", e.target.value)}
-                      placeholder="Image URL (opsional)"
-                      className="min-w-0 flex-1 rounded-md border border-slate-700/40 bg-slate-800/40 px-2.5 py-1.5 text-[12px] text-slate-300 outline-none placeholder:text-slate-600 focus:border-cyan-400/40"
+                  <div className="mt-2 pl-[42px]">
+                    <ImageUpload
+                      label="Gambar (opsional)"
+                      buttonText={line.image ? "Ganti Image" : "Tambahkan Image"}
+                      currentImageUrl={line.image || undefined}
+                      onUploadComplete={(url) => updateLine(i, "image", url)}
                     />
                   </div>
                 </div>

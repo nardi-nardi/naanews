@@ -60,6 +60,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
           rating: body.rating,
           description: body.description,
           chapters: body.chapters,
+          storyId: body.storyId ?? null,
         },
       },
       { returnDocument: "after" },

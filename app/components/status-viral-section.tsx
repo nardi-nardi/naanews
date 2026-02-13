@@ -5,50 +5,99 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { StoryBubble } from "@/app/components/story-bubble";
-import type { Feed, Story } from "@/app/data/content";
+import type { Book, ChatLine, Feed, Story } from "@/app/data/content";
 
 type StatusViralSectionProps = {
   stories: Story[];
   feeds: Feed[];
+  books?: Book[];
   standalone?: boolean;
 };
 
 export function StatusViralSection({
   stories,
   feeds,
+  books = [],
   standalone = false,
 }: StatusViralSectionProps) {
   const [selectedStoryId, setSelectedStoryId] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const storyCovers = useMemo(() => {
+  const storyCoverMap = useMemo(() => {
     const map = new Map<number, string>();
     stories.forEach((story) => {
       if (story.image) {
         map.set(story.id, story.image);
         return;
       }
-      const candidates = feeds.filter((f) => f.category === story.type && f.image);
-      if (candidates.length > 0) {
-        const pick = candidates[story.id % candidates.length];
-        map.set(story.id, pick.image);
+      const assignedFeed = feeds.find((f) => f.storyId === story.id && f.image);
+      if (assignedFeed) {
+        map.set(story.id, assignedFeed.image);
+        return;
+      }
+      const assignedBook = books.find((b) => b.storyId === story.id && b.cover);
+      if (assignedBook) {
+        map.set(story.id, assignedBook.cover);
       }
     });
     return map;
-  }, [stories, feeds]);
+  }, [stories, feeds, books]);
 
   const selectedStory = stories.find((story) => story.id === selectedStoryId) || null;
 
-  const popularFeeds = useMemo(() => {
-    if (!selectedStory) {
-      return [];
-    }
+  type StoryContent = {
+    kind: "feed" | "book";
+    id: number;
+    title: string;
+    category: Story["type"];
+    createdAt: number;
+    popularity: number;
+    image: string;
+    lines: ChatLine[];
+    takeaway: string;
+    detailHref: string;
+  };
 
-    return [...feeds]
-      .filter((feed) => feed.category === selectedStory.type)
+  const popularFeeds = useMemo<StoryContent[]>(() => {
+    if (!selectedStory) return [];
+
+    const assignedFeeds: StoryContent[] = feeds
+      .filter((f) => f.storyId === selectedStory.id)
+      .map((f) => ({
+        kind: "feed",
+        id: f.id,
+        title: f.title,
+        category: f.category,
+        createdAt: f.createdAt,
+        popularity: f.popularity,
+        image: f.image,
+        lines: f.lines,
+        takeaway: f.takeaway,
+        detailHref: `/read/${f.id}`,
+      }));
+
+    const assignedBooks: StoryContent[] = books
+      .filter((b) => b.storyId === selectedStory.id)
+      .map((b) => ({
+        kind: "book",
+        id: Number(`200000${b.id}`),
+        title: b.title,
+        category: selectedStory.type,
+        createdAt: Date.now(),
+        popularity: Math.round((b.rating || 0) * 20),
+        image: b.cover,
+        lines: [
+          { role: "q", text: b.description || "Ringkasan buku" },
+          { role: "a", text: b.chapters[0]?.lines[0]?.text || "Lihat detail buku" },
+        ],
+        takeaway: `${b.genre} • ${b.pages} halaman • ★ ${b.rating}`,
+        detailHref: `/buku/${b.id}`,
+      }));
+
+    return [...assignedFeeds, ...assignedBooks]
       .sort((a, b) => b.popularity - a.popularity)
       .slice(0, 4);
-  }, [selectedStory, feeds]);
+  }, [selectedStory, feeds, books]);
 
   const currentIndex = popularFeeds.length
     ? Math.min(activeIndex, popularFeeds.length - 1)
@@ -57,7 +106,14 @@ export function StatusViralSection({
   const prevFeed = currentIndex > 0 ? popularFeeds[currentIndex - 1] : null;
   const nextFeed =
     currentIndex < popularFeeds.length - 1 ? popularFeeds[currentIndex + 1] : null;
-  const viewerCover = activeFeed?.image || (selectedStory ? storyCovers.get(selectedStory.id) : undefined);
+  const storyCoverFallback = useMemo(() => {
+    if (!selectedStory) return undefined;
+    const direct = storyCoverMap.get(selectedStory.id);
+    if (direct) return direct;
+    const firstAssigned = popularFeeds[0];
+    return firstAssigned?.image;
+  }, [popularFeeds, selectedStory, storyCoverMap]);
+  const viewerCover = activeFeed?.image || storyCoverFallback;
 
   function openStory(storyId: number) {
     setSelectedStoryId(storyId);
@@ -210,11 +266,11 @@ export function StatusViralSection({
                   ← Prev
                 </button>
                 <Link
-                  href={`/read/${activeFeed.id}`}
+                  href={activeFeed.detailHref}
                   className="rounded-full border border-cyan-400/50 bg-cyan-500/20 px-5 py-2 text-xs font-bold text-cyan-100 transition hover:bg-cyan-500/35 hover:border-cyan-300/70"
                   onClick={closeStoryViewer}
                 >
-                  Baca Artikel
+                  {activeFeed.kind === "book" ? "Lihat Buku" : "Baca Artikel"}
                 </Link>
                 <button
                   type="button"
@@ -282,7 +338,7 @@ export function StatusViralSection({
             <StoryBubble
               key={story.id}
               story={story}
-              coverImage={storyCovers.get(story.id) ?? story.image}
+              coverImage={storyCoverMap.get(story.id)}
               active={story.id === selectedStoryId}
               onClick={() => openStory(story.id)}
             />
