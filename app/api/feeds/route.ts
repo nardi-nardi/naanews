@@ -39,18 +39,19 @@ export async function GET(req: NextRequest) {
     const feeds = await db
       .collection("feeds")
       .find(filter)
-      .sort({ popularity: -1 })
+      .sort({ createdAt: -1 })
       .toArray();
 
     const mapped = feeds.map((f) => ({
       id: f.id,
       title: f.title,
       category: f.category,
-      time: f.time,
+      createdAt: f.createdAt || Date.now(), // Fallback for old data
       popularity: f.popularity,
       image: f.image,
       lines: f.lines,
       takeaway: f.takeaway,
+      source: f.source,
       _id: f._id.toString(),
     }));
 
@@ -68,13 +69,18 @@ export async function POST(req: NextRequest) {
     if (!db) {
       return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
     }
-    const body = (await req.json()) as Omit<Feed, "id">;
+    const body = (await req.json()) as Omit<Feed, "id" | "createdAt" | "popularity">;
 
     // Auto-increment id
     const last = await db.collection("feeds").find().sort({ id: -1 }).limit(1).toArray();
     const nextId = last.length > 0 ? (last[0].id as number) + 1 : 1;
 
-    const newFeed = { ...body, id: nextId };
+    const newFeed = { 
+      ...body, 
+      id: nextId,
+      createdAt: Date.now(), // Auto-assign current timestamp
+      popularity: 0 // Start with 0 views
+    };
     await db.collection("feeds").insertOne(newFeed);
 
     return NextResponse.json({ ...newFeed, id: nextId }, { status: 201 });

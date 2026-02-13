@@ -23,6 +23,7 @@ export async function GET() {
       label: s.label,
       type: s.type,
       palette: s.palette,
+      image: s.image || "",
       viral: s.viral,
       _id: s._id.toString(),
     }));
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
     const last = await db.collection("stories").find().sort({ id: -1 }).limit(1).toArray();
     const nextId = last.length > 0 ? (last[0].id as number) + 1 : 1;
 
-    const newStory = { ...body, id: nextId };
+    const newStory = { ...body, image: body.image || "", id: nextId };
     await db.collection("stories").insertOne(newStory);
 
     return NextResponse.json({ ...newStory, id: nextId }, { status: 201 });

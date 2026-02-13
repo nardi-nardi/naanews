@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Feed } from "@/app/data/content";
+import { RelativeTime } from "@/app/components/relative-time";
 
 type FeedTitleCardProps = {
   feed: Feed;
@@ -40,7 +41,9 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
       <div className="p-5 md:p-6">
         <header className="mb-4">
           <h2 className="text-lg font-semibold text-slate-50 md:text-xl">{feed.title}</h2>
-          <p className="mt-1 text-xs text-slate-400">{feed.time}</p>
+          <p className="mt-1 text-xs text-slate-400">
+            <RelativeTime timestamp={feed.createdAt} />
+          </p>
         </header>
 
         <div className="rounded-xl border border-slate-500/35 bg-slate-900/45 px-4 py-3 text-sm text-slate-300">

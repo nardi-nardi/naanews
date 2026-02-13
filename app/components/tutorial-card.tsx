@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Feed } from "@/app/data/content";
+import { RelativeTime } from "@/app/components/relative-time";
 
 type TutorialCardProps = {
   feed: Feed;
@@ -48,7 +49,9 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
                 Tutorial
               </span>
               <span className="text-[11px] text-slate-500">•</span>
-              <span className="text-[11px] text-slate-400">{feed.time}</span>
+              <span className="text-[11px] text-slate-400">
+                <RelativeTime timestamp={feed.createdAt} />
+              </span>
             </div>
 
             {/* Title */}

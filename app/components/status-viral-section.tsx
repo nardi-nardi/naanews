@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -19,6 +20,22 @@ export function StatusViralSection({
 }: StatusViralSectionProps) {
   const [selectedStoryId, setSelectedStoryId] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const storyCovers = useMemo(() => {
+    const map = new Map<number, string>();
+    stories.forEach((story) => {
+      if (story.image) {
+        map.set(story.id, story.image);
+        return;
+      }
+      const candidates = feeds.filter((f) => f.category === story.type && f.image);
+      if (candidates.length > 0) {
+        const pick = candidates[story.id % candidates.length];
+        map.set(story.id, pick.image);
+      }
+    });
+    return map;
+  }, [stories, feeds]);
 
   const selectedStory = stories.find((story) => story.id === selectedStoryId) || null;
 
@@ -40,6 +57,7 @@ export function StatusViralSection({
   const prevFeed = currentIndex > 0 ? popularFeeds[currentIndex - 1] : null;
   const nextFeed =
     currentIndex < popularFeeds.length - 1 ? popularFeeds[currentIndex + 1] : null;
+  const viewerCover = activeFeed?.image || (selectedStory ? storyCovers.get(selectedStory.id) : undefined);
 
   function openStory(storyId: number) {
     setSelectedStoryId(storyId);
@@ -151,6 +169,19 @@ export function StatusViralSection({
               </div>
 
               <div className="no-scrollbar flex-1 overflow-y-auto rounded-2xl border border-slate-600/30 bg-slate-950/50 p-5">
+                {viewerCover ? (
+                  <div className="mb-4 overflow-hidden rounded-xl border border-slate-700/45 bg-slate-900/60">
+                    <Image
+                      src={viewerCover}
+                      alt={`Status ${selectedStory?.name ?? "Status"}`}
+                      width={720}
+                      height={400}
+                      className="h-44 w-full object-cover"
+                      priority
+                    />
+                  </div>
+                ) : null}
+
                 <div className="flex items-center justify-between">
                   <span className="rounded-full border border-amber-300/40 bg-amber-400/10 px-2.5 py-1 text-[11px] font-semibold text-amber-200">
                     #{currentIndex + 1} Populer
@@ -251,6 +282,7 @@ export function StatusViralSection({
             <StoryBubble
               key={story.id}
               story={story}
+              coverImage={storyCovers.get(story.id) ?? story.image}
               active={story.id === selectedStoryId}
               onClick={() => openStory(story.id)}
             />

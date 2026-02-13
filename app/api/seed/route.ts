@@ -16,11 +16,16 @@ export async function POST() {
     await db.collection("stories").deleteMany({});
     await db.collection("books").deleteMany({});
 
-    // Insert feeds
+    // Insert feeds with updated timestamps
     if (feeds.length > 0) {
-      await db.collection("feeds").insertMany(
-        feeds.map((f) => ({ ...f })),
-      );
+      const now = Date.now();
+      const feedsWithTimestamps = feeds.map((f, index) => ({
+        ...f,
+        // Generate varied timestamps: newest feeds get recent dates
+        // Spread them across the last 7 days
+        createdAt: now - (index * 6 * 60 * 60 * 1000), // 6 hours apart
+      }));
+      await db.collection("feeds").insertMany(feedsWithTimestamps);
     }
 
     // Insert stories

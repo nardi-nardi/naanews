@@ -24,7 +24,7 @@ async function loadFeeds(category?: Feed["category"]): Promise<Feed[]> {
     const docs = await db
       .collection("feeds")
       .find(filter)
-      .sort({ popularity: -1 })
+      .sort({ createdAt: -1 })
       .toArray();
 
     if (docs.length === 0 && !category) {
@@ -35,17 +35,18 @@ async function loadFeeds(category?: Feed["category"]): Promise<Feed[]> {
       id: d.id as number,
       title: d.title as string,
       category: d.category as Feed["category"],
-      time: d.time as string,
+      createdAt: (d.createdAt as number) || Date.now(),
       popularity: d.popularity as number,
       image: d.image as string,
       lines: d.lines as Feed["lines"],
       takeaway: d.takeaway as string,
+      source: d.source as Feed["source"],
     }));
   } catch {
     const filtered = category
       ? dummyFeeds.filter((f) => f.category === category)
       : dummyFeeds;
-    return filtered.sort((a, b) => b.popularity - a.popularity);
+    return filtered.sort((a, b) => b.createdAt - a.createdAt);
   }
 }
 
@@ -64,6 +65,7 @@ async function loadStories(): Promise<Story[]> {
       label: d.label as string,
       type: d.type as Story["type"],
       palette: d.palette as string,
+      image: (d.image as string) || "",
       viral: d.viral as boolean,
     }));
   } catch {

@@ -9,8 +9,6 @@ import { ImageUpload } from "@/app/components/image-upload";
 type FeedForm = {
   title: string;
   category: "Berita" | "Tutorial" | "Riset";
-  time: string;
-  popularity: number;
   image: string;
   takeaway: string;
   lines: ChatLine[];
@@ -37,8 +35,6 @@ export default function EditFeedPage() {
           setForm({
             title: feed.title,
             category: feed.category,
-            time: feed.time,
-            popularity: feed.popularity,
             image: feed.image,
             takeaway: feed.takeaway,
             lines: [...feed.lines],
@@ -147,7 +143,7 @@ export default function EditFeedPage() {
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
               />
             </div>
-            <div>
+            <div className="sm:col-span-2">
               <label className="mb-1 block text-xs text-slate-400">Category</label>
               <select
                 value={form.category}
@@ -158,24 +154,6 @@ export default function EditFeedPage() {
                 <option value="Tutorial">Tutorial</option>
                 <option value="Riset">Riset</option>
               </select>
-            </div>
-            <div>
-              <label className="mb-1 block text-xs text-slate-400">Time</label>
-              <input
-                value={form.time}
-                onChange={(e) => setForm((p) => p ? ({ ...p, time: e.target.value }) : p)}
-                placeholder="2 jam lalu"
-                className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-xs text-slate-400">Popularity</label>
-              <input
-                type="number"
-                value={form.popularity}
-                onChange={(e) => setForm((p) => p ? ({ ...p, popularity: Number(e.target.value) }) : p)}
-                className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
-              />
             </div>
             <div className="sm:col-span-2">
               <ImageUpload

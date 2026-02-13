@@ -4,6 +4,7 @@ export type Story = {
   label: string;
   type: "Berita" | "Tutorial" | "Riset";
   palette: string;
+  image: string;
   viral: boolean;
 };
 
@@ -17,7 +18,7 @@ export type Feed = {
   id: number;
   title: string;
   category: "Berita" | "Tutorial" | "Riset";
-  time: string;
+  createdAt: number; // Unix timestamp in milliseconds
   popularity: number;
   image: string;
   lines: ChatLine[];
@@ -49,12 +50,60 @@ export type NavItem = {
 };
 
 export const stories: Story[] = [
-  { id: 1, name: "AI Corner", label: "AI", type: "Berita", palette: "from-sky-400 to-blue-500", viral: true },
-  { id: 2, name: "Code Daily", label: "CD", type: "Tutorial", palette: "from-amber-300 to-orange-500", viral: true },
-  { id: 3, name: "Lab NAA", label: "LAB", type: "Riset", palette: "from-emerald-400 to-teal-500", viral: false },
-  { id: 4, name: "Cyber Byte", label: "CB", type: "Berita", palette: "from-indigo-400 to-blue-600", viral: true },
-  { id: 5, name: "UX Pulse", label: "UX", type: "Tutorial", palette: "from-pink-400 to-rose-500", viral: false },
-  { id: 6, name: "Data Hunt", label: "DH", type: "Riset", palette: "from-violet-400 to-fuchsia-500", viral: true },
+  {
+    id: 1,
+    name: "AI Corner",
+    label: "AI",
+    type: "Berita",
+    palette: "from-sky-400 to-blue-500",
+    image: "https://picsum.photos/seed/ai-corner/400/400",
+    viral: true,
+  },
+  {
+    id: 2,
+    name: "Code Daily",
+    label: "CD",
+    type: "Tutorial",
+    palette: "from-amber-300 to-orange-500",
+    image: "https://picsum.photos/seed/code-daily/400/400",
+    viral: true,
+  },
+  {
+    id: 3,
+    name: "Lab NAA",
+    label: "LAB",
+    type: "Riset",
+    palette: "from-emerald-400 to-teal-500",
+    image: "https://picsum.photos/seed/lab-naa/400/400",
+    viral: false,
+  },
+  {
+    id: 4,
+    name: "Cyber Byte",
+    label: "CB",
+    type: "Berita",
+    palette: "from-indigo-400 to-blue-600",
+    image: "https://picsum.photos/seed/cyber-byte/400/400",
+    viral: true,
+  },
+  {
+    id: 5,
+    name: "UX Pulse",
+    label: "UX",
+    type: "Tutorial",
+    palette: "from-pink-400 to-rose-500",
+    image: "https://picsum.photos/seed/ux-pulse/400/400",
+    viral: false,
+  },
+  {
+    id: 6,
+    name: "Data Hunt",
+    label: "DH",
+    type: "Riset",
+    palette: "from-violet-400 to-fuchsia-500",
+    image: "https://picsum.photos/seed/data-hunt/400/400",
+    viral: true,
+  },
 ];
 
 export const feeds: Feed[] = [
@@ -62,7 +111,7 @@ export const feeds: Feed[] = [
     id: 1,
     title: "Model AI Lokal Makin Ringan untuk Device Mid-Range",
     category: "Berita",
-    time: "2 jam lalu",
+    createdAt: 1770973205681,
     popularity: 98,
     image: "https://picsum.photos/seed/ai-local/800/400",
     lines: [
@@ -77,7 +126,7 @@ export const feeds: Feed[] = [
     id: 2,
     title: "Tutorial: Bikin API Cache Layer di Next.js 16",
     category: "Tutorial",
-    time: "5 jam lalu",
+    createdAt: 1770962405681,
     popularity: 94,
     image: "https://picsum.photos/seed/cache-nextjs/800/400",
     lines: [
@@ -94,7 +143,7 @@ export const feeds: Feed[] = [
     id: 3,
     title: "Eksperimen A/B UI Chat News vs Artikel Klasik",
     category: "Riset",
-    time: "kemarin",
+    createdAt: 1770894005681,
     popularity: 91,
     image: "https://picsum.photos/seed/ab-test-ui/800/400",
     lines: [
@@ -111,7 +160,7 @@ export const feeds: Feed[] = [
     id: 4,
     title: "Chip ARM Generasi Baru Klaim Efisiensi 30% Lebih Tinggi",
     category: "Berita",
-    time: "7 jam lalu",
+    createdAt: 1770955205681,
     popularity: 89,
     image: "https://picsum.photos/seed/arm-chip/800/400",
     lines: [
@@ -126,7 +175,7 @@ export const feeds: Feed[] = [
     id: 5,
     title: "Tutorial: Setup CI/CD Next.js dengan Testing Otomatis",
     category: "Tutorial",
-    time: "1 hari lalu",
+    createdAt: 1770894005681,
     popularity: 87,
     image: "https://picsum.photos/seed/cicd-nextjs/800/400",
     lines: [
@@ -141,7 +190,7 @@ export const feeds: Feed[] = [
     id: 6,
     title: "Riset: Prompt Bertahap Tingkatkan Akurasi Ringkasan Dokumen",
     category: "Riset",
-    time: "2 hari lalu",
+    createdAt: 1770807605681,
     popularity: 85,
     image: "https://picsum.photos/seed/prompt-research/800/400",
     lines: [
@@ -156,7 +205,7 @@ export const feeds: Feed[] = [
     id: 7,
     title: "Browser Baru Berbasis Rust Klaim 2x Lebih Cepat dari Chrome",
     category: "Berita",
-    time: "3 jam lalu",
+    createdAt: 1770969605681,
     popularity: 96,
     image: "https://picsum.photos/seed/rust-browser/800/400",
     lines: [
@@ -175,7 +224,7 @@ export const feeds: Feed[] = [
     id: 8,
     title: "Tutorial: Fullstack Authentication dengan Next.js dan Auth.js v5",
     category: "Tutorial",
-    time: "4 jam lalu",
+    createdAt: 1770966005681,
     popularity: 93,
     image: "https://picsum.photos/seed/auth-nextjs/800/400",
     lines: [
@@ -196,7 +245,7 @@ export const feeds: Feed[] = [
     id: 9,
     title: "Riset: Dampak Dark Mode terhadap Produktivitas Developer",
     category: "Riset",
-    time: "6 jam lalu",
+    createdAt: 1770958805681,
     popularity: 90,
     image: "https://picsum.photos/seed/dark-mode-study/800/400",
     lines: [
@@ -215,7 +264,7 @@ export const feeds: Feed[] = [
     id: 10,
     title: "OpenAI Rilis Model GPT-5 Turbo dengan Context 500K Token",
     category: "Berita",
-    time: "1 jam lalu",
+    createdAt: 1770976805681,
     popularity: 99,
     image: "https://picsum.photos/seed/gpt5-release/800/400",
     lines: [
@@ -236,7 +285,7 @@ export const feeds: Feed[] = [
     id: 11,
     title: "Tutorial: Optimasi Web Vitals untuk Skor Lighthouse 100",
     category: "Tutorial",
-    time: "8 jam lalu",
+    createdAt: 1770951605681,
     popularity: 88,
     image: "https://picsum.photos/seed/lighthouse-score/800/400",
     lines: [
@@ -257,7 +306,7 @@ export const feeds: Feed[] = [
     id: 12,
     title: "Riset: Perbandingan State Management React 2026",
     category: "Riset",
-    time: "1 hari lalu",
+    createdAt: 1770894005681,
     popularity: 86,
     image: "https://picsum.photos/seed/react-state/800/400",
     lines: [
@@ -278,7 +327,7 @@ export const feeds: Feed[] = [
     id: 13,
     title: "Kubernetes 2.0 Preview: Simpler Config, Faster Scaling",
     category: "Berita",
-    time: "5 jam lalu",
+    createdAt: 1770962405681,
     popularity: 92,
     image: "https://picsum.photos/seed/k8s-v2/800/400",
     lines: [
@@ -297,7 +346,7 @@ export const feeds: Feed[] = [
     id: 14,
     title: "Tutorial: Integrasi AI Chatbot di Website dengan Vercel AI SDK",
     category: "Tutorial",
-    time: "10 jam lalu",
+    createdAt: 1770944405681,
     popularity: 91,
     image: "https://picsum.photos/seed/vercel-ai-sdk/800/400",
     lines: [
@@ -318,7 +367,7 @@ export const feeds: Feed[] = [
     id: 15,
     title: "Riset: Efektivitas Pair Programming AI vs Human",
     category: "Riset",
-    time: "3 hari lalu",
+    createdAt: 1770721205681,
     popularity: 84,
     image: "https://picsum.photos/seed/pair-prog-ai/800/400",
     lines: [
@@ -337,7 +386,7 @@ export const feeds: Feed[] = [
     id: 16,
     title: "Apple Rilis M5 Ultra: Neural Engine 2x Lebih Kuat",
     category: "Berita",
-    time: "30 menit lalu",
+    createdAt: 1770978605681,
     popularity: 97,
     image: "https://picsum.photos/seed/m5-ultra-chip/800/400",
     lines: [
@@ -358,7 +407,7 @@ export const feeds: Feed[] = [
     id: 17,
     title: "Tutorial: Database Edge dengan Turso dan Drizzle ORM",
     category: "Tutorial",
-    time: "12 jam lalu",
+    createdAt: 1770937205681,
     popularity: 86,
     image: "https://picsum.photos/seed/turso-drizzle/800/400",
     lines: [
@@ -379,7 +428,7 @@ export const feeds: Feed[] = [
     id: 18,
     title: "Riset: Pengaruh Code Review AI terhadap Bug Rate di Production",
     category: "Riset",
-    time: "2 hari lalu",
+    createdAt: 1770807605681,
     popularity: 83,
     image: "https://picsum.photos/seed/ai-code-review/800/400",
     lines: [

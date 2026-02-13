@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { ImageUpload } from "@/app/components/image-upload";
 import type { Feed, Story, ChatLine, Book, BookChapter } from "@/app/data/content";
+import { RelativeTime } from "@/app/components/relative-time";
 
 type Tab = "feeds" | "stories" | "books";
 
 type FeedForm = {
   title: string;
   category: "Berita" | "Tutorial" | "Riset";
-  time: string;
-  popularity: number;
   image: string;
   takeaway: string;
   lines: ChatLine[];
@@ -22,14 +22,13 @@ type StoryForm = {
   label: string;
   type: "Berita" | "Tutorial" | "Riset";
   palette: string;
+  image: string;
   viral: boolean;
 };
 
 const emptyFeedForm: FeedForm = {
   title: "",
   category: "Berita",
-  time: "",
-  popularity: 50,
   image: "",
   takeaway: "",
   lines: [{ role: "q", text: "" }, { role: "a", text: "" }],
@@ -40,6 +39,7 @@ const emptyStoryForm: StoryForm = {
   label: "",
   type: "Berita",
   palette: "from-sky-400 to-blue-500",
+  image: "",
   viral: false,
 };
 
@@ -80,7 +80,6 @@ export default function AdminPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
-  const [fetchingNews, setFetchingNews] = useState(false);
   const [message, setMessage] = useState("");
 
   // Feed form
@@ -111,8 +110,6 @@ export default function AdminPage() {
       setFeedForm({
         title: json.title || "",
         category: json.category || "Berita",
-        time: json.time || "",
-        popularity: json.popularity || 50,
         image: json.image || "",
         takeaway: json.takeaway || "",
         lines: Array.isArray(json.lines) ? json.lines : [{ role: "q", text: "" }, { role: "a", text: "" }],
@@ -136,6 +133,7 @@ export default function AdminPage() {
         label: json.label || "",
         type: json.type || "Berita",
         palette: json.palette || "from-sky-400 to-blue-500",
+        image: json.image || "",
         viral: json.viral || false,
       });
       setEditingStoryId(null);
@@ -182,7 +180,11 @@ export default function AdminPage() {
         fetch("/api/stories"),
         fetch("/api/books"),
       ]);
-      if (feedsRes.ok) setFeeds(await feedsRes.json());
+      if (feedsRes.ok) {
+        const feedsData = await feedsRes.json();
+        // Sort by createdAt descending (newest first)
+        setFeeds(feedsData.sort((a: Feed, b: Feed) => b.createdAt - a.createdAt));
+      }
       if (storiesRes.ok) setStories(await storiesRes.json());
       if (booksRes.ok) setBooks(await booksRes.json());
     } catch (err) {
@@ -202,13 +204,13 @@ export default function AdminPage() {
 
   // ──── SEED ────
   async function handleSeed() {
-    if (!confirm("Ini akan menghapus semua data di DB dan menggantinya dengan dummy data. Lanjut?")) return;
+    if (!confirm("🔄 DATABASE MIGRATION\n\nIni akan:\n✅ Menghapus semua data lama\n✅ Mengisi ulang dengan data dummy\n✅ Memperbaiki timestamp konten (waktu relatif)\n✅ Reset view counts\n\nLanjutkan?")) return;
     setSeeding(true);
     try {
       const res = await fetch("/api/seed", { method: "POST" });
       const data = await res.json();
       if (res.ok) {
-        flash(`✅ Seed berhasil! ${data.feedsInserted} feeds, ${data.storiesInserted} stories, ${data.booksInserted} books`);
+        flash(`✅ Migrasi berhasil! ${data.feedsInserted} feeds, ${data.storiesInserted} stories, ${data.booksInserted} books. Timestamp sudah diperbaiki!`);
         fetchData();
       } else {
         flash(`❌ Seed gagal: ${data.error}`);
@@ -219,27 +221,6 @@ export default function AdminPage() {
     setSeeding(false);
   }
 
-  // ──── FETCH REAL NEWS ────
-  async function handleFetchNews() {
-    setFetchingNews(true);
-    try {
-      const res = await fetch("/api/fetch-news", { method: "POST" });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        const sourceInfo = (data.sources as { name: string; count: number; error?: string }[])
-          .map((s) => `${s.name}: ${s.count}${s.error ? " ⚠️" : ""}`)
-          .join(", ");
-        flash(`📡 ${data.message} (${sourceInfo})`);
-        fetchData();
-      } else {
-        flash(`❌ ${data.message || data.error || "Gagal fetch news"}`);
-      }
-    } catch {
-      flash("❌ Gagal mengambil berita: network error");
-    }
-    setFetchingNews(false);
-  }
-
   // ──── FEED CRUD ────
   function openFeedCreate() {
     setFeedForm(emptyFeedForm);
@@ -248,11 +229,11 @@ export default function AdminPage() {
   }
 
   function openFeedEdit(feed: Feed) {
+    // This function is no longer used - forms moved to separate pages
+    // Kept for backwards compatibility but should be removed
     setFeedForm({
       title: feed.title,
       category: feed.category,
-      time: feed.time,
-      popularity: feed.popularity,
       image: feed.image,
       takeaway: feed.takeaway,
       lines: [...feed.lines],
@@ -337,6 +318,7 @@ export default function AdminPage() {
       label: story.label,
       type: story.type,
       palette: story.palette,
+      image: story.image || "",
       viral: story.viral,
     });
     setEditingStoryId(story.id);
@@ -533,18 +515,11 @@ export default function AdminPage() {
               ← Home
             </Link>
             <button
-              onClick={handleFetchNews}
-              disabled={fetchingNews}
-              className="rounded-xl bg-emerald-600/80 px-3 py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:opacity-50"
-            >
-              {fetchingNews ? "⏳ Ambil..." : "📡 Ambil Berita"}
-            </button>
-            <button
               onClick={handleSeed}
               disabled={seeding}
               className="rounded-xl bg-amber-600/80 px-3 py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-amber-500 disabled:opacity-50"
             >
-              {seeding ? "⏳ Seed..." : "🌱 Seed DB"}
+              {seeding ? "⏳ Migrating..." : "🔄 Migrate DB"}
             </button>
           </div>
         </div>
@@ -671,26 +646,6 @@ export default function AdminPage() {
                           <option value="Tutorial">Tutorial</option>
                           <option value="Riset">Riset</option>
                         </select>
-                      </div>
-                      <div>
-                        <label className="mb-1 block text-xs text-slate-400">Time</label>
-                        <input
-                          value={feedForm.time}
-                          onChange={(e) => setFeedForm((p) => ({ ...p, time: e.target.value }))}
-                          placeholder="e.g. 2 jam lalu"
-                          className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
-                        />
-                      </div>
-                      <div>
-                        <label className="mb-1 block text-xs text-slate-400">Popularity (0-100)</label>
-                        <input
-                          type="number"
-                          min={0}
-                          max={100}
-                          value={feedForm.popularity}
-                          onChange={(e) => setFeedForm((p) => ({ ...p, popularity: Number(e.target.value) }))}
-                          className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
-                        />
                       </div>
                       <div className="sm:col-span-2">
                         <label className="mb-1 block text-xs text-slate-400">Image URL</label>
@@ -822,7 +777,9 @@ export default function AdminPage() {
                           <span className="text-xs text-slate-500">Pop: {feed.popularity}</span>
                         </div>
                         <p className="mt-1 truncate text-sm font-medium">{feed.title}</p>
-                        <p className="truncate text-xs text-slate-400">{feed.time} · {feed.lines.length} lines</p>
+                        <p className="truncate text-xs text-slate-400">
+                          <RelativeTime timestamp={feed.createdAt} /> · {feed.lines.length} lines
+                        </p>
                       </div>
                       <div className="flex shrink-0 gap-2">
                         <Link
@@ -842,7 +799,7 @@ export default function AdminPage() {
                   ))}
                   {feeds.length === 0 ? (
                     <div className="glass-panel rounded-xl p-6 text-center text-sm text-slate-400">
-                      Belum ada feed. Klik &quot;Seed Database&quot; untuk mengisi data awal, atau tambah manual.
+                      Belum ada feed. Klik tombol <strong className="text-amber-300">🔄 Migrate DB</strong> di atas untuk mengisi data awal dengan timestamp yang benar, atau tambah manual.
                     </div>
                   ) : null}
                 </div>
@@ -877,7 +834,7 @@ export default function AdminPage() {
                     <textarea
                       value={jsonInput}
                       onChange={(e) => setJsonInput(e.target.value)}
-                      placeholder='{"name": "...", "label": "...", "type": "Berita", "palette": "from-sky-400 to-blue-500", "viral": false}'
+                      placeholder='{"name": "...", "label": "...", "type": "Berita", "palette": "from-sky-400 to-blue-500", "image": "https://...", "viral": false}'
                       className="mb-3 w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 font-mono text-xs text-slate-200 outline-none focus:border-cyan-400/60"
                       rows={6}
                     />
@@ -958,6 +915,23 @@ export default function AdminPage() {
                           ))}
                         </select>
                       </div>
+                      <div className="sm:col-span-2 space-y-2">
+                        <ImageUpload
+                          currentImageUrl={storyForm.image}
+                          onUploadComplete={(url) => setStoryForm((p) => ({ ...p, image: url }))}
+                          label="Cover Image"
+                          buttonText="Upload Gambar"
+                        />
+                        <div>
+                          <label className="mb-1 block text-xs text-slate-400">Atau masukkan URL manual</label>
+                          <input
+                            value={storyForm.image}
+                            onChange={(e) => setStoryForm((p) => ({ ...p, image: e.target.value }))}
+                            placeholder="https://picsum.photos/seed/ai-corner/400/400"
+                            className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
+                          />
+                        </div>
+                      </div>
                       <div className="flex items-center gap-3">
                         <label className="text-xs text-slate-400">Viral?</label>
                         <input
@@ -994,9 +968,12 @@ export default function AdminPage() {
                     >
                       <div className="flex items-center gap-3">
                         <div
-                          className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${story.palette} text-xs font-bold text-white`}
+                          className={`flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br ${story.palette} text-xs font-bold text-white ring-1 ring-white/10`}
+                          style={story.image ? { backgroundImage: `url(${story.image})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
                         >
-                          {story.label}
+                          <span className="rounded-full bg-slate-900/60 px-1.5 py-0.5 text-[10px] font-bold">
+                            {story.label}
+                          </span>
                         </div>
                         <div>
                           <p className="text-sm font-medium">{story.name}</p>

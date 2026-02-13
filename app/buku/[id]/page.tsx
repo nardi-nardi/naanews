@@ -114,22 +114,32 @@ export default async function ReadBookPage({ params }: PageProps) {
               </div>
 
               <p className="mt-4 text-sm leading-relaxed text-slate-300">{book.description}</p>
-
-              <div className="mt-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300">Daftar Isi</p>
-                <div className="mt-2 space-y-1.5">
-                  {book.chapters.map((chapter, i) => (
-                    <a
-                      key={i}
-                      href={`#chapter-${i}`}
-                      className="block rounded-lg border border-slate-700/50 bg-slate-900/30 px-3 py-2 text-sm text-slate-200 transition hover:border-cyan-300/40 hover:bg-cyan-500/5"
-                    >
-                      {chapter.title}
-                    </a>
-                  ))}
-                </div>
-              </div>
             </div>
+          </div>
+        </section>
+
+        {/* Daftar Isi - Table of Contents */}
+        <section className="glass-panel mt-6 rounded-3xl p-5 md:p-7">
+          <header className="mb-4 border-b border-slate-700/70 pb-3">
+            <h2 className="text-lg font-bold text-slate-50 md:text-xl">📖 Daftar Isi</h2>
+            <p className="mt-1 text-xs text-slate-400">{book.chapters.length} bab tersedia</p>
+          </header>
+          <div className="grid gap-2.5 sm:grid-cols-2">
+            {book.chapters.map((chapter, i) => (
+              <a
+                key={i}
+                href={`#chapter-${i}`}
+                className="group flex items-center gap-3 rounded-xl border border-slate-700/50 bg-slate-900/30 px-4 py-3 text-sm transition hover:border-cyan-300/50 hover:bg-cyan-500/5"
+              >
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-xs font-bold text-cyan-300 ring-1 ring-cyan-500/20 transition group-hover:bg-cyan-500/15 group-hover:ring-cyan-400/30">
+                  {i + 1}
+                </span>
+                <span className="flex-1 text-slate-200 transition group-hover:text-cyan-200">{chapter.title}</span>
+                <svg className="h-4 w-4 shrink-0 text-slate-500 transition group-hover:translate-x-1 group-hover:text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            ))}
           </div>
         </section>
 

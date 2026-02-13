@@ -33,6 +33,7 @@ export async function GET(_req: NextRequest, context: RouteContext) {
       label: story.label,
       type: story.type,
       palette: story.palette,
+      image: story.image || "",
       viral: story.viral,
       _id: story._id.toString(),
     });
@@ -75,6 +76,7 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       label: result.label,
       type: result.type,
       palette: result.palette,
+      image: result.image || "",
       viral: result.viral,
       _id: result._id.toString(),
     });

@@ -31,11 +31,12 @@ export async function GET(_req: NextRequest, context: RouteContext) {
       id: feed.id,
       title: feed.title,
       category: feed.category,
-      time: feed.time,
+      createdAt: feed.createdAt || Date.now(),
       popularity: feed.popularity,
       image: feed.image,
       lines: feed.lines,
       takeaway: feed.takeaway,
+      source: feed.source,
       _id: feed._id.toString(),
     });
   } catch (error) {

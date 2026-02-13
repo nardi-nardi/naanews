@@ -9,8 +9,6 @@ import { ImageUpload } from "@/app/components/image-upload";
 type FeedForm = {
   title: string;
   category: "Berita" | "Tutorial" | "Riset";
-  time: string;
-  popularity: number;
   image: string;
   takeaway: string;
   lines: ChatLine[];
@@ -20,8 +18,6 @@ type FeedForm = {
 const emptyForm: FeedForm = {
   title: "",
   category: "Berita",
-  time: "",
-  popularity: 50,
   image: "",
   takeaway: "",
   lines: [{ role: "q", text: "" }, { role: "a", text: "" }],
@@ -45,8 +41,6 @@ export default function NewFeedPage() {
       setForm({
         title: json.title || "",
         category: json.category || "Berita",
-        time: json.time || "",
-        popularity: json.popularity || 50,
         image: json.image || "",
         takeaway: json.takeaway || "",
         lines: Array.isArray(json.lines) ? json.lines : [{ role: "q", text: "" }, { role: "a", text: "" }],
@@ -127,7 +121,7 @@ export default function NewFeedPage() {
             <textarea
               value={jsonInput}
               onChange={(e) => setJsonInput(e.target.value)}
-              placeholder='{"title": "...", "category": "Berita", "time": "...", "popularity": 50, "image": "...", "takeaway": "...", "source": {"title": "Kompas.com", "url": "https://..."}, "lines": [...]}'
+              placeholder='{"title": "...", "category": "Berita", "image": "...", "takeaway": "...", "source": {"title": "Kompas.com", "url": "https://..."}, "lines": [...]}'
               className="mb-3 w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 font-mono text-xs text-slate-200 outline-none focus:border-cyan-400/60"
               rows={8}
             />
@@ -162,7 +156,7 @@ export default function NewFeedPage() {
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
               />
             </div>
-            <div>
+            <div className="sm:col-span-2">
               <label className="mb-1 block text-xs text-slate-400">Category</label>
               <select
                 value={form.category}
@@ -173,24 +167,6 @@ export default function NewFeedPage() {
                 <option value="Tutorial">Tutorial</option>
                 <option value="Riset">Riset</option>
               </select>
-            </div>
-            <div>
-              <label className="mb-1 block text-xs text-slate-400">Time</label>
-              <input
-                value={form.time}
-                onChange={(e) => setForm((p) => ({ ...p, time: e.target.value }))}
-                placeholder="2 jam lalu"
-                className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-xs text-slate-400">Popularity</label>
-              <input
-                type="number"
-                value={form.popularity}
-                onChange={(e) => setForm((p) => ({ ...p, popularity: Number(e.target.value) }))}
-                className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
-              />
             </div>
             <div className="sm:col-span-2">
               <ImageUpload

@@ -131,27 +131,40 @@ export function FeedPage({
 
       {/* Category filter buttons — only on home */}
       {isHome ? (
-        <div className="mt-5 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
-          {categoryButtons.map((cat) => (
-            <button
-              key={cat.key}
-              onClick={() => setActiveCategory(activeCategory === cat.key ? null : cat.key)}
-              className={`shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold transition-all duration-200 ${
-                activeCategory === cat.key
-                  ? cat.activeColor
-                  : "border border-slate-700/50 text-slate-400 hover:border-slate-600 hover:text-slate-200"
-              }`}
-            >
-              {cat.icon} {cat.key}
-            </button>
-          ))}
+        <div className="mt-5 -mx-3 md:-mx-5">
+          <div className="flex items-center gap-2 overflow-x-auto px-3 pb-2 md:px-5 scrollbar-hide">
+            {categoryButtons.map((cat) => (
+              <button
+                key={cat.key}
+                onClick={() => setActiveCategory(activeCategory === cat.key ? null : cat.key)}
+                className={`shrink-0 whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200 ${
+                  activeCategory === cat.key
+                    ? cat.activeColor
+                    : "border border-slate-700/50 text-slate-400 hover:border-slate-600 hover:text-slate-200"
+                }`}
+              >
+                {cat.icon} {cat.key}
+              </button>
+            ))}
+          </div>
         </div>
       ) : null}
 
       {loading ? (
-        <div className="glass-panel mt-4 rounded-2xl p-8 text-center text-sm text-slate-300">
-          <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-slate-400 border-t-cyan-400"></div>
-          <p className="mt-3">Memuat konten...</p>
+        <div className="mt-4 grid gap-4">
+          {/* Skeleton loading cards */}
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="glass-panel animate-pulse rounded-3xl overflow-hidden">
+              <div className="h-44 w-full bg-slate-800/50 md:h-52" />
+              <div className="p-5 md:p-6">
+                <div className="mb-4">
+                  <div className="h-6 w-3/4 rounded bg-slate-800/50 md:h-7" />
+                  <div className="mt-2 h-3 w-24 rounded bg-slate-800/50" />
+                </div>
+                <div className="h-16 rounded-xl bg-slate-800/50" />
+              </div>
+            </div>
+          ))}
         </div>
       ) : (
         <>

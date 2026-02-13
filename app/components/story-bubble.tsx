@@ -4,11 +4,15 @@ import type { Story } from "@/app/data/content";
 
 type StoryBubbleProps = {
   story: Story;
+  coverImage?: string;
   active?: boolean;
   onClick?: () => void;
 };
 
-export function StoryBubble({ story, active = false, onClick }: StoryBubbleProps) {
+export function StoryBubble({ story, coverImage, active = false, onClick }: StoryBubbleProps) {
+  const backgroundImage = coverImage ? `url(${coverImage})` : undefined;
+  const hasImage = Boolean(coverImage);
+
   return (
     <button
       type="button"
@@ -18,8 +22,15 @@ export function StoryBubble({ story, active = false, onClick }: StoryBubbleProps
       }`}
     >
       <div className={`story-ring ${story.viral ? "story-live" : ""}`}>
-        <div className={`story-core grid place-items-center bg-gradient-to-br ${story.palette} text-xs font-semibold text-white`}>
-          {story.label}
+        <div
+          className={`story-core grid place-items-center overflow-hidden bg-gradient-to-br ${story.palette} text-xs font-semibold text-white`}
+          style={backgroundImage ? { backgroundImage, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
+        >
+          {!hasImage ? (
+            <span className="text-sm font-semibold leading-none tracking-tight">
+              {story.label}
+            </span>
+          ) : null}
         </div>
       </div>
       <p className="w-full truncate text-center text-xs text-slate-200">{story.name}</p>

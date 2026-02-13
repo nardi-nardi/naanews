@@ -74,7 +74,7 @@ function SearchPageContent() {
             .join(" ")
             .toLowerCase();
           return tokens.every((t) => haystack.includes(t));
-        }) : [];
+        }).sort((a, b) => b.createdAt - a.createdAt) : [];
 
         const filteredBooks = Array.isArray(allBooks) ? allBooks.filter((book) => {
           const haystack = [book.title, book.description, book.author]

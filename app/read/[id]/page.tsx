@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ChatImage } from "@/app/components/chat-image";
 import { ShareButton } from "@/app/components/share-button";
 import { getFeedIds, getFeeds } from "@/app/lib/data";
+import { RelativeTime } from "@/app/components/relative-time";
 
 export const revalidate = 300;
 
@@ -107,7 +108,9 @@ export default async function ReadPage({ params }: PageProps) {
           <div className="p-5 md:p-7">
           <header className="mb-5 border-b border-slate-700/70 pb-5">
             <h1 className="text-2xl font-bold text-slate-50 md:text-3xl">{feed.title}</h1>
-            <p className="mt-2 text-sm text-slate-400">{feed.time}</p>
+            <p className="mt-2 text-sm text-slate-400">
+              <RelativeTime timestamp={feed.createdAt} />
+            </p>
           </header>
 
           <div className="flex flex-col gap-3">
@@ -191,7 +194,9 @@ export default async function ReadPage({ params }: PageProps) {
                     <h3 className="text-sm font-semibold leading-snug text-slate-50 line-clamp-2">
                       {item.title}
                     </h3>
-                    <p className="mt-1.5 text-xs text-slate-400">{item.time}</p>
+                    <p className="mt-1.5 text-xs text-slate-400">
+                      <RelativeTime timestamp={item.createdAt} />
+                    </p>
                     <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-slate-300">
                       {item.lines[0]?.text}
                     </p>
