@@ -6,7 +6,7 @@ import { ImageUpload } from "@/app/components/image-upload";
 import type { Feed, Story, ChatLine, Book, BookChapter } from "@/app/data/content";
 import { RelativeTime } from "@/app/components/relative-time";
 
-type Tab = "feeds" | "stories" | "books";
+type Tab = "feeds" | "stories" | "books" | "roadmaps" | "products";
 
 type FeedForm = {
   title: string;
@@ -78,6 +78,8 @@ export default function AdminPage() {
   const [feeds, setFeeds] = useState<Feed[]>([]);
   const [stories, setStories] = useState<Story[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
+  const [roadmaps, setRoadmaps] = useState<{ slug: string; title: string; level: string; duration: string; tags: string[]; steps: unknown[] }[]>([]);
+  const [products, setProducts] = useState<{ id: string; name: string; category: string; price: number; stock: number; images: string[] }[]>([]);
   const [loading, setLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
   const [message, setMessage] = useState("");
@@ -175,10 +177,12 @@ export default function AdminPage() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [feedsRes, storiesRes, booksRes] = await Promise.all([
+      const [feedsRes, storiesRes, booksRes, roadmapsRes, productsRes] = await Promise.all([
         fetch("/api/feeds"),
         fetch("/api/stories"),
         fetch("/api/books"),
+        fetch("/api/roadmaps"),
+        fetch("/api/products"),
       ]);
       if (feedsRes.ok) {
         const feedsData = await feedsRes.json();
@@ -187,6 +191,8 @@ export default function AdminPage() {
       }
       if (storiesRes.ok) setStories(await storiesRes.json());
       if (booksRes.ok) setBooks(await booksRes.json());
+      if (roadmapsRes.ok) setRoadmaps(await roadmapsRes.json());
+      if (productsRes.ok) setProducts(await productsRes.json());
     } catch (err) {
       console.error("Fetch error:", err);
     }
@@ -505,7 +511,7 @@ export default function AdminPage() {
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">🛠️ Admin Panel</h1>
-            <p className="mt-1 text-sm text-slate-400">Kelola feeds, stories, dan buku NAA News</p>
+            <p className="mt-1 text-sm text-slate-400">Kelola feeds, stories, buku, dan roadmap NAA News</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Link
@@ -562,6 +568,26 @@ export default function AdminPage() {
             }`}
           >
             📚 Buku ({books.length})
+          </button>
+          <button
+            onClick={() => setTab("roadmaps")}
+            className={`rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition ${
+              tab === "roadmaps"
+                ? "bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-500/40"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            🧭 Roadmaps ({roadmaps.length})
+          </button>
+          <button
+            onClick={() => setTab("products")}
+            className={`rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition ${
+              tab === "products"
+                ? "bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-500/40"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            🛒 Produk ({products.length})
           </button>
         </div>
 
@@ -1267,6 +1293,132 @@ export default function AdminPage() {
                   {books.length === 0 ? (
                     <div className="glass-panel rounded-xl p-6 text-center text-sm text-slate-400">
                       Belum ada buku. Klik &quot;Seed Database&quot; untuk mengisi data awal, atau tambah manual.
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+
+            {/* ──── ROADMAPS TAB ──── */}
+            {tab === "roadmaps" ? (
+              <div>
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="text-base sm:text-lg font-semibold">Daftar Roadmap</h2>
+                  <Link
+                    href="/admin/roadmaps"
+                    className="rounded-lg sm:rounded-xl bg-cyan-600/80 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-cyan-500"
+                  >
+                    + Tambah Roadmap
+                  </Link>
+                </div>
+
+                <div className="space-y-3">
+                  {roadmaps.map((roadmap) => (
+                    <div
+                      key={roadmap.slug}
+                      className="glass-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4 hover:border-cyan-400/30"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-1 flex flex-wrap items-center gap-2">
+                          <span className="shrink-0 rounded-full bg-cyan-500/20 px-2 py-0.5 text-[10px] font-bold text-cyan-300">
+                            {roadmap.level}
+                          </span>
+                          <span className="text-xs text-slate-500">{roadmap.duration}</span>
+                          <span className="text-xs text-slate-500">{roadmap.steps.length} langkah</span>
+                        </div>
+                        <p className="mt-1 truncate text-sm font-medium">{roadmap.title}</p>
+                        <p className="truncate text-xs text-slate-400">
+                          {roadmap.tags.join(", ")}
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 gap-2">
+                        <Link
+                          href={`/admin/roadmaps?edit=${roadmap.slug}`}
+                          className="rounded-lg bg-slate-700/60 px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-600"
+                        >
+                          Edit
+                        </Link>
+                        <Link
+                          href={`/roadmap/${roadmap.slug}`}
+                          target="_blank"
+                          className="rounded-lg bg-cyan-700/40 px-3 py-1.5 text-xs text-cyan-200 hover:bg-cyan-600/50"
+                        >
+                          Lihat
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                  {roadmaps.length === 0 ? (
+                    <div className="glass-panel rounded-xl p-6 text-center text-sm text-slate-400">
+                      Belum ada roadmap. Klik &quot;Tambah Roadmap&quot; untuk membuat roadmap pertama.
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+
+            {/* ──── PRODUCTS TAB ──── */}
+            {tab === "products" ? (
+              <div>
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="text-base sm:text-lg font-semibold">Daftar Produk</h2>
+                  <Link
+                    href="/toko"
+                    className="rounded-lg sm:rounded-xl bg-cyan-600/80 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-cyan-500"
+                  >
+                    + Tambah Produk
+                  </Link>
+                </div>
+
+                <div className="space-y-3">
+                  {products.map((product) => (
+                    <div
+                      key={product.id}
+                      className="glass-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4 hover:border-cyan-400/30"
+                    >
+                      <div className="flex min-w-0 flex-1 items-center gap-3">
+                        {product.images[0] && (
+                          <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-slate-900/60">
+                            <img
+                              src={product.images[0]}
+                              alt={product.name}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                        )}
+                        <div className="min-w-0 flex-1">
+                          <div className="mb-1 flex flex-wrap items-center gap-2">
+                            <span className="shrink-0 rounded-full bg-cyan-500/20 px-2 py-0.5 text-[10px] font-bold text-cyan-300">
+                              {product.category}
+                            </span>
+                            <span className="text-xs text-slate-500">Stok: {product.stock}</span>
+                          </div>
+                          <p className="mt-1 truncate text-sm font-medium">{product.name}</p>
+                          <p className="text-xs font-semibold text-cyan-400">
+                            Rp {product.price.toLocaleString("id-ID")}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex shrink-0 gap-2">
+                        <button
+                          className="rounded-lg bg-slate-700/60 px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-600"
+                          onClick={() => alert("Edit produk - Coming soon!")}
+                        >
+                          Edit
+                        </button>
+                        <Link
+                          href={`/toko/${product.id}`}
+                          target="_blank"
+                          className="rounded-lg bg-cyan-700/40 px-3 py-1.5 text-xs text-cyan-200 hover:bg-cyan-600/50"
+                        >
+                          Lihat
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                  {products.length === 0 ? (
+                    <div className="glass-panel rounded-xl p-6 text-center text-sm text-slate-400">
+                      Belum ada produk. Klik &quot;Tambah Produk&quot; untuk membuat produk pertama.
                     </div>
                   ) : null}
                 </div>

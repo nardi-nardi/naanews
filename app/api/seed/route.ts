@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/app/lib/mongodb";
 import { books, feeds, stories } from "@/app/data/content";
+import { roadmaps } from "@/app/roadmap/roadmaps";
+import { products } from "@/app/toko/products";
 
 // POST /api/seed — seed the database with dummy data
 export async function POST() {
@@ -15,6 +17,8 @@ export async function POST() {
     await db.collection("feeds").deleteMany({});
     await db.collection("stories").deleteMany({});
     await db.collection("books").deleteMany({});
+    await db.collection("roadmaps").deleteMany({});
+    await db.collection("products").deleteMany({});
 
     // Insert feeds with updated timestamps
     if (feeds.length > 0) {
@@ -47,11 +51,38 @@ export async function POST() {
       );
     }
 
+    // Insert roadmaps with timestamps
+    if (roadmaps.length > 0) {
+      const now = Date.now();
+      const roadmapsWithTimestamps = roadmaps.map((r, index) => ({
+        ...r,
+        createdAt: now - (index * 24 * 60 * 60 * 1000), // 1 day apart
+        updatedAt: now - (index * 24 * 60 * 60 * 1000),
+      }));
+      await db.collection("roadmaps").insertMany(roadmapsWithTimestamps);
+    }
+
+    // Insert products with timestamps
+    if (products.length > 0) {
+      const now = Date.now();
+      const productsWithTimestamps = products.map((p, index) => {
+        const { _id, ...productWithoutId } = p;
+        return {
+          ...productWithoutId,
+          createdAt: now - (index * 12 * 60 * 60 * 1000), // 12 hours apart
+          updatedAt: now - (index * 12 * 60 * 60 * 1000),
+        };
+      });
+      await db.collection("products").insertMany(productsWithTimestamps);
+    }
+
     return NextResponse.json({
       success: true,
       feedsInserted: feeds.length,
       storiesInserted: stories.length,
       booksInserted: books.length,
+      roadmapsInserted: roadmaps.length,
+      productsInserted: products.length,
     });
   } catch (error) {
     console.error("POST /api/seed error:", error);
