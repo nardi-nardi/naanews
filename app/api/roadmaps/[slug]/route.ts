@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { roadmaps as seedRoadmaps } from "@/app/roadmap/roadmaps";
+import { getDb } from "@/app/(frontend)/lib/mongodb";
+import { roadmaps as seedRoadmaps } from "@/app/(frontend)/roadmap/roadmaps";
 
 export const dynamic = "force-dynamic";
 

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { books, feeds, stories } from "@/app/data/content";
-import { roadmaps } from "@/app/roadmap/roadmaps";
-import { products } from "@/app/toko/products";
+import { getDb } from "@/app/(frontend)/lib/mongodb";
+import { books, feeds, stories } from "@/app/(frontend)/data/content";
+import { roadmaps } from "@/app/(frontend)/roadmap/roadmaps";
+import { products } from "@/app/(frontend)/toko/products";
 
 // POST /api/seed — seed the database with dummy data
 export async function POST() {

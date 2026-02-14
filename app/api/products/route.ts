@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { products } from "@/app/toko/products";
+import { getDb } from "@/app/(frontend)/lib/mongodb";
+import { products } from "@/app/(frontend)/toko/products";
 
 // GET /api/products — list all products
 export async function GET() {
@@ -34,9 +34,9 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { id, name, description, price, images, category, stock, featured } = body;
+    const { id, name, description, price, images, category, categoryId, stock, featured, productType, platforms } = body;
 
-    if (!id || !name || !description || price === undefined || !category || stock === undefined) {
+    if (!id || !name || !description || price === undefined || !category || !categoryId || stock === undefined || !productType) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -54,8 +54,11 @@ export async function POST(req: Request) {
       price: Number(price),
       images: images || [],
       category,
+      categoryId,
       stock: Number(stock),
       featured: featured || false,
+      productType,
+      platforms: platforms || {},
       createdAt: now,
       updatedAt: now,
     };

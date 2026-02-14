@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { ChatLine, Story } from "@/app/data/content";
-import { ImageUpload } from "@/app/components/image-upload";
+import type { ChatLine, Story } from "@/app/(frontend)/data/content";
+import { ImageUpload } from "@/app/(frontend)/components/image-upload";
 
 type FeedForm = {
   title: string;

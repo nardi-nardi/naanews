@@ -1,6 +1,6 @@
 "use client";
 
-import { FeedPage } from "@/app/components/feed-page";
+import { FeedPage } from "@/app/(frontend)/components/feed-page";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, Suspense } from "react";
 

@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { ImageUpload } from "@/app/components/image-upload";
-import type { Feed, Story, ChatLine, Book, BookChapter } from "@/app/data/content";
-import { RelativeTime } from "@/app/components/relative-time";
+import { ImageUpload } from "@/app/(frontend)/components/image-upload";
+import type { Feed, Story, ChatLine, Book, BookChapter } from "@/app/(frontend)/data/content";
+import type { Product, Category } from "@/app/(frontend)/toko/products";
+import { RelativeTime } from "@/app/(frontend)/components/relative-time";
 
-type Tab = "feeds" | "stories" | "books" | "roadmaps" | "products";
+type Tab = "feeds" | "stories" | "books" | "roadmaps" | "products" | "categories" | "analytics";
 
 type FeedForm = {
   title: string;
@@ -73,13 +74,63 @@ const emptyBookForm: BookForm = {
   ],
 };
 
+type CategoryForm = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  icon: string;
+};
+
+const emptyCategoryForm: CategoryForm = {
+  id: "",
+  name: "",
+  slug: "",
+  description: "",
+  icon: "",
+};
+
+type ProductForm = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  images: string[];
+  category: string;
+  categoryId: string;
+  stock: number;
+  featured: boolean;
+  productType: "physical" | "digital";
+  platforms: {
+    shopee?: string;
+    tokopedia?: string;
+    tiktokshop?: string;
+    lynk?: string;
+  };
+};
+
+const emptyProductForm: ProductForm = {
+  id: "",
+  name: "",
+  description: "",
+  price: 0,
+  images: [],
+  category: "",
+  categoryId: "",
+  stock: 0,
+  featured: false,
+  productType: "physical",
+  platforms: {},
+};
+
 export default function AdminPage() {
   const [tab, setTab] = useState<Tab>("feeds");
   const [feeds, setFeeds] = useState<Feed[]>([]);
   const [stories, setStories] = useState<Story[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
   const [roadmaps, setRoadmaps] = useState<{ slug: string; title: string; level: string; duration: string; tags: string[]; steps: unknown[] }[]>([]);
-  const [products, setProducts] = useState<{ id: string; name: string; category: string; price: number; stock: number; images: string[] }[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
   const [message, setMessage] = useState("");
@@ -98,6 +149,16 @@ export default function AdminPage() {
   const [bookForm, setBookForm] = useState<BookForm>(emptyBookForm);
   const [editingBookId, setEditingBookId] = useState<number | null>(null);
   const [showBookForm, setShowBookForm] = useState(false);
+
+  // Category form
+  const [categoryForm, setCategoryForm] = useState<CategoryForm>(emptyCategoryForm);
+  const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+
+  // Product form
+  const [productForm, setProductForm] = useState<ProductForm>(emptyProductForm);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
+  const [showProductForm, setShowProductForm] = useState(false);
 
   // Import JSON states
   const [showFeedImport, setShowFeedImport] = useState(false);
@@ -177,12 +238,13 @@ export default function AdminPage() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [feedsRes, storiesRes, booksRes, roadmapsRes, productsRes] = await Promise.all([
+      const [feedsRes, storiesRes, booksRes, roadmapsRes, productsRes, categoriesRes] = await Promise.all([
         fetch("/api/feeds"),
         fetch("/api/stories"),
         fetch("/api/books"),
         fetch("/api/roadmaps"),
         fetch("/api/products"),
+        fetch("/api/categories"),
       ]);
       if (feedsRes.ok) {
         const feedsData = await feedsRes.json();
@@ -193,6 +255,7 @@ export default function AdminPage() {
       if (booksRes.ok) setBooks(await booksRes.json());
       if (roadmapsRes.ok) setRoadmaps(await roadmapsRes.json());
       if (productsRes.ok) setProducts(await productsRes.json());
+      if (categoriesRes.ok) setCategories(await categoriesRes.json());
     } catch (err) {
       console.error("Fetch error:", err);
     }
@@ -515,12 +578,6 @@ export default function AdminPage() {
           </div>
           <div className="flex flex-wrap gap-2">
             <Link
-              href="/admin/analytics"
-              className="rounded-xl border border-slate-600/50 px-3 py-2 text-xs sm:text-sm text-slate-300 transition hover:border-cyan-400/50 hover:text-cyan-200"
-            >
-              📊 Analytics
-            </Link>
-            <Link
               href="/"
               className="rounded-xl border border-slate-600/50 px-3 py-2 text-xs sm:text-sm text-slate-300 transition hover:border-cyan-400/50 hover:text-cyan-200"
             >
@@ -595,6 +652,22 @@ export default function AdminPage() {
           >
             🛒 Produk ({products.length})
           </button>
+          <button
+            onClick={() => setTab("categories")}
+            className={`rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition ${
+              tab === "categories"
+                ? "bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-500/40"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            🏷️ Kategori ({categories.length})
+          </button>
+          <Link
+            href="/admin/analytics"
+            className="rounded-xl px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-slate-400 hover:text-slate-200 transition flex items-center"
+          >
+            📊 Analytics
+          </Link>
         </div>
 
         {loading ? (
@@ -1369,10 +1442,10 @@ export default function AdminPage() {
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                   <h2 className="text-base sm:text-lg font-semibold">Daftar Produk</h2>
                   <Link
-                    href="/toko"
+                    href="/admin/products"
                     className="rounded-lg sm:rounded-xl bg-cyan-600/80 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-cyan-500"
                   >
-                    + Tambah Produk
+                    🛒 Kelola Produk
                   </Link>
                 </div>
 
@@ -1406,25 +1479,75 @@ export default function AdminPage() {
                         </div>
                       </div>
                       <div className="flex shrink-0 gap-2">
-                        <button
+                        <Link
+                          href="/admin/products"
                           className="rounded-lg bg-slate-700/60 px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-600"
-                          onClick={() => alert("Edit produk - Coming soon!")}
                         >
-                          Edit
-                        </button>
+                          ✏️ Edit
+                        </Link>
                         <Link
                           href={`/toko/${product.id}`}
                           target="_blank"
                           className="rounded-lg bg-cyan-700/40 px-3 py-1.5 text-xs text-cyan-200 hover:bg-cyan-600/50"
                         >
-                          Lihat
+                          👁️ Lihat
                         </Link>
                       </div>
                     </div>
                   ))}
                   {products.length === 0 ? (
                     <div className="glass-panel rounded-xl p-6 text-center text-sm text-slate-400">
-                      Belum ada produk. Klik &quot;Tambah Produk&quot; untuk membuat produk pertama.
+                      Belum ada produk. Klik &quot;🛒 Kelola Produk&quot; untuk membuat produk pertama.
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+
+            {/* ──── CATEGORIES TAB ──── */}
+            {tab === "categories" ? (
+              <div>
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                  <h2 className="text-base sm:text-lg font-semibold">Daftar Kategori</h2>
+                  <Link
+                    href="/admin/categories"
+                    className="rounded-lg sm:rounded-xl bg-cyan-600/80 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-cyan-500"
+                  >
+                    🏷️ Kelola Kategori
+                  </Link>
+                </div>
+
+                <div className="space-y-3">
+                  {categories.map((category) => (
+                    <div
+                      key={category.id}
+                      className="glass-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4 hover:border-cyan-400/30"
+                    >
+                      <div className="flex min-w-0 flex-1 items-center gap-3">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-slate-900/60 text-2xl">
+                          {category.icon || "🏷️"}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-medium">{category.name}</p>
+                          <p className="text-xs text-slate-500">/{category.slug}</p>
+                          {category.description && (
+                            <p className="mt-1 text-xs text-slate-400 line-clamp-1">{category.description}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex shrink-0 gap-2">
+                        <Link
+                          href="/admin/categories"
+                          className="rounded-lg bg-slate-700/60 px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-600"
+                        >
+                          ✏️ Edit
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                  {categories.length === 0 ? (
+                    <div className="glass-panel rounded-xl p-6 text-center text-sm text-slate-400">
+                      Belum ada kategori. Klik &quot;🏷️ Kelola Kategori&quot; untuk membuat kategori pertama.
                     </div>
                   ) : null}
                 </div>

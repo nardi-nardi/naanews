@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { SiteShell } from "@/app/components/site-shell";
-import type { Feed, Book } from "@/app/data/content";
+import { SiteShell } from "@/app/(frontend)/components/site-shell";
+import type { Feed, Book } from "@/app/(frontend)/data/content";
 import {
   BarChart,
   Bar,

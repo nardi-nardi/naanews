@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import type { BookChapter, ChatLine, Book, Story } from "@/app/data/content";
-import { ImageUpload } from "@/app/components/image-upload";
+import type { BookChapter, ChatLine, Book, Story } from "@/app/(frontend)/data/content";
+import { ImageUpload } from "@/app/(frontend)/components/image-upload";
 
 type BookForm = {
   title: string;

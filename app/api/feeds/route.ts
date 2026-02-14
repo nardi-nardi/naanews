@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import type { Feed } from "@/app/data/content";
-import { feeds as dummyFeeds } from "@/app/data/content";
+import { getDb } from "@/app/(frontend)/lib/mongodb";
+import type { Feed } from "@/app/(frontend)/data/content";
+import { feeds as dummyFeeds } from "@/app/(frontend)/data/content";
 
 export const dynamic = "force-dynamic";
 

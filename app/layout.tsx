@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { LightboxProvider } from "@/app/components/chat-image";
+import { LightboxProvider } from "@/app/(frontend)/components/chat-image";
 import "./globals.css";
 
 export const metadata: Metadata = {

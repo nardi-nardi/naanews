@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { getProductById } from "@/app/toko/products";
+import { getDb } from "@/app/(frontend)/lib/mongodb";
+import { getProductById } from "@/app/(frontend)/toko/products";
 
 // GET /api/products/[id] — get single product
 export async function GET(
@@ -50,7 +50,7 @@ export async function PUT(
     }
 
     const body = await req.json();
-    const { name, description, price, images, category, stock, featured } = body;
+    const { name, description, price, images, category, categoryId, stock, featured, productType, platforms } = body;
 
     const updateData: Record<string, unknown> = {
       updatedAt: Date.now(),
@@ -61,8 +61,11 @@ export async function PUT(
     if (price !== undefined) updateData.price = Number(price);
     if (images !== undefined) updateData.images = images;
     if (category !== undefined) updateData.category = category;
+    if (categoryId !== undefined) updateData.categoryId = categoryId;
     if (stock !== undefined) updateData.stock = Number(stock);
     if (featured !== undefined) updateData.featured = featured;
+    if (productType !== undefined) updateData.productType = productType;
+    if (platforms !== undefined) updateData.platforms = platforms;
 
     const result = await db.collection("products").updateOne(
       { id },
