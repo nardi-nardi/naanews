@@ -1,41 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { SiteShell } from "@/app/(frontend)/components/site-shell";
-import { getDb } from "@/app/(frontend)/lib/mongodb";
-import { products as seedProducts } from "@/app/(frontend)/toko/products";
+// 👇 Import data fetcher dari lib
+import { getProducts } from "@/app/(frontend)/lib/data";
 import type { Product } from "@/app/(frontend)/toko/products";
 
-export const dynamic = "force-dynamic";
-
-async function fetchProducts(): Promise<Product[]> {
-  try {
-    const db = await getDb();
-    if (!db) return seedProducts;
-
-    const data = await db.collection("products").find({}).sort({ createdAt: -1 }).toArray();
-    
-    if (data.length === 0) return seedProducts;
-    
-    return data.map((item) => ({
-      _id: item._id?.toString(),
-      id: item.id,
-      name: item.name,
-      description: item.description,
-      price: item.price,
-      images: item.images || [],
-      category: item.category,
-      stock: item.stock,
-      featured: item.featured,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-    })) as Product[];
-  } catch {
-    return seedProducts;
-  }
-}
+export const revalidate = 300; // Cache 5 menit
 
 export default async function TokoPage() {
-  const products = await fetchProducts();
+  // ✅ Panggil fungsi cached dari lib/data
+  const products = await getProducts();
+  
   const featuredProducts = products.filter((p) => p.featured);
   const categories = Array.from(new Set(products.map((p) => p.category)));
 
@@ -101,6 +76,7 @@ export default async function TokoPage() {
   );
 }
 
+// Sub-komponen (Tetap sama)
 function ProductCard({ product, featured = false }: { product: Product; featured?: boolean }) {
   const mainImage = product.images[0] || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80";
 
@@ -111,7 +87,6 @@ function ProductCard({ product, featured = false }: { product: Product; featured
         featured ? "ring-2 ring-cyan-500/40" : ""
       }`}
     >
-      {/* Product Image */}
       <div className="relative aspect-square overflow-hidden bg-slate-900/60">
         <Image
           src={mainImage}
@@ -127,7 +102,6 @@ function ProductCard({ product, featured = false }: { product: Product; featured
         )}
       </div>
 
-      {/* Product Info - Minimal like Shopee */}
       <div className="flex flex-col gap-1.5 p-2.5">
         <h3 className="line-clamp-2 min-h-[2.5rem] text-sm leading-tight text-slate-50">
           {product.name}

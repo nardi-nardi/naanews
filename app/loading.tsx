@@ -12,7 +12,7 @@ export default function Loading() {
             <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-cyan-400 border-r-cyan-400"></div>
             
             {/* Inner pulse */}
-            <div className="absolute inset-2 animate-pulse rounded-full bg-gradient-to-br from-cyan-500/30 to-blue-600/30 ring-1 ring-cyan-500/40"></div>
+            <div className="absolute inset-2 animate-pulse rounded-full bg-linear-to-br from-cyan-500/30 to-blue-600/30 ring-1 ring-cyan-500/40"></div>
             
             {/* Center icon */}
             <div className="absolute inset-0 flex items-center justify-center">
@@ -53,7 +53,7 @@ export default function Loading() {
         {/* Progress bar */}
         <div className="mt-8 mx-auto w-64">
           <div className="h-1 w-full overflow-hidden rounded-full bg-slate-800/60">
-            <div className="h-full animate-loading-bar bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full"></div>
+            <div className="h-full animate-loading-bar bg-linear-to-r from-cyan-500 to-blue-500 rounded-full"></div>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/app/(frontend)/lib/mongodb";
-import { roadmaps as seedRoadmaps } from "@/app/(frontend)/roadmap/roadmaps";
+import { roadmaps as seedRoadmaps } from "@/app/(frontend)/data/roadmaps";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,11 @@ export async function GET() {
       return NextResponse.json(seedRoadmaps);
     }
 
-    const docs = await db.collection("roadmaps").find().sort({ createdAt: -1 }).toArray();
+    const docs = await db
+      .collection("roadmaps")
+      .find()
+      .sort({ createdAt: -1 })
+      .toArray();
     const roadmaps = docs.map(({ _id, ...rest }) => rest);
     return NextResponse.json(roadmaps);
   } catch (error) {
@@ -36,13 +40,25 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const db = await getDb();
-    if (!db) return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+    if (!db)
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
 
     const slug = body.slug?.trim() || slugify(body.title ?? "");
-    if (!slug) return NextResponse.json({ error: "Slug or title required" }, { status: 400 });
+    if (!slug)
+      return NextResponse.json(
+        { error: "Slug or title required" },
+        { status: 400 }
+      );
 
     const exists = await db.collection("roadmaps").findOne({ slug });
-    if (exists) return NextResponse.json({ error: "Slug already exists" }, { status: 409 });
+    if (exists)
+      return NextResponse.json(
+        { error: "Slug already exists" },
+        { status: 409 }
+      );
 
     const now = Date.now();
     const doc = {
@@ -51,7 +67,14 @@ export async function POST(request: NextRequest) {
       summary: body.summary ?? "",
       duration: body.duration ?? "",
       level: body.level ?? "Pemula",
-      tags: Array.isArray(body.tags) ? body.tags : typeof body.tags === "string" ? body.tags.split(",").map((t: string) => t.trim()).filter(Boolean) : [],
+      tags: Array.isArray(body.tags)
+        ? body.tags
+        : typeof body.tags === "string"
+          ? body.tags
+              .split(",")
+              .map((t: string) => t.trim())
+              .filter(Boolean)
+          : [],
       image: body.image ?? "",
       steps: Array.isArray(body.steps) ? body.steps : [],
       createdAt: now,
@@ -62,6 +85,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(doc, { status: 201 });
   } catch (error) {
     console.error("POST /api/roadmaps error:", error);
-    return NextResponse.json({ error: "Failed to create roadmap" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create roadmap" },
+      { status: 500 }
+    );
   }
 }

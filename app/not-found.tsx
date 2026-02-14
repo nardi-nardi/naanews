@@ -7,7 +7,7 @@ export default function NotFound() {
         <div className="glass-panel rounded-3xl p-8 md:p-12">
           {/* 404 Icon */}
           <div className="mb-6 flex justify-center">
-            <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-600/20 ring-1 ring-cyan-500/30">
+            <div className="flex h-32 w-32 items-center justify-center rounded-full bg-linear-to-br from-cyan-500/20 to-blue-600/20 ring-1 ring-cyan-500/30">
               <svg
                 className="h-16 w-16 text-cyan-400"
                 fill="none"
@@ -25,10 +25,14 @@ export default function NotFound() {
           </div>
 
           {/* Error Code */}
-          <h1 className="mb-3 text-6xl font-bold text-cyan-300 md:text-7xl">404</h1>
+          <h1 className="mb-3 text-6xl font-bold text-cyan-300 md:text-7xl">
+            404
+          </h1>
 
           {/* Error Message */}
-          <h2 className="mb-2 text-2xl font-bold text-slate-50">Halaman Tidak Ditemukan</h2>
+          <h2 className="mb-2 text-2xl font-bold text-slate-50">
+            Halaman Tidak Ditemukan
+          </h2>
           <p className="mb-8 text-slate-400">
             Maaf, halaman yang Anda cari tidak ada atau telah dipindahkan.
           </p>

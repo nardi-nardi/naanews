@@ -1,13 +1,39 @@
+import { Suspense } from "react";
 import { FeedPage } from "@/app/(frontend)/components/feed-page";
+import { getFeeds, getStories, getBooks } from "@/app/(frontend)/lib/data";
 
-export default function TutorialPage() {
+async function getInternalData(endpoint: string) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  try {
+    const res = await fetch(`${baseUrl}/api/${endpoint}`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (error) { return []; }
+}
+
+export default async function TutorialPage() {
+  const [feeds, stories, books, roadmaps, products] = await Promise.all([
+    getFeeds(),
+    getStories(),
+    getBooks(),
+    getInternalData('roadmaps'),
+    getInternalData('products')
+  ]);
+
   return (
-    <FeedPage
-      activePath="/tutorial"
-      badge="TUTORIAL"
-      title="Panduan Teknis"
-      description="Tutorial langkah demi langkah membangun fitur dan solusi."
-      category="Tutorial"
-    />
+    <Suspense fallback={<div className="min-h-screen bg-slate-950" />}>
+      <FeedPage
+        activePath="/tutorial"
+        badge="TUTORIAL"
+        title="Tutorial & Panduan"
+        description="Langkah demi langkah menguasai teknologi baru."
+        category="Tutorial"
+        initialFeeds={feeds}
+        initialStories={stories}
+        initialBooks={books}
+        initialRoadmaps={roadmaps}
+        initialProducts={products}
+      />
+    </Suspense>
   );
 }

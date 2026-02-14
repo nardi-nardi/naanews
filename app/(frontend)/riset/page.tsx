@@ -1,13 +1,39 @@
+import { Suspense } from "react";
 import { FeedPage } from "@/app/(frontend)/components/feed-page";
+import { getFeeds, getStories, getBooks } from "@/app/(frontend)/lib/data";
 
-export default function RisetPage() {
+async function getInternalData(endpoint: string) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  try {
+    const res = await fetch(`${baseUrl}/api/${endpoint}`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (error) { return []; }
+}
+
+export default async function RisetPage() {
+  const [feeds, stories, books, roadmaps, products] = await Promise.all([
+    getFeeds(),
+    getStories(),
+    getBooks(),
+    getInternalData('roadmaps'),
+    getInternalData('products')
+  ]);
+
   return (
-    <FeedPage
-      activePath="/riset"
-      badge="RISET"
-      title="Hasil Riset"
-      description="Insight produk, analisis fitur, dan best practice."
-      category="Riset"
-    />
+    <Suspense fallback={<div className="min-h-screen bg-slate-950" />}>
+      <FeedPage
+        activePath="/riset"
+        badge="RISET"
+        title="Riset & Eksperimen"
+        description="Analisa mendalam dan eksperimen koding."
+        category="Riset"
+        initialFeeds={feeds}
+        initialStories={stories}
+        initialBooks={books}
+        initialRoadmaps={roadmaps}
+        initialProducts={products}
+      />
+    </Suspense>
   );
 }

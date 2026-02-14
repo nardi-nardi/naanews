@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/app/(frontend)/lib/mongodb";
 import { books, feeds, stories } from "@/app/(frontend)/data/content";
-import { roadmaps } from "@/app/(frontend)/roadmap/roadmaps";
+import { roadmaps } from "@/app/(frontend)/data/roadmaps";
 import { products } from "@/app/(frontend)/toko/products";
 
 // POST /api/seed — seed the database with dummy data
@@ -10,7 +10,10 @@ export async function POST() {
     const db = await getDb();
 
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
 
     // Clear existing data
@@ -27,7 +30,7 @@ export async function POST() {
         ...f,
         // Generate varied timestamps: newest feeds get recent dates
         // Spread them across the last 7 days
-        createdAt: now - (index * 6 * 60 * 60 * 1000), // 6 hours apart
+        createdAt: now - index * 6 * 60 * 60 * 1000, // 6 hours apart
         storyId: f.storyId ?? null,
       }));
       await db.collection("feeds").insertMany(feedsWithTimestamps);
@@ -35,9 +38,7 @@ export async function POST() {
 
     // Insert stories
     if (stories.length > 0) {
-      await db.collection("stories").insertMany(
-        stories.map((s) => ({ ...s })),
-      );
+      await db.collection("stories").insertMany(stories.map((s) => ({ ...s })));
     }
 
     // Insert books
@@ -47,18 +48,21 @@ export async function POST() {
           ...b,
           storyId: b.storyId ?? null,
           chapters: b.chapters.map((ch) => ({ ...ch, lines: [...ch.lines] })),
-        })),
+        }))
       );
     }
 
     // Insert roadmaps with timestamps
     if (roadmaps.length > 0) {
       const now = Date.now();
-      const roadmapsWithTimestamps = roadmaps.map((r, index) => ({
-        ...r,
-        createdAt: now - (index * 24 * 60 * 60 * 1000), // 1 day apart
-        updatedAt: now - (index * 24 * 60 * 60 * 1000),
-      }));
+      const roadmapsWithTimestamps = roadmaps.map((r, index) => {
+        const { _id, ...roadmapWithoutId } = r;
+        return {
+          ...roadmapWithoutId,
+          createdAt: now - index * 24 * 60 * 60 * 1000, // 1 day apart
+          updatedAt: now - index * 24 * 60 * 60 * 1000,
+        };
+      });
       await db.collection("roadmaps").insertMany(roadmapsWithTimestamps);
     }
 
@@ -69,8 +73,8 @@ export async function POST() {
         const { _id, ...productWithoutId } = p;
         return {
           ...productWithoutId,
-          createdAt: now - (index * 12 * 60 * 60 * 1000), // 12 hours apart
-          updatedAt: now - (index * 12 * 60 * 60 * 1000),
+          createdAt: now - index * 12 * 60 * 60 * 1000, // 12 hours apart
+          updatedAt: now - index * 12 * 60 * 60 * 1000,
         };
       });
       await db.collection("products").insertMany(productsWithTimestamps);
@@ -86,6 +90,9 @@ export async function POST() {
     });
   } catch (error) {
     console.error("POST /api/seed error:", error);
-    return NextResponse.json({ error: "Failed to seed database" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to seed database" },
+      { status: 500 }
+    );
   }
 }
