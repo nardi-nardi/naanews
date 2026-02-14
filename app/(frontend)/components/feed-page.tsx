@@ -1,9 +1,11 @@
+// FILE: app/(frontend)/components/feed-page.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation"; // Pindahan dari page.tsx
+import { useSearchParams } from "next/navigation";
 import { BookCard } from "@/app/(frontend)/components/book-card";
 import { FeedTitleCard } from "@/app/(frontend)/components/feed-title-card";
 import { GlobalSearchForm } from "@/app/(frontend)/components/global-search-form";
@@ -12,7 +14,6 @@ import { StatusViralSection } from "@/app/(frontend)/components/status-viral-sec
 import { TutorialCard } from "@/app/(frontend)/components/tutorial-card";
 import type { Book, Feed, Story } from "@/app/(frontend)/data/content";
 
-// Definisi Tipe Data (Bisa dipindah ke file types.ts jika mau lebih rapi)
 type HomeCategory = "Semua" | "Berita" | "Tutorial" | "Riset" | "Buku";
 
 type Product = {
@@ -34,15 +35,40 @@ type Roadmap = {
   createdAt?: number;
 };
 
-const categoryButtons: { key: HomeCategory; icon: string; activeColor: string }[] = [
-  { key: "Semua", icon: "🌐", activeColor: "bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-500/40" },
-  { key: "Berita", icon: "📰", activeColor: "bg-sky-500/20 text-sky-200 ring-1 ring-sky-500/40" },
-  { key: "Tutorial", icon: "🎓", activeColor: "bg-emerald-500/20 text-emerald-200 ring-1 ring-emerald-500/40" },
-  { key: "Riset", icon: "🔬", activeColor: "bg-fuchsia-500/20 text-fuchsia-200 ring-1 ring-fuchsia-500/40" },
-  { key: "Buku", icon: "📚", activeColor: "bg-amber-500/20 text-amber-200 ring-1 ring-amber-500/40" },
+const categoryButtons: {
+  key: HomeCategory;
+  icon: string;
+  activeColor: string;
+}[] = [
+  {
+    key: "Semua",
+    icon: "🌐",
+    activeColor: "bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-500/40",
+  },
+  {
+    key: "Berita",
+    icon: "📰",
+    activeColor: "bg-sky-500/20 text-sky-200 ring-1 ring-sky-500/40",
+  },
+  {
+    key: "Tutorial",
+    icon: "🎓",
+    activeColor:
+      "bg-emerald-500/20 text-emerald-200 ring-1 ring-emerald-500/40",
+  },
+  {
+    key: "Riset",
+    icon: "🔬",
+    activeColor:
+      "bg-fuchsia-500/20 text-fuchsia-200 ring-1 ring-fuchsia-500/40",
+  },
+  {
+    key: "Buku",
+    icon: "📚",
+    activeColor: "bg-amber-500/20 text-amber-200 ring-1 ring-amber-500/40",
+  },
 ];
 
-// Props diperbarui untuk menerima data awal dari Server
 type FeedPageProps = {
   activePath: "/" | "/berita" | "/tutorial" | "/riset";
   badge: string;
@@ -63,54 +89,46 @@ export function FeedPage({
   title,
   description,
   category,
+  showStories = false,
   initialFeeds = [],
   initialStories = [],
   initialBooks = [],
   initialRoadmaps = [],
   initialProducts = [],
 }: FeedPageProps) {
-
   const searchParams = useSearchParams();
   const isHome = activePath === "/";
 
-  // State UI
-  const [activeCategory, setActiveCategory] = useState<HomeCategory>(isHome ? "Semua" : "Berita");
+  const [activeCategory, setActiveCategory] = useState<HomeCategory>(
+    isHome ? "Semua" : "Berita"
+  );
 
-  // Assign data dari props ke variabel lokal
   const feeds = initialFeeds;
   const stories = initialStories;
   const books = initialBooks;
   const roadmaps = initialRoadmaps;
   const products = initialProducts;
 
-  // --- LOGIC KEYBOARD & SEARCH (Dipindah dari page.tsx) ---
   useEffect(() => {
-    // 1. Handle redirect focus dari halaman search
     if (searchParams.get("from") === "search") {
       setTimeout(() => {
-        const searchInput = document.getElementById("global-search") as HTMLInputElement;
-        if (searchInput) {
-          searchInput.focus();
-        }
+        const searchInput = document.getElementById(
+          "global-search"
+        ) as HTMLInputElement;
+        if (searchInput) searchInput.focus();
         window.history.replaceState(null, "", "/");
       }, 100);
     }
 
-    // 2. Global Keyboard Shortcuts
     function handleKeyPress(e: KeyboardEvent) {
       const target = e.target as HTMLElement;
-      // Jangan trigger shortcut jika sedang mengetik di input
-      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") {
-        return;
-      }
-
-      // Shortcut '/': Focus ke search
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
       if (e.key === "/") {
         e.preventDefault();
-        const searchInput = document.getElementById("global-search") as HTMLInputElement;
-        if (searchInput) {
-          searchInput.focus();
-        }
+        const searchInput = document.getElementById(
+          "global-search"
+        ) as HTMLInputElement;
+        if (searchInput) searchInput.focus();
       }
     }
 
@@ -118,14 +136,15 @@ export function FeedPage({
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [searchParams]);
 
-  // --- FILTER LOGIC ---
-  const filteredFeeds = activeCategory === "Buku"
-    ? []
-    : activeCategory === "Semua"
-    ? feeds
-    : feeds.filter((f) => f.category === activeCategory);
+  const filteredFeeds =
+    activeCategory === "Buku"
+      ? []
+      : activeCategory === "Semua"
+        ? feeds
+        : feeds.filter((f) => f.category === activeCategory);
 
-  const showBooks = isHome && (activeCategory === "Buku" || activeCategory === "Semua");
+  const showBooks =
+    isHome && (activeCategory === "Buku" || activeCategory === "Semua");
   const showRoadmaps = isHome && activeCategory === "Semua";
   const showProducts = isHome && activeCategory === "Semua";
   const showFeeds = activeCategory !== "Buku";
@@ -136,14 +155,20 @@ export function FeedPage({
       <section className="glass-panel rounded-3xl p-5 md:p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">{badge}</p>
-            <h1 className="mt-2 text-2xl font-bold text-slate-50 md:text-3xl">{title}</h1>
-            <p className="mt-2 max-w-xl text-sm text-slate-300">{description}</p>
+            <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">
+              {badge}
+            </p>
+            <h1 className="mt-2 text-2xl font-bold text-slate-50 md:text-3xl">
+              {title}
+            </h1>
+            <p className="mt-2 max-w-xl text-sm text-slate-300">
+              {description}
+            </p>
           </div>
         </div>
 
-        {/* Stories Section (Desktop) */}
-        {initialStories.length > 0 ? (
+        {/* Stories Section (Desktop) - Hanya di Home */}
+        {isHome && showStories && stories.length > 0 ? (
           <div className="hidden xl:block">
             <StatusViralSection stories={stories} feeds={feeds} books={books} />
           </div>
@@ -152,10 +177,15 @@ export function FeedPage({
 
       {isHome ? (
         <div className="mt-4 flex flex-col gap-4">
-          {/* Stories Section (Mobile) */}
-          {initialStories.length > 0 ? (
+          {/* Stories Section (Mobile) - Hanya di Home */}
+          {showStories && stories.length > 0 ? (
             <section className="glass-panel rounded-3xl p-5 xl:hidden">
-              <StatusViralSection stories={stories} feeds={feeds} books={books} standalone />
+              <StatusViralSection
+                stories={stories}
+                feeds={feeds}
+                books={books}
+                standalone
+              />
             </section>
           ) : null}
           <div>
@@ -164,7 +194,6 @@ export function FeedPage({
         </div>
       ) : null}
 
-      {/* Category Filter Buttons */}
       {isHome ? (
         <div className="mt-5 -mx-3 md:-mx-5">
           <div className="flex items-center gap-2 overflow-x-auto px-3 pb-2 md:px-5 scrollbar-hide">
@@ -185,9 +214,8 @@ export function FeedPage({
         </div>
       ) : null}
 
-      {/* --- CONTENT AREA (Tanpa Loading State) --- */}
-      
-      {/* 1. Feed Cards (Kecuali mode 'Semua' yang punya section sendiri) */}
+      {/* --- CONTENT AREA --- */}
+
       {isHome && showFeeds && filteredFeeds.length > 0 && !showAllSections ? (
         <section className="mt-4">
           <div className="grid gap-4">
@@ -196,76 +224,89 @@ export function FeedPage({
                 <TutorialCard key={feed.id} feed={feed} index={index} />
               ) : (
                 <FeedTitleCard key={feed.id} feed={feed} index={index} />
-              ),
+              )
             )}
           </div>
         </section>
       ) : null}
 
-      {/* 2. Mode 'Semua': Menampilkan per Section */}
       {isHome && showAllSections ? (
         <>
-          {/* Section Berita */}
-          {filteredFeeds.filter(f => f.category === "Berita").length > 0 && (
+          {filteredFeeds.filter((f) => f.category === "Berita").length > 0 && (
             <section className="mt-4">
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-500/15 ring-1 ring-sky-500/25">
                   <span className="text-lg">📰</span>
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-50">Berita Terbaru</h2>
-                  <p className="text-xs text-slate-400">Update berita teknologi</p>
+                  <h2 className="text-lg font-bold text-slate-50">
+                    Berita Terbaru
+                  </h2>
+                  <p className="text-xs text-slate-400">
+                    Update berita teknologi
+                  </p>
                 </div>
               </div>
               <div className="grid gap-4">
-                {filteredFeeds.filter(f => f.category === "Berita").slice(0, 4).map((feed, index) => (
-                  <FeedTitleCard key={feed.id} feed={feed} index={index} />
-                ))}
+                {filteredFeeds
+                  .filter((f) => f.category === "Berita")
+                  .slice(0, 4)
+                  .map((feed, index) => (
+                    <FeedTitleCard key={feed.id} feed={feed} index={index} />
+                  ))}
               </div>
             </section>
           )}
 
-          {/* Section Tutorial */}
-          {filteredFeeds.filter(f => f.category === "Tutorial").length > 0 && (
+          {filteredFeeds.filter((f) => f.category === "Tutorial").length >
+            0 && (
             <section className="mt-6">
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15 ring-1 ring-emerald-500/25">
                   <span className="text-lg">🎓</span>
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-50">Tutorial Terbaru</h2>
+                  <h2 className="text-lg font-bold text-slate-50">
+                    Tutorial Terbaru
+                  </h2>
                   <p className="text-xs text-slate-400">Panduan step-by-step</p>
                 </div>
               </div>
               <div className="grid gap-4">
-                {filteredFeeds.filter(f => f.category === "Tutorial").slice(0, 4).map((feed, index) => (
-                  <TutorialCard key={feed.id} feed={feed} index={index} />
-                ))}
+                {filteredFeeds
+                  .filter((f) => f.category === "Tutorial")
+                  .slice(0, 4)
+                  .map((feed, index) => (
+                    <TutorialCard key={feed.id} feed={feed} index={index} />
+                  ))}
               </div>
             </section>
           )}
 
-          {/* Section Riset */}
-          {filteredFeeds.filter(f => f.category === "Riset").length > 0 && (
+          {filteredFeeds.filter((f) => f.category === "Riset").length > 0 && (
             <section className="mt-6">
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-fuchsia-500/15 ring-1 ring-fuchsia-500/25">
                   <span className="text-lg">🔬</span>
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-50">Riset Terbaru</h2>
+                  <h2 className="text-lg font-bold text-slate-50">
+                    Riset Terbaru
+                  </h2>
                   <p className="text-xs text-slate-400">Analisa mendalam</p>
                 </div>
               </div>
               <div className="grid gap-4">
-                {filteredFeeds.filter(f => f.category === "Riset").slice(0, 4).map((feed, index) => (
-                  <FeedTitleCard key={feed.id} feed={feed} index={index} />
-                ))}
+                {filteredFeeds
+                  .filter((f) => f.category === "Riset")
+                  .slice(0, 4)
+                  .map((feed, index) => (
+                    <FeedTitleCard key={feed.id} feed={feed} index={index} />
+                  ))}
               </div>
             </section>
           )}
 
-          {/* Section Roadmap */}
           {showRoadmaps && roadmaps.length > 0 && (
             <section className="mt-6">
               <div className="mb-4 flex items-center gap-3">
@@ -273,8 +314,12 @@ export function FeedPage({
                   <span className="text-lg">🗺️</span>
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-50">Roadmap Belajar</h2>
-                  <p className="text-xs text-slate-400">Jalur pembelajaran terstruktur</p>
+                  <h2 className="text-lg font-bold text-slate-50">
+                    Roadmap Belajar
+                  </h2>
+                  <p className="text-xs text-slate-400">
+                    Jalur pembelajaran terstruktur
+                  </p>
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -312,7 +357,6 @@ export function FeedPage({
             </section>
           )}
 
-          {/* Section Produk */}
           {showProducts && products.length > 0 && (
             <section className="mt-6">
               <div className="mb-4 flex items-center gap-3">
@@ -320,8 +364,12 @@ export function FeedPage({
                   <span className="text-lg">🛍️</span>
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-50">Produk Terbaru</h2>
-                  <p className="text-xs text-slate-400">Merchandise dan produk digital</p>
+                  <h2 className="text-lg font-bold text-slate-50">
+                    Produk Terbaru
+                  </h2>
+                  <p className="text-xs text-slate-400">
+                    Merchandise dan produk digital
+                  </p>
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -341,7 +389,7 @@ export function FeedPage({
                       />
                     </div>
                     <div className="flex flex-col gap-1.5 p-2.5">
-                      <h3 className="line-clamp-2 min-h-10 text-sm leading-tight text-slate-50">
+                      <h3 className="line-clamp-2 min-h-[2.5rem] text-sm leading-tight text-slate-50">
                         {product.name}
                       </h3>
                       <div className="flex items-baseline gap-1.5">
@@ -359,18 +407,31 @@ export function FeedPage({
             </section>
           )}
 
-          {/* Section Buku */}
           {showBooks && books.length > 0 && (
             <section className="mt-6">
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/15 ring-1 ring-amber-500/25">
-                  <svg className="h-4 w-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                  <svg
+                    className="h-4 w-4 text-amber-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+                    />
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-50">Buku Terbaru</h2>
-                  <p className="text-xs text-slate-400">Koleksi buku Q&A interaktif</p>
+                  <h2 className="text-lg font-bold text-slate-50">
+                    Buku Terbaru
+                  </h2>
+                  <p className="text-xs text-slate-400">
+                    Koleksi buku Q&A interaktif
+                  </p>
                 </div>
               </div>
               <div className="grid gap-4">
@@ -383,7 +444,6 @@ export function FeedPage({
         </>
       ) : null}
 
-      {/* 3. Non-Home Feed Cards (Halaman Kategori spesifik) */}
       {!isHome ? (
         <section className="mt-5 grid gap-4">
           {feeds.length > 0 ? (
@@ -392,7 +452,7 @@ export function FeedPage({
                 <TutorialCard key={feed.id} feed={feed} index={index} />
               ) : (
                 <FeedTitleCard key={feed.id} feed={feed} index={index} />
-              ),
+              )
             )
           ) : (
             <div className="glass-panel rounded-2xl p-5 text-sm text-slate-300">
@@ -402,7 +462,6 @@ export function FeedPage({
         </section>
       ) : null}
 
-      {/* 4. Book Cards (Jika Tab 'Buku' dipilih di Home) */}
       {isHome && activeCategory === "Buku" && books.length > 0 ? (
         <section className="mt-4">
           <div className="grid gap-4">
@@ -413,11 +472,14 @@ export function FeedPage({
         </section>
       ) : null}
 
-      {/* 5. Empty State */}
-      {isHome && !showAllSections && filteredFeeds.length === 0 && activeCategory !== "Buku" ? (
+      {isHome &&
+      !showAllSections &&
+      filteredFeeds.length === 0 &&
+      activeCategory !== "Buku" ? (
         <div className="glass-panel mt-4 rounded-2xl p-5 text-sm text-slate-300">
           Belum ada konten untuk kategori ini.
         </div>
       ) : null}
     </SiteShell>
-  )};
+  );
+}
