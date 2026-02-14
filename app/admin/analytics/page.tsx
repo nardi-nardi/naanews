@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { SiteShell } from "@/app/components/site-shell";
 import type { Feed, Book } from "@/app/data/content";
 import {
   BarChart,
@@ -176,62 +175,73 @@ export default function AnalyticsPage() {
   ];
 
   return (
-    <SiteShell activePath="/analytics">
-      {/* Hero Section */}
-      <div className="glass-panel mb-8 overflow-hidden rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-cyan-500/10 to-blue-600/10 p-8 sm:p-12">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300 sm:text-sm">
-          ANALYTICS DASHBOARD
-        </p>
-        <h1 className="mb-3 text-3xl font-bold text-slate-50 sm:text-4xl lg:text-5xl">
-          📊 Analisis Konten
-        </h1>
-        <p className="max-w-2xl text-sm text-slate-300 sm:text-base">
-          Ringkasan konten untuk melihat distribusi kategori dan statistik.
-        </p>
-      </div>
+    <div className="bg-canvas min-h-screen p-4 sm:p-6 lg:p-8 text-slate-100">
+      <div className="mx-auto max-w-7xl">
+        {/* Header with Back Button */}
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+          <Link
+            href="/admin"
+            className="rounded-xl border border-slate-600/50 px-3 py-2 text-xs sm:text-sm text-slate-300 transition hover:border-cyan-400/50 hover:text-cyan-200"
+          >
+            ← Kembali ke Admin Panel
+          </Link>
+        </div>
+
+        {/* Hero Section */}
+        <div className="glass-panel mb-4 sm:mb-8 overflow-hidden rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-cyan-500/10 to-blue-600/10 p-4 sm:p-8 lg:p-12">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide sm:tracking-[0.2em] text-cyan-300">
+            ANALYTICS DASHBOARD
+          </p>
+          <h1 className="mb-2 text-2xl font-bold text-slate-50 sm:text-3xl lg:text-4xl">
+            📊 Analisis Konten
+          </h1>
+          <p className="max-w-2xl text-xs text-slate-300 sm:text-sm lg:text-base">
+            Ringkasan konten untuk melihat distribusi kategori dan statistik.
+          </p>
+        </div>
 
       {loading ? (
         <div className="glass-panel rounded-xl p-12 text-center text-slate-400">Loading...</div>
       ) : (
         <>
           {/* Stats Cards */}
-          <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-            <div className="glass-panel rounded-xl p-5">
-              <p className="text-xs font-medium text-slate-400">Total Konten</p>
-              <p className="mt-2 text-3xl font-bold text-slate-100">{totalContent}</p>
+          <div className="mb-4 sm:mb-8 grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-3 sm:p-5">
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Total Konten</p>
+              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-slate-100">{totalContent}</p>
             </div>
-            <div className="glass-panel rounded-xl p-5">
-              <p className="text-xs font-medium text-slate-400">Feed</p>
-              <p className="mt-2 text-3xl font-bold text-cyan-400">{feeds.length}</p>
+            <div className="glass-panel rounded-lg sm:rounded-xl p-3 sm:p-5">
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Feed</p>
+              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-cyan-400">{feeds.length}</p>
             </div>
-            <div className="glass-panel rounded-xl p-5">
-              <p className="text-xs font-medium text-slate-400">Buku</p>
-              <p className="mt-2 text-3xl font-bold text-amber-400">{books.length}</p>
+            <div className="glass-panel rounded-lg sm:rounded-xl p-3 sm:p-5">
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Buku</p>
+              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-amber-400">{books.length}</p>
             </div>
-            <div className="glass-panel rounded-xl p-5">
-              <p className="text-xs font-medium text-slate-400">Roadmap</p>
-              <p className="mt-2 text-3xl font-bold text-emerald-400">{roadmaps.length}</p>
+            <div className="glass-panel rounded-lg sm:rounded-xl p-3 sm:p-5">
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Roadmap</p>
+              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-emerald-400">{roadmaps.length}</p>
             </div>
-            <div className="glass-panel rounded-xl p-5">
-              <p className="text-xs font-medium text-slate-400">Produk</p>
-              <p className="mt-2 text-3xl font-bold text-purple-400">{products.length}</p>
+            <div className="glass-panel rounded-lg sm:rounded-xl p-3 sm:p-5">
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Produk</p>
+              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-purple-400">{products.length}</p>
             </div>
-            <div className="glass-panel rounded-xl p-5">
-              <p className="text-xs font-medium text-slate-400">Rata-rata Q&A</p>
-              <p className="mt-2 text-3xl font-bold text-pink-400">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-3 sm:p-5">
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Rata-rata Q&A</p>
+              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-pink-400">
                 {avgChatLength.toFixed(1)}
               </p>
             </div>
           </div>
 
           {/* Charts Grid */}
-          <div className="mb-8 grid gap-6 lg:grid-cols-2">
+          <div className="mb-4 sm:mb-8 grid gap-4 sm:gap-6 lg:grid-cols-2">
             {/* Content Type Distribution */}
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="mb-4 text-lg font-semibold text-slate-100">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-6">
+              <h2 className="mb-3 sm:mb-4 text-sm sm:text-lg font-semibold text-slate-100">
                 Distribusi Tipe Konten
               </h2>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie
                     data={contentTypeData}
@@ -241,7 +251,7 @@ export default function AnalyticsPage() {
                     label={({ name, percent }) =>
                       `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`
                     }
-                    outerRadius={80}
+                    outerRadius={70}
                     fill="#8884d8"
                     dataKey="value"
                   >
@@ -255,11 +265,11 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Feed Category Distribution */}
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="mb-4 text-lg font-semibold text-slate-100">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-6">
+              <h2 className="mb-3 sm:mb-4 text-sm sm:text-lg font-semibold text-slate-100">
                 Distribusi Kategori Feed
               </h2>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie
                     data={categoryData}
@@ -269,7 +279,7 @@ export default function AnalyticsPage() {
                     label={({ name, percent }) =>
                       `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`
                     }
-                    outerRadius={80}
+                    outerRadius={70}
                     fill="#8884d8"
                     dataKey="value"
                   >
@@ -283,11 +293,11 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Content Over Time */}
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="mb-4 text-lg font-semibold text-slate-100">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-6">
+              <h2 className="mb-3 sm:mb-4 text-sm sm:text-lg font-semibold text-slate-100">
                 Konten 7 Hari Terakhir
               </h2>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={250}>
                 <AreaChart data={timelineData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                   <XAxis dataKey="date" stroke="#94a3b8" fontSize={12} />
@@ -326,11 +336,11 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Average Q&A by Category */}
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="mb-4 text-lg font-semibold text-slate-100">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-6">
+              <h2 className="mb-3 sm:mb-4 text-sm sm:text-lg font-semibold text-slate-100">
                 Rata-rata Q&A per Kategori
               </h2>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={avgQAByCategory}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                   <XAxis dataKey="category" stroke="#94a3b8" fontSize={12} />
@@ -348,11 +358,11 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Popularity Trend */}
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="mb-4 text-lg font-semibold text-slate-100">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-6">
+              <h2 className="mb-3 sm:mb-4 text-sm sm:text-lg font-semibold text-slate-100">
                 Tren Popularitas Feed
               </h2>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={popularityData.slice(0, 15)}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                   <XAxis dataKey="title" stroke="#94a3b8" fontSize={10} hide />
@@ -376,11 +386,11 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Roadmap Levels */}
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="mb-4 text-lg font-semibold text-slate-100">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-6">
+              <h2 className="mb-3 sm:mb-4 text-sm sm:text-lg font-semibold text-slate-100">
                 Distribusi Level Roadmap
               </h2>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={roadmapLevelData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                   <XAxis dataKey="level" stroke="#94a3b8" fontSize={12} />
@@ -399,40 +409,40 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Additional Stats */}
-          <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="glass-panel rounded-xl p-5">
-              <p className="text-xs font-medium text-slate-400">Total Nilai Inventori</p>
-              <p className="mt-2 text-2xl font-bold text-emerald-400">
+          <div className="mb-4 sm:mb-8 grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-5">
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Total Nilai Inventori</p>
+              <p className="mt-1 sm:mt-2 text-xl sm:text-2xl font-bold text-emerald-400">
                 Rp {totalProductValue.toLocaleString("id-ID")}
               </p>
-              <p className="mt-1 text-xs text-slate-500">Dari {products.length} produk</p>
+              <p className="mt-1 text-[10px] sm:text-xs text-slate-500">Dari {products.length} produk</p>
             </div>
-            <div className="glass-panel rounded-xl p-5">
-              <p className="text-xs font-medium text-slate-400">Kategori Produk</p>
-              <p className="mt-2 text-2xl font-bold text-purple-400">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-5">
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Kategori Produk</p>
+              <p className="mt-1 sm:mt-2 text-xl sm:text-2xl font-bold text-purple-400">
                 {productCategories.length}
               </p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-[10px] sm:text-xs text-slate-500">
                 {productCategories.join(", ")}
               </p>
             </div>
-            <div className="glass-panel rounded-xl p-5">
-              <p className="text-xs font-medium text-slate-400">Rata-rata Harga Produk</p>
-              <p className="mt-2 text-2xl font-bold text-amber-400">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-5">
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Rata-rata Harga Produk</p>
+              <p className="mt-1 sm:mt-2 text-xl sm:text-2xl font-bold text-amber-400">
                 Rp {avgProductPrice.toLocaleString("id-ID", { maximumFractionDigits: 0 })}
               </p>
-              <p className="mt-1 text-xs text-slate-500">Per item</p>
+              <p className="mt-1 text-[10px] sm:text-xs text-slate-500">Per item</p>
             </div>
           </div>
 
           {/* Content Lists Grid */}
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
             {/* Top Feed */}
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="mb-4 text-lg font-semibold text-slate-100">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-6 flex flex-col">
+              <h2 className="mb-3 sm:mb-4 text-sm sm:text-lg font-semibold text-slate-100">
                 🔥 Top 10 Feed Terpopuler
               </h2>
-              <div className="space-y-2">
+              <div className="space-y-2 overflow-y-auto max-h-[500px]">
                 {topFeeds.map((feed, index) => (
                   <Link
                     key={feed.id}
@@ -452,11 +462,11 @@ export default function AnalyticsPage() {
             </div>
 
             {/* All Books */}
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="mb-4 text-lg font-semibold text-slate-100">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-6 flex flex-col">
+              <h2 className="mb-3 sm:mb-4 text-sm sm:text-lg font-semibold text-slate-100">
                 📚 Buku ({books.length})
               </h2>
-              <div className="space-y-2">
+              <div className="space-y-2 overflow-y-auto max-h-[500px]">
                 {books.map((book) => (
                   <Link
                     key={book.id}
@@ -481,11 +491,11 @@ export default function AnalyticsPage() {
             </div>
 
             {/* All Roadmaps */}
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="mb-4 text-lg font-semibold text-slate-100">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-6 flex flex-col">
+              <h2 className="mb-3 sm:mb-4 text-sm sm:text-lg font-semibold text-slate-100">
                 🧭 Roadmap ({roadmaps.length})
               </h2>
-              <div className="space-y-2">
+              <div className="space-y-2 overflow-y-auto max-h-[500px]">
                 {roadmaps.map((roadmap) => (
                   <Link
                     key={roadmap.slug}
@@ -510,11 +520,11 @@ export default function AnalyticsPage() {
             </div>
 
             {/* All Products */}
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="mb-4 text-lg font-semibold text-slate-100">
+            <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-6 flex flex-col">
+              <h2 className="mb-3 sm:mb-4 text-sm sm:text-lg font-semibold text-slate-100">
                 🛒 Produk ({products.length})
               </h2>
-              <div className="space-y-2">
+              <div className="space-y-2 overflow-y-auto max-h-[500px]">
                 {products.map((product) => (
                   <Link
                     key={product.id}
@@ -542,8 +552,8 @@ export default function AnalyticsPage() {
           </div>
 
           {/* All Content List */}
-          <div className="mt-8 glass-panel rounded-xl p-6">
-            <h2 className="mb-4 text-lg font-semibold text-slate-100">
+          <div className="mt-4 sm:mt-8 glass-panel rounded-lg sm:rounded-xl p-4 sm:p-6">
+            <h2 className="mb-3 sm:mb-4 text-sm sm:text-lg font-semibold text-slate-100">
               📋 Semua Konten ({feeds.length})
             </h2>
             <div className="space-y-2">
@@ -578,6 +588,7 @@ export default function AnalyticsPage() {
           </div>
         </>
       )}
-    </SiteShell>
+      </div>
+    </div>
   );
 }

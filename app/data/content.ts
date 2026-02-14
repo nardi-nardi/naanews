@@ -48,7 +48,7 @@ export type Book = {
 export type NavItem = {
   title: string;
   note: string;
-  href: "/" | "/berita" | "/tutorial" | "/riset" | "/buku" | "/roadmap" | "/toko" | "/tentang" | "/analytics";
+  href: "/" | "/berita" | "/tutorial" | "/riset" | "/buku" | "/roadmap" | "/toko" | "/tentang";
 };
 
 export const stories: Story[] = [
@@ -458,7 +458,6 @@ export const navItems: NavItem[] = [
   { title: "Buku", note: "Belajar lewat Q&A", href: "/buku" },
   { title: "Toko", note: "Belanja merchandise", href: "/toko" },
   { title: "Tentang", note: "Misi, tim, kontak", href: "/tentang" },
-  { title: "Analytics", note: "Pantau konten viral", href: "/analytics" },
 ];
 
 export const books: Book[] = [

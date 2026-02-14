@@ -515,6 +515,12 @@ export default function AdminPage() {
           </div>
           <div className="flex flex-wrap gap-2">
             <Link
+              href="/admin/analytics"
+              className="rounded-xl border border-slate-600/50 px-3 py-2 text-xs sm:text-sm text-slate-300 transition hover:border-cyan-400/50 hover:text-cyan-200"
+            >
+              📊 Analytics
+            </Link>
+            <Link
               href="/"
               className="rounded-xl border border-slate-600/50 px-3 py-2 text-xs sm:text-sm text-slate-300 transition hover:border-cyan-400/50 hover:text-cyan-200"
             >
