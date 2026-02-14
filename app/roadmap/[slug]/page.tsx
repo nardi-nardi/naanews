@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { SiteShell } from "@/app/components/site-shell";
 import { getDb } from "@/app/lib/mongodb";
 import { roadmaps as seedRoadmaps, type Roadmap } from "@/app/roadmap/roadmaps";
 
@@ -51,8 +50,19 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
   const current = roadmap;
 
   return (
-    <SiteShell activePath="/roadmap">
-      <div className="space-y-6">
+    <div className="bg-canvas min-h-screen px-3 py-4 text-slate-100 md:px-5 md:py-6">
+      <div className="mx-auto w-full max-w-4xl">
+        {/* Back Button */}
+        <div className="mb-4">
+          <Link
+            href="/roadmap"
+            className="inline-flex items-center gap-2 rounded-full border border-slate-400/40 bg-slate-900/40 px-4 py-2 text-sm text-slate-100 transition hover:border-cyan-300/50"
+          >
+            ← Semua Roadmap
+          </Link>
+        </div>
+
+        <div className="space-y-6">
         <header className="glass-panel rounded-3xl p-6 shadow-xl shadow-cyan-500/5 ring-1 ring-white/5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -75,22 +85,6 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
             ))}
           </div>
         </header>
-
-        <div className="flex justify-start">
-          <Link
-            href="/roadmap"
-            className="inline-flex items-center gap-2 rounded-full border border-slate-700/60 bg-slate-900/60 px-4 py-2 text-sm font-semibold text-slate-100 shadow-lg shadow-slate-900/50 transition hover:border-cyan-300/50 hover:text-cyan-100"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
-              <path
-                fillRule="evenodd"
-                d="M11.707 4.293a1 1 0 0 1 0 1.414L7.414 10l4.293 4.293a1 1 0 0 1-1.414 1.414l-5-5a1 1 0 0 1 0-1.414l5-5a1 1 0 0 1 1.414 0Z"
-                clipRule="evenodd"
-              />
-            </svg>
-            Kembali ke daftar roadmap
-          </Link>
-        </div>
 
         <div className="relative">
           <span className="pointer-events-none absolute left-5 top-6 hidden h-[calc(100%-2.5rem)] w-px bg-gradient-to-b from-cyan-500/60 via-cyan-400/30 to-transparent md:block" aria-hidden />
@@ -146,7 +140,8 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
             })}
           </ol>
         </div>
+        </div>
       </div>
-    </SiteShell>
+    </div>
   );
 }

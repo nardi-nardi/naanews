@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { SiteShell } from "@/app/components/site-shell";
 import { getDb } from "@/app/lib/mongodb";
 import { getProductById } from "@/app/toko/products";
 import type { Product } from "@/app/toko/products";
@@ -52,13 +51,13 @@ export default async function ProductDetailPage({
   const stockColor = product.stock > 0 ? "text-emerald-400" : "text-rose-400";
 
   return (
-    <SiteShell activePath="/toko">
-      <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
+    <div className="bg-canvas min-h-screen px-3 py-4 text-slate-100 md:px-5 md:py-6">
+      <div className="mx-auto w-full max-w-5xl">
         {/* Back Button */}
         <div className="mb-4">
           <Link
             href="/toko"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-200 hover:text-cyan-100"
+            className="inline-flex items-center gap-2 rounded-full border border-slate-400/40 bg-slate-900/40 px-4 py-2 text-sm text-slate-100 transition hover:border-cyan-300/50"
           >
             ← Kembali ke Toko
           </Link>
@@ -199,7 +198,7 @@ export default async function ProductDetailPage({
           </div>
         </div>
       </div>
-    </SiteShell>
+    </div>
   );
 }
 

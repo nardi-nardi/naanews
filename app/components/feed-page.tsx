@@ -314,7 +314,7 @@ export function FeedPage({
                       <p className="text-xs text-slate-400">Jalur pembelajaran terstruktur</p>
                     </div>
                   </div>
-                  <div className="grid gap-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
                     {roadmaps.slice(0, 4).map((roadmap) => (
                       <Link
                         key={roadmap.slug}
@@ -327,7 +327,7 @@ export function FeedPage({
                             alt={roadmap.title}
                             fill
                             className="object-cover transition-transform group-hover:scale-105"
-                            sizes="(max-width: 768px) 100vw, 50vw"
+                            sizes="(max-width: 640px) 100vw, 50vw"
                           />
                         </div>
                         <div className="p-4">
@@ -361,37 +361,39 @@ export function FeedPage({
                       <p className="text-xs text-slate-400">Merchandise dan produk digital</p>
                     </div>
                   </div>
-                  <div className="grid gap-4">
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {products.slice(0, 4).map((product) => (
                       <Link
                         key={product.id}
                         href={`/toko/${product.id}`}
-                        className="glass-panel group overflow-hidden rounded-xl transition hover:border-purple-400/40"
+                        className="glass-panel group flex flex-col overflow-hidden rounded-lg transition hover:shadow-lg hover:shadow-cyan-500/10"
                       >
+                        {/* Product Image */}
                         <div className="relative aspect-square overflow-hidden bg-slate-900/60">
                           <Image
                             src={product.images[0]}
                             alt={product.name}
                             fill
-                            className="object-cover transition-transform group-hover:scale-105"
-                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           />
                         </div>
-                        <div className="p-4">
-                          <div className="mb-2 flex items-center justify-between">
-                            <span className="rounded-full bg-purple-500/20 px-2 py-0.5 text-xs font-semibold text-purple-300">
-                              {product.category}
-                            </span>
-                            <span className="text-sm font-bold text-cyan-300">
+
+                        {/* Product Info - Minimal like Shopee */}
+                        <div className="flex flex-col gap-1.5 p-2.5">
+                          <h3 className="line-clamp-2 min-h-[2.5rem] text-sm leading-tight text-slate-50">
+                            {product.name}
+                          </h3>
+                          
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-base font-bold text-orange-500">
                               Rp {product.price.toLocaleString("id-ID")}
                             </span>
                           </div>
-                          <h3 className="mb-2 line-clamp-2 text-base font-semibold text-slate-50 group-hover:text-purple-200">
-                            {product.name}
-                          </h3>
-                          <p className="line-clamp-2 text-sm text-slate-400">
-                            {product.description}
-                          </p>
+
+                          <div className="flex items-center justify-between text-[11px] text-slate-500">
+                            <span>{product.category}</span>
+                          </div>
                         </div>
                       </Link>
                     ))}
@@ -442,20 +444,9 @@ export function FeedPage({
             </section>
           ) : null}
 
-          {/* Book cards - only for Buku category */}
+          {/* Book cards - when Buku category is selected */}
           {isHome && activeCategory === "Buku" && books.length > 0 ? (
             <section className="mt-4">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/15 ring-1 ring-amber-500/25">
-                  <svg className="h-4 w-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                  </svg>
-                </div>
-                <div>
-                  <h2 className="text-lg font-bold text-slate-50">Buku Terbaru</h2>
-                  <p className="text-xs text-slate-400">Koleksi buku Q&A interaktif</p>
-                </div>
-              </div>
               <div className="grid gap-4">
                 {books.map((book, index) => (
                   <BookCard key={book.id} book={book} index={index} />
