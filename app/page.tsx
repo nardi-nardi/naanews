@@ -53,7 +53,7 @@ function HomePageContent() {
   return (
     <FeedPage
       activePath="/"
-      badge="NAA Newsroom"
+      badge="Narzza Media Digital"
       title="Berita, tutorial, dan eksperimen dalam format chat"
       description="Baca topik panjang jadi lebih santai: pertanyaan singkat, jawaban padat, dan inti cepat per konten."
       showStories

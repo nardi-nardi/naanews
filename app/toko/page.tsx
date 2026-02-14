@@ -41,11 +41,11 @@ export default async function TokoPage() {
 
   return (
     <SiteShell activePath="/toko">
-      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <div className="glass-panel mb-8 overflow-hidden rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-cyan-500/10 to-blue-600/10 p-8 sm:p-12">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300 sm:text-sm">
-            TOKO NAA NEWS
+            TOKO NARZZA MEDIA DIGITAL
           </p>
           <h1 className="mb-3 text-3xl font-bold text-slate-50 sm:text-4xl lg:text-5xl">
             🛒 Belanja Merchandise
@@ -103,14 +103,12 @@ export default async function TokoPage() {
 
 function ProductCard({ product, featured = false }: { product: Product; featured?: boolean }) {
   const mainImage = product.images[0] || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80";
-  const stockStatus = product.stock > 0 ? "Tersedia" : "Habis";
-  const stockColor = product.stock > 0 ? "text-emerald-400" : "text-rose-400";
 
   return (
     <Link
       href={`/toko/${product.id}`}
-      className={`glass-panel group flex flex-col overflow-hidden rounded-xl transition hover:border-cyan-400/40 ${
-        featured ? "ring-1 ring-cyan-500/30" : ""
+      className={`glass-panel group flex flex-col overflow-hidden rounded-lg transition hover:shadow-lg hover:shadow-cyan-500/10 ${
+        featured ? "ring-2 ring-cyan-500/40" : ""
       }`}
     >
       {/* Product Image */}
@@ -119,41 +117,43 @@ function ProductCard({ product, featured = false }: { product: Product; featured
           src={mainImage}
           alt={product.name}
           fill
-          className="object-cover transition-transform group-hover:scale-105"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
         {featured && (
-          <div className="absolute left-2 top-2 rounded-full bg-cyan-500/90 px-2 py-0.5 text-[10px] font-bold text-white">
-            UNGGULAN
+          <div className="absolute left-2 top-2 rounded bg-gradient-to-r from-orange-500 to-orange-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-md">
+            ⭐ UNGGULAN
           </div>
         )}
-        <div className={`absolute bottom-2 right-2 rounded-full bg-slate-900/90 px-2 py-0.5 text-[10px] font-semibold ${stockColor}`}>
-          {stockStatus}
-        </div>
       </div>
 
-      {/* Product Info */}
-      <div className="flex flex-1 flex-col p-3 sm:p-4">
-        <div className="mb-1 flex items-center justify-between gap-2">
-          <span className="truncate text-[10px] font-medium text-slate-500 sm:text-xs">{product.category}</span>
-          {product.stock > 0 && product.stock < 10 && (
-            <span className="shrink-0 text-[9px] text-amber-400 sm:text-[10px]">Stok terbatas</span>
-          )}
-        </div>
-        
-        <h3 className="mb-2 line-clamp-2 min-h-[2.5rem] text-sm font-semibold leading-tight text-slate-50 group-hover:text-cyan-200 sm:text-base">
+      {/* Product Info - Minimal like Shopee */}
+      <div className="flex flex-col gap-1.5 p-2.5">
+        <h3 className="line-clamp-2 min-h-[2.5rem] text-sm leading-tight text-slate-50">
           {product.name}
         </h3>
         
-        <p className="mb-3 line-clamp-2 min-h-[2.5rem] flex-1 text-xs leading-tight text-slate-400 sm:text-sm">
-          {product.description}
-        </p>
-
-        <div className="mt-auto flex items-center justify-between gap-2 border-t border-slate-700/40 pt-3">
-          <span className="text-sm font-bold text-cyan-300 sm:text-base lg:text-lg">
+        <div className="flex items-baseline gap-1.5">
+          <span className="text-base font-bold text-orange-500">
             Rp {product.price.toLocaleString("id-ID")}
           </span>
-          <span className="shrink-0 text-[10px] text-slate-500 sm:text-xs">Stok: {product.stock}</span>
+        </div>
+
+        <div className="flex items-center justify-between text-[11px] text-slate-500">
+          <span>{product.category}</span>
+          <span className="flex items-center gap-1">
+            {product.stock > 0 ? (
+              <>
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                Tersedia
+              </>
+            ) : (
+              <>
+                <span className="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
+                Habis
+              </>
+            )}
+          </span>
         </div>
       </div>
     </Link>

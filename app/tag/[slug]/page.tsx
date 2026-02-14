@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const tag = `#${slug}`;
   return {
-    title: `${tag} | NAA Newsroom`,
-    description: `Semua konten bertag ${tag} di NAA Newsroom.`,
+    title: `${tag} | Narzza Media Digital`,
+    description: `Semua konten bertag ${tag} di Narzza Media Digital.`,
     alternates: { canonical: `/tag/${slug}` },
   };
 }

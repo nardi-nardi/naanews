@@ -27,7 +27,7 @@ export function MobileNavDrawer({ activePath, items }: MobileNavDrawerProps) {
       {/* Mobile top bar */}
       <header className="glass-panel fixed inset-x-3 top-3 z-30 rounded-2xl px-4 py-3 xl:hidden">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-semibold tracking-wide text-slate-100">NAA Newsroom</p>
+          <p className="text-sm font-semibold tracking-wide text-slate-100">Narzza Media Digital</p>
           <button
             type="button"
             onClick={() => setIsOpen(true)}

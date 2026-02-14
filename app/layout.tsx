@@ -3,7 +3,7 @@ import { LightboxProvider } from "@/app/components/chat-image";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "NAA Newsroom",
+  title: "Narzza Media Digital",
   description: "Portal berita, tutorial, dan hasil eksperimen dengan format chat",
 };
 

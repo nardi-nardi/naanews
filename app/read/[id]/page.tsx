@@ -23,18 +23,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const feedId = Number(id);
 
   if (Number.isNaN(feedId)) {
-    return { title: "Konten tidak ditemukan | NAA Newsroom" };
+    return { title: "Konten tidak ditemukan | Narzza Media Digital" };
   }
 
   const feeds = await getFeeds();
   const feed = feeds.find((item) => item.id === feedId);
 
   if (!feed) {
-    return { title: "Konten tidak ditemukan | NAA Newsroom" };
+    return { title: "Konten tidak ditemukan | Narzza Media Digital" };
   }
 
   return {
-    title: `${feed.title} | NAA Newsroom`,
+    title: `${feed.title} | Narzza Media Digital`,
     description: feed.takeaway,
     openGraph: {
       title: feed.title,

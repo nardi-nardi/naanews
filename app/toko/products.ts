@@ -78,7 +78,7 @@ export const products: Product[] = [
   {
     id: "tote-bag-canvas",
     name: "Canvas Tote Bag",
-    description: "Tote bag canvas natural dengan sablon NAA News. Kuat dan ramah lingkungan, kapasitas besar untuk kebutuhan sehari-hari.",
+    description: "Tote bag canvas natural dengan sablon Narzza Media Digital. Kuat dan ramah lingkungan, kapasitas besar untuk kebutuhan sehari-hari.",
     price: 55000,
     images: [
       "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80",

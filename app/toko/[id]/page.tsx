@@ -53,9 +53,9 @@ export default async function ProductDetailPage({
 
   return (
     <SiteShell activePath="/toko">
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
+      <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
         {/* Back Button */}
-        <div className="mb-6">
+        <div className="mb-4">
           <Link
             href="/toko"
             className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-200 hover:text-cyan-100"
@@ -64,129 +64,138 @@ export default async function ProductDetailPage({
           </Link>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-2">
-          {/* Images Section */}
-          <div className="space-y-4">
-            {/* Main Image */}
-            <div className="glass-panel overflow-hidden rounded-2xl">
-              <div className="relative aspect-square">
-                <Image
-                  src={mainImage}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-              </div>
+        {/* Vertical Layout - Shopee Style */}
+        <div className="space-y-4">
+          {/* Image Gallery Section */}
+          <div className="glass-panel overflow-hidden rounded-xl">
+            <div className="relative aspect-[4/3] bg-slate-900/60">
+              <Image
+                src={mainImage}
+                alt={product.name}
+                fill
+                className="object-cover"
+                priority
+                sizes="(max-width: 768px) 100vw, 672px"
+              />
+              {product.featured && (
+                <div className="absolute left-3 top-3 rounded bg-gradient-to-r from-orange-500 to-orange-600 px-2.5 py-1 text-xs font-bold text-white shadow-lg">
+                  ⭐ UNGGULAN
+                </div>
+              )}
             </div>
 
             {/* Thumbnail Images */}
             {product.images.length > 1 && (
-              <div className="grid grid-cols-4 gap-3">
-                {product.images.map((img, idx) => (
-                  <div
-                    key={idx}
-                    className="glass-panel overflow-hidden rounded-lg ring-1 ring-slate-700/60 hover:ring-cyan-500/40"
-                  >
-                    <div className="relative aspect-square">
+              <div className="border-t border-slate-700/40 bg-slate-900/20 p-3">
+                <div className="flex gap-2 overflow-x-auto">
+                  {product.images.map((img, idx) => (
+                    <div
+                      key={idx}
+                      className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 border-slate-700/60 hover:border-cyan-500/60"
+                    >
                       <Image
                         src={img}
                         alt={`${product.name} ${idx + 1}`}
                         fill
                         className="object-cover"
-                        sizes="(max-width: 1024px) 25vw, 12vw"
+                        sizes="64px"
                       />
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
           </div>
 
           {/* Product Info Section */}
-          <div className="glass-panel rounded-2xl p-6 sm:p-8">
-            <div className="mb-4 flex items-start justify-between gap-4">
-              <div>
-                <p className="mb-1 text-sm font-medium text-cyan-400">{product.category}</p>
-                <h1 className="text-2xl font-bold text-slate-50 sm:text-3xl">
-                  {product.name}
-                </h1>
-              </div>
-              {product.featured && (
-                <span className="shrink-0 rounded-full bg-cyan-500/20 px-3 py-1 text-xs font-bold text-cyan-300 ring-1 ring-cyan-500/40">
-                  UNGGULAN
-                </span>
-              )}
-            </div>
+          <div className="glass-panel rounded-xl p-4">
+            {/* Title & Price */}
+            <h1 className="mb-3 text-xl font-bold leading-tight text-slate-50">
+              {product.name}
+            </h1>
 
-            {/* Price */}
-            <div className="mb-6 border-b border-slate-700/60 pb-6">
-              <p className="text-3xl font-bold text-cyan-300 sm:text-4xl">
+            <div className="mb-4 rounded-lg bg-slate-900/40 p-3">
+              <p className="text-2xl font-bold text-orange-500">
                 Rp {product.price.toLocaleString("id-ID")}
               </p>
             </div>
 
-            {/* Stock Status */}
-            <div className="mb-6 flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className={`text-sm font-semibold ${stockColor}`}>{stockStatus}</span>
-                <span className="text-sm text-slate-500">•</span>
-                <span className="text-sm text-slate-400">Stok: {product.stock} unit</span>
-              </div>
-              {product.stock > 0 && product.stock < 10 && (
-                <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-xs font-semibold text-amber-300">
-                  Stok terbatas!
+            {/* Stock & Category */}
+            <div className="mb-4 flex items-center justify-between border-b border-slate-700/40 pb-4">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-slate-400">Stok:</span>
+                <span className={product.stock > 0 ? "text-emerald-400" : "text-rose-400"}>
+                  {product.stock > 0 ? `${product.stock} unit tersedia` : "Habis"}
                 </span>
-              )}
+              </div>
+              <span className="rounded-full bg-slate-700/60 px-3 py-1 text-xs font-medium text-slate-300">
+                {product.category}
+              </span>
             </div>
 
             {/* Description */}
-            <div className="mb-8">
-              <h2 className="mb-3 text-lg font-semibold text-slate-100">Deskripsi Produk</h2>
-              <p className="text-sm leading-relaxed text-slate-300">{product.description}</p>
+            <div className="mb-4">
+              <h2 className="mb-2 text-sm font-semibold text-slate-200">Deskripsi Produk</h2>
+              <p className="text-sm leading-relaxed text-slate-400">{product.description}</p>
             </div>
 
-            {/* Action Buttons */}
-            <div className="space-y-3">
-              {product.stock > 0 ? (
-                <>
-                  <button className="w-full rounded-xl bg-cyan-600 px-6 py-3 font-semibold text-white transition hover:bg-cyan-500">
-                    🛒 Tambah ke Keranjang
-                  </button>
-                  <button className="w-full rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-6 py-3 font-semibold text-cyan-200 transition hover:bg-cyan-500/20">
-                    💬 Hubungi Penjual
-                  </button>
-                </>
-              ) : (
-                <button
-                  disabled
-                  className="w-full cursor-not-allowed rounded-xl bg-slate-700/60 px-6 py-3 font-semibold text-slate-400"
-                >
-                  Stok Habis
-                </button>
-              )}
-            </div>
-
-            {/* Additional Info */}
-            <div className="mt-8 space-y-2 rounded-xl border border-slate-700/60 bg-slate-900/40 p-4 text-sm">
-              <div className="flex justify-between">
-                <span className="text-slate-400">Kategori</span>
-                <span className="font-medium text-slate-200">{product.category}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">ID Produk</span>
-                <span className="font-mono text-xs text-slate-300">{product.id}</span>
+            {/* Product Details */}
+            <div className="mb-4 rounded-lg bg-slate-900/40 p-3">
+              <h3 className="mb-3 text-sm font-semibold text-slate-200">Keterangan Produk</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Kategori</span>
+                  <span className="font-medium text-slate-200">{product.category}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Kondisi</span>
+                  <span className="font-medium text-slate-200">Baru</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Stok</span>
+                  <span className="font-medium text-slate-200">{product.stock} unit</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">SKU</span>
+                  <span className="font-mono text-xs text-slate-300">{product.id}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Related Products Section - Coming Soon */}
-        <div className="mt-16">
-          <h2 className="mb-6 text-2xl font-bold text-slate-50">Produk Terkait</h2>
-          <div className="glass-panel rounded-xl p-8 text-center">
-            <p className="text-slate-400">Produk terkait akan ditampilkan di sini</p>
+          {/* CTA Buttons - Buy on External Platforms */}
+          <div className="glass-panel rounded-xl p-4">
+            <h3 className="mb-3 text-sm font-semibold text-slate-200">Beli Produk Ini di:</h3>
+            <div className="space-y-2">
+              <a
+                href={`https://shopee.co.id/search?keyword=${encodeURIComponent(product.name)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-3 font-semibold text-white transition hover:from-orange-600 hover:to-orange-700"
+              >
+                🛍️ Beli di Shopee
+              </a>
+              <a
+                href={`https://www.tiktok.com/search?q=${encodeURIComponent(product.name)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 rounded-lg border-2 border-slate-700 bg-slate-900/60 px-4 py-3 font-semibold text-slate-200 transition hover:border-cyan-500/60 hover:bg-slate-800/60"
+              >
+                🎵 Beli di TikTok Shop
+              </a>
+              <a
+                href={`https://www.tokopedia.com/search?q=${encodeURIComponent(product.name)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 rounded-lg border-2 border-slate-700 bg-slate-900/60 px-4 py-3 font-semibold text-slate-200 transition hover:border-emerald-500/60 hover:bg-slate-800/60"
+              >
+                🟢 Beli di Tokopedia
+              </a>
+            </div>
+            
+            <p className="mt-3 text-center text-xs text-slate-500">
+              Website ini tidak menyediakan sistem pembayaran. Klik link di atas untuk membeli produk di platform terpercaya.
+            </p>
           </div>
         </div>
       </div>
@@ -209,7 +218,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${product.name} - Toko NAA News`,
+    title: `${product.name} - Toko Narzza Media Digital`,
     description: product.description,
   };
 }

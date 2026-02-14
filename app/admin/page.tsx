@@ -511,7 +511,7 @@ export default function AdminPage() {
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">🛠️ Admin Panel</h1>
-            <p className="mt-1 text-sm text-slate-400">Kelola feeds, stories, buku, dan roadmap NAA News</p>
+            <p className="mt-1 text-sm text-slate-400">Kelola feeds, stories, buku, dan roadmap Narzza Media Digital</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Link

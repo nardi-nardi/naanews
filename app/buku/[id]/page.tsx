@@ -23,18 +23,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const bookId = Number(id);
 
   if (Number.isNaN(bookId)) {
-    return { title: "Buku tidak ditemukan | NAA Newsroom" };
+    return { title: "Buku tidak ditemukan | Narzza Media Digital" };
   }
 
   const books = await getBooks();
   const book = books.find((item) => item.id === bookId);
 
   if (!book) {
-    return { title: "Buku tidak ditemukan | NAA Newsroom" };
+    return { title: "Buku tidak ditemukan | Narzza Media Digital" };
   }
 
   return {
-    title: `${book.title} | NAA Newsroom`,
+    title: `${book.title} | Narzza Media Digital`,
     description: book.description,
     openGraph: {
       title: book.title,
