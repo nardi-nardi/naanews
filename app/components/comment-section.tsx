@@ -131,33 +131,39 @@ export function CommentSection({ feedId }: CommentSectionProps) {
         </button>
       </form>
 
-      {loading ? (
-        <div className="glass-panel rounded-2xl p-8 text-center text-sm text-slate-400">
-          Memuat komentar...
-        </div>
-      ) : comments.length === 0 ? (
-        <div className="glass-panel rounded-2xl p-5 text-center text-sm text-slate-400">
-          Belum ada komentar. Jadilah yang pertama berkomentar!
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {comments.map((comment) => (
-            <div key={comment.id} className="glass-panel rounded-2xl p-4">
-              <div className="mb-2 flex items-center justify-between">
-                <span className="font-semibold text-slate-100">
-                  {comment.author}
-                </span>
-                <span className="text-xs text-slate-400">
-                  {formatTime(comment.createdAt)}
-                </span>
+      <div className="glass-panel rounded-2xl p-5">
+        <h3 className="mb-3 text-sm font-semibold text-slate-200">
+          Komentar Berita Lainnya
+        </h3>
+        
+        {loading ? (
+          <div className="py-8 text-center text-sm text-slate-400">
+            Memuat komentar...
+          </div>
+        ) : comments.length === 0 ? (
+          <div className="py-5 text-center text-sm text-slate-400">
+            Belum ada komentar. Jadilah yang pertama berkomentar!
+          </div>
+        ) : (
+          <div className="scrollbar-hide max-h-[500px] space-y-3 overflow-y-auto pr-2">
+            {comments.map((comment) => (
+              <div key={comment.id} className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-4">
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="font-semibold text-slate-100">
+                    {comment.author}
+                  </span>
+                  <span className="text-xs text-slate-400">
+                    {formatTime(comment.createdAt)}
+                  </span>
+                </div>
+                <p className="text-sm leading-relaxed text-slate-300">
+                  {comment.text}
+                </p>
               </div>
-              <p className="text-sm leading-relaxed text-slate-300">
-                {comment.text}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </section>
   );
 }
