@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { NavItem } from "@/app/(frontend)/data/content";
+import type { NavItem } from "@/app/data/content";
 
 type MobileNavDrawerProps = {
   activePath: string;
@@ -27,7 +27,9 @@ export function MobileNavDrawer({ activePath, items }: MobileNavDrawerProps) {
       {/* Mobile top bar */}
       <header className="glass-panel fixed inset-x-3 top-3 z-30 rounded-2xl px-4 py-3 xl:hidden">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-semibold tracking-wide text-slate-100">Narzza Media Digital</p>
+          <p className="text-sm font-semibold tracking-wide text-slate-100">
+            Narzza Media Digital
+          </p>
           <button
             type="button"
             onClick={() => setIsOpen(true)}
@@ -42,7 +44,9 @@ export function MobileNavDrawer({ activePath, items }: MobileNavDrawerProps) {
       </header>
 
       {/* Drawer overlay + panel */}
-      <div className={`fixed inset-0 z-40 xl:hidden ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
+      <div
+        className={`fixed inset-0 z-40 xl:hidden ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+      >
         <button
           type="button"
           aria-label="Tutup navigasi"
@@ -78,8 +82,16 @@ export function MobileNavDrawer({ activePath, items }: MobileNavDrawerProps) {
                       : ""
                   }`}
                 >
-                  <p className={`text-sm font-medium ${isActive ? "text-cyan-200" : "text-slate-100"}`}>{item.title}</p>
-                  <p className={`text-xs ${isActive ? "text-cyan-300/70" : "text-slate-400"}`}>{item.note}</p>
+                  <p
+                    className={`text-sm font-medium ${isActive ? "text-cyan-200" : "text-slate-100"}`}
+                  >
+                    {item.title}
+                  </p>
+                  <p
+                    className={`text-xs ${isActive ? "text-cyan-300/70" : "text-slate-400"}`}
+                  >
+                    {item.note}
+                  </p>
                 </Link>
               );
             })}

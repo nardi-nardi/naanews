@@ -1,6 +1,6 @@
 "use client";
 
-import type { Story } from "@/app/(frontend)/data/content";
+import type { Story } from "@/app/data/content";
 
 type StoryBubbleProps = {
   story: Story;
@@ -9,7 +9,12 @@ type StoryBubbleProps = {
   onClick?: () => void;
 };
 
-export function StoryBubble({ story, coverImage, active = false, onClick }: StoryBubbleProps) {
+export function StoryBubble({
+  story,
+  coverImage,
+  active = false,
+  onClick,
+}: StoryBubbleProps) {
   const backgroundImage = coverImage ? `url(${coverImage})` : undefined;
   const hasImage = Boolean(coverImage);
 
@@ -24,7 +29,15 @@ export function StoryBubble({ story, coverImage, active = false, onClick }: Stor
       <div className={`story-ring ${story.viral ? "story-live" : ""}`}>
         <div
           className={`story-core grid place-items-center overflow-hidden bg-gradient-to-br ${story.palette} text-xs font-semibold text-white`}
-          style={backgroundImage ? { backgroundImage, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
+          style={
+            backgroundImage
+              ? {
+                  backgroundImage,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }
+              : undefined
+          }
         >
           {!hasImage ? (
             <span className="text-sm font-semibold leading-none tracking-tight">
@@ -33,7 +46,9 @@ export function StoryBubble({ story, coverImage, active = false, onClick }: Stor
           ) : null}
         </div>
       </div>
-      <p className="w-full truncate text-center text-xs text-slate-200">{story.name}</p>
+      <p className="w-full truncate text-center text-xs text-slate-200">
+        {story.name}
+      </p>
       <span className="rounded-full border border-slate-500/60 px-2 py-0.5 text-[10px] text-slate-300">
         {story.type}
       </span>

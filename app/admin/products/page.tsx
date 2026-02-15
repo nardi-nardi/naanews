@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { ImageUpload } from "@/app/(frontend)/components/image-upload";
+import { ImageUpload } from "@/app/components/image-upload";
 import type { Product, Category } from "@/app/(frontend)/toko/products";
 
 type ProductForm = {
@@ -59,7 +59,7 @@ export default function ProductsAdminPage() {
         fetch("/api/products"),
         fetch("/api/categories"),
       ]);
-      
+
       if (productsRes.ok) setProducts(await productsRes.json());
       if (categoriesRes.ok) setCategories(await categoriesRes.json());
     } catch (err) {
@@ -78,13 +78,13 @@ export default function ProductsAdminPage() {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
-    
+
     setProductForm({ ...productForm, name, id: editingProductId || id });
   };
 
   // Update category name when categoryId changes
   const handleCategoryChange = (categoryId: string) => {
-    const category = categories.find(c => c.id === categoryId);
+    const category = categories.find((c) => c.id === categoryId);
     setProductForm({
       ...productForm,
       categoryId,
@@ -100,7 +100,7 @@ export default function ProductsAdminPage() {
 
     try {
       const method = editingProductId ? "PUT" : "POST";
-      const url = editingProductId 
+      const url = editingProductId
         ? `/api/products/${editingProductId}`
         : "/api/products";
 
@@ -109,12 +109,18 @@ export default function ProductsAdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...productForm,
-          id: productForm.id || productForm.name.toLowerCase().replace(/\s+/g, "-"),
+          id:
+            productForm.id ||
+            productForm.name.toLowerCase().replace(/\s+/g, "-"),
         }),
       });
 
       if (res.ok) {
-        flash(editingProductId ? "✅ Produk berhasil diupdate!" : "✅ Produk berhasil dibuat!");
+        flash(
+          editingProductId
+            ? "✅ Produk berhasil diupdate!"
+            : "✅ Produk berhasil dibuat!"
+        );
         setProductForm(emptyProductForm);
         setEditingProductId(null);
         setShowProductForm(false);
@@ -183,8 +189,12 @@ export default function ProductsAdminPage() {
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold sm:text-3xl">🛒 Kelola Produk Toko</h1>
-            <p className="mt-1 text-sm text-slate-400">Tambah, edit, dan hapus produk untuk dijual</p>
+            <h1 className="text-2xl font-bold sm:text-3xl">
+              🛒 Kelola Produk Toko
+            </h1>
+            <p className="mt-1 text-sm text-slate-400">
+              Tambah, edit, dan hapus produk untuk dijual
+            </p>
           </div>
           <Link
             href="/admin"
@@ -223,12 +233,14 @@ export default function ProductsAdminPage() {
             <h2 className="mb-4 text-lg font-semibold">
               {editingProductId ? "Edit Produk" : "Tambah Produk Baru"}
             </h2>
-            
+
             <div className="space-y-6">
               {/* Basic Info */}
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm text-slate-300">Nama Produk *</label>
+                  <label className="mb-1 block text-sm text-slate-300">
+                    Nama Produk *
+                  </label>
                   <input
                     type="text"
                     value={productForm.name}
@@ -237,13 +249,17 @@ export default function ProductsAdminPage() {
                     placeholder="Contoh: Kaos NAA News Navy"
                   />
                 </div>
-                
+
                 <div>
-                  <label className="mb-1 block text-sm text-slate-300">ID Produk</label>
+                  <label className="mb-1 block text-sm text-slate-300">
+                    ID Produk
+                  </label>
                   <input
                     type="text"
                     value={productForm.id}
-                    onChange={(e) => setProductForm({ ...productForm, id: e.target.value })}
+                    onChange={(e) =>
+                      setProductForm({ ...productForm, id: e.target.value })
+                    }
                     className="w-full rounded-lg border border-slate-600/50 bg-slate-900/40 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-500/50 focus:outline-none"
                     placeholder="kaos-naa-navy"
                     disabled={!!editingProductId}
@@ -253,10 +269,17 @@ export default function ProductsAdminPage() {
 
               {/* Description */}
               <div>
-                <label className="mb-1 block text-sm text-slate-300">Deskripsi</label>
+                <label className="mb-1 block text-sm text-slate-300">
+                  Deskripsi
+                </label>
                 <textarea
                   value={productForm.description}
-                  onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
+                  onChange={(e) =>
+                    setProductForm({
+                      ...productForm,
+                      description: e.target.value,
+                    })
+                  }
                   className="w-full rounded-lg border border-slate-600/50 bg-slate-900/40 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-500/50 focus:outline-none"
                   placeholder="Deskripsi produk lengkap..."
                   rows={4}
@@ -266,29 +289,45 @@ export default function ProductsAdminPage() {
               {/* Price, Stock, Category */}
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
-                  <label className="mb-1 block text-sm text-slate-300">Harga (Rp) *</label>
+                  <label className="mb-1 block text-sm text-slate-300">
+                    Harga (Rp) *
+                  </label>
                   <input
                     type="number"
                     value={productForm.price}
-                    onChange={(e) => setProductForm({ ...productForm, price: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setProductForm({
+                        ...productForm,
+                        price: Number(e.target.value),
+                      })
+                    }
                     className="w-full rounded-lg border border-slate-600/50 bg-slate-900/40 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-500/50 focus:outline-none"
                     placeholder="89000"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm text-slate-300">Stok</label>
+                  <label className="mb-1 block text-sm text-slate-300">
+                    Stok
+                  </label>
                   <input
                     type="number"
                     value={productForm.stock}
-                    onChange={(e) => setProductForm({ ...productForm, stock: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setProductForm({
+                        ...productForm,
+                        stock: Number(e.target.value),
+                      })
+                    }
                     className="w-full rounded-lg border border-slate-600/50 bg-slate-900/40 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-500/50 focus:outline-none"
                     placeholder="50"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm text-slate-300">Kategori *</label>
+                  <label className="mb-1 block text-sm text-slate-300">
+                    Kategori *
+                  </label>
                   <select
                     value={productForm.categoryId}
                     onChange={(e) => handleCategoryChange(e.target.value)}
@@ -307,10 +346,17 @@ export default function ProductsAdminPage() {
               {/* Product Type & Featured */}
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm text-slate-300">Tipe Produk</label>
+                  <label className="mb-1 block text-sm text-slate-300">
+                    Tipe Produk
+                  </label>
                   <select
                     value={productForm.productType}
-                    onChange={(e) => setProductForm({ ...productForm, productType: e.target.value as "physical" | "digital" })}
+                    onChange={(e) =>
+                      setProductForm({
+                        ...productForm,
+                        productType: e.target.value as "physical" | "digital",
+                      })
+                    }
                     className="w-full rounded-lg border border-slate-600/50 bg-slate-900/40 px-3 py-2 text-sm text-slate-100 focus:border-cyan-500/50 focus:outline-none"
                   >
                     <option value="physical">📦 Produk Fisik</option>
@@ -323,7 +369,12 @@ export default function ProductsAdminPage() {
                     type="checkbox"
                     id="featured"
                     checked={productForm.featured}
-                    onChange={(e) => setProductForm({ ...productForm, featured: e.target.checked })}
+                    onChange={(e) =>
+                      setProductForm({
+                        ...productForm,
+                        featured: e.target.checked,
+                      })
+                    }
                     className="h-4 w-4 rounded border-slate-600 bg-slate-900/40 text-cyan-500 focus:ring-cyan-500"
                   />
                   <label htmlFor="featured" className="text-sm text-slate-300">
@@ -334,45 +385,68 @@ export default function ProductsAdminPage() {
 
               {/* Platform URLs */}
               <div>
-                <label className="mb-2 block text-sm font-semibold text-slate-200">Platform Penjualan</label>
+                <label className="mb-2 block text-sm font-semibold text-slate-200">
+                  Platform Penjualan
+                </label>
                 <div className="space-y-3">
                   {productForm.productType === "physical" ? (
                     <>
                       <div>
-                        <label className="mb-1 block text-xs text-slate-400">Shopee URL</label>
+                        <label className="mb-1 block text-xs text-slate-400">
+                          Shopee URL
+                        </label>
                         <input
                           type="url"
                           value={productForm.platforms.shopee || ""}
-                          onChange={(e) => setProductForm({
-                            ...productForm,
-                            platforms: { ...productForm.platforms, shopee: e.target.value }
-                          })}
+                          onChange={(e) =>
+                            setProductForm({
+                              ...productForm,
+                              platforms: {
+                                ...productForm.platforms,
+                                shopee: e.target.value,
+                              },
+                            })
+                          }
                           className="w-full rounded-lg border border-slate-600/50 bg-slate-900/40 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-500/50 focus:outline-none"
                           placeholder="https://shopee.co.id/product/..."
                         />
                       </div>
                       <div>
-                        <label className="mb-1 block text-xs text-slate-400">Tokopedia URL</label>
+                        <label className="mb-1 block text-xs text-slate-400">
+                          Tokopedia URL
+                        </label>
                         <input
                           type="url"
                           value={productForm.platforms.tokopedia || ""}
-                          onChange={(e) => setProductForm({
-                            ...productForm,
-                            platforms: { ...productForm.platforms, tokopedia: e.target.value }
-                          })}
+                          onChange={(e) =>
+                            setProductForm({
+                              ...productForm,
+                              platforms: {
+                                ...productForm.platforms,
+                                tokopedia: e.target.value,
+                              },
+                            })
+                          }
                           className="w-full rounded-lg border border-slate-600/50 bg-slate-900/40 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-500/50 focus:outline-none"
                           placeholder="https://tokopedia.com/product/..."
                         />
                       </div>
                       <div>
-                        <label className="mb-1 block text-xs text-slate-400">TikTok Shop URL</label>
+                        <label className="mb-1 block text-xs text-slate-400">
+                          TikTok Shop URL
+                        </label>
                         <input
                           type="url"
                           value={productForm.platforms.tiktokshop || ""}
-                          onChange={(e) => setProductForm({
-                            ...productForm,
-                            platforms: { ...productForm.platforms, tiktokshop: e.target.value }
-                          })}
+                          onChange={(e) =>
+                            setProductForm({
+                              ...productForm,
+                              platforms: {
+                                ...productForm.platforms,
+                                tiktokshop: e.target.value,
+                              },
+                            })
+                          }
                           className="w-full rounded-lg border border-slate-600/50 bg-slate-900/40 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-500/50 focus:outline-none"
                           placeholder="https://tiktokshop.com/product/..."
                         />
@@ -380,14 +454,21 @@ export default function ProductsAdminPage() {
                     </>
                   ) : (
                     <div>
-                      <label className="mb-1 block text-xs text-slate-400">Lynk URL</label>
+                      <label className="mb-1 block text-xs text-slate-400">
+                        Lynk URL
+                      </label>
                       <input
                         type="url"
                         value={productForm.platforms.lynk || ""}
-                        onChange={(e) => setProductForm({
-                          ...productForm,
-                          platforms: { ...productForm.platforms, lynk: e.target.value }
-                        })}
+                        onChange={(e) =>
+                          setProductForm({
+                            ...productForm,
+                            platforms: {
+                              ...productForm.platforms,
+                              lynk: e.target.value,
+                            },
+                          })
+                        }
                         className="w-full rounded-lg border border-slate-600/50 bg-slate-900/40 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-500/50 focus:outline-none"
                         placeholder="https://lynk.id/..."
                       />
@@ -398,7 +479,9 @@ export default function ProductsAdminPage() {
 
               {/* Images */}
               <div>
-                <label className="mb-2 block text-sm font-semibold text-slate-200">Gambar Produk</label>
+                <label className="mb-2 block text-sm font-semibold text-slate-200">
+                  Gambar Produk
+                </label>
                 <div className="space-y-3">
                   {productForm.images.map((img, idx) => (
                     <div key={idx} className="flex items-center gap-2">
@@ -453,13 +536,19 @@ export default function ProductsAdminPage() {
 
         {/* Products List */}
         {loading ? (
-          <div className="glass-panel rounded-2xl p-8 text-center text-slate-400">Memuat data...</div>
+          <div className="glass-panel rounded-2xl p-8 text-center text-slate-400">
+            Memuat data...
+          </div>
         ) : (
           <div className="glass-panel rounded-2xl p-4 sm:p-6">
-            <h2 className="mb-4 text-lg font-semibold">Semua Produk ({products.length})</h2>
-            
+            <h2 className="mb-4 text-lg font-semibold">
+              Semua Produk ({products.length})
+            </h2>
+
             {products.length === 0 ? (
-              <p className="text-center text-sm text-slate-400">Belum ada produk</p>
+              <p className="text-center text-sm text-slate-400">
+                Belum ada produk
+              </p>
             ) : (
               <div className="space-y-3">
                 {products.map((product) => (
@@ -481,7 +570,9 @@ export default function ProductsAdminPage() {
                     {/* Product Info */}
                     <div className="min-w-0 flex-1">
                       <div className="mb-1 flex items-start justify-between gap-2">
-                        <h3 className="font-semibold text-slate-100">{product.name}</h3>
+                        <h3 className="font-semibold text-slate-100">
+                          {product.name}
+                        </h3>
                         <div className="flex shrink-0 gap-2">
                           <button
                             onClick={() => handleEditProduct(product)}
@@ -498,14 +589,18 @@ export default function ProductsAdminPage() {
                         </div>
                       </div>
 
-                      <p className="mb-2 text-sm text-slate-400 line-clamp-2">{product.description}</p>
+                      <p className="mb-2 text-sm text-slate-400 line-clamp-2">
+                        {product.description}
+                      </p>
 
                       <div className="flex flex-wrap items-center gap-2 text-xs">
                         <span className="font-semibold text-orange-400">
                           Rp {product.price.toLocaleString("id-ID")}
                         </span>
                         <span className="text-slate-500">•</span>
-                        <span className="text-slate-400">Stok: {product.stock}</span>
+                        <span className="text-slate-400">
+                          Stok: {product.stock}
+                        </span>
                         <span className="text-slate-500">•</span>
                         <span className="rounded-full bg-slate-700/60 px-2 py-0.5 text-slate-300">
                           {product.category}
@@ -519,32 +614,45 @@ export default function ProductsAdminPage() {
                           </>
                         )}
                         <span className="text-slate-500">•</span>
-                        <span className={`rounded-full px-2 py-0.5 ${
-                          product.productType === "digital"
-                            ? "bg-purple-500/20 text-purple-300"
-                            : "bg-blue-500/20 text-blue-300"
-                        }`}>
-                          {product.productType === "digital" ? "💾 Digital" : "📦 Fisik"}
+                        <span
+                          className={`rounded-full px-2 py-0.5 ${
+                            product.productType === "digital"
+                              ? "bg-purple-500/20 text-purple-300"
+                              : "bg-blue-500/20 text-blue-300"
+                          }`}
+                        >
+                          {product.productType === "digital"
+                            ? "💾 Digital"
+                            : "📦 Fisik"}
                         </span>
                       </div>
 
                       {/* Platform badges */}
-                      {product.platforms && Object.keys(product.platforms).length > 0 && (
-                        <div className="mt-2 flex flex-wrap gap-1">
-                          {product.platforms.shopee && (
-                            <span className="rounded bg-orange-500/20 px-2 py-0.5 text-xs text-orange-300">Shopee</span>
-                          )}
-                          {product.platforms.tokopedia && (
-                            <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-xs text-emerald-300">Tokopedia</span>
-                          )}
-                          {product.platforms.tiktokshop && (
-                            <span className="rounded bg-slate-500/20 px-2 py-0.5 text-xs text-slate-300">TikTok Shop</span>
-                          )}
-                          {product.platforms.lynk && (
-                            <span className="rounded bg-cyan-500/20 px-2 py-0.5 text-xs text-cyan-300">Lynk</span>
-                          )}
-                        </div>
-                      )}
+                      {product.platforms &&
+                        Object.keys(product.platforms).length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-1">
+                            {product.platforms.shopee && (
+                              <span className="rounded bg-orange-500/20 px-2 py-0.5 text-xs text-orange-300">
+                                Shopee
+                              </span>
+                            )}
+                            {product.platforms.tokopedia && (
+                              <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-xs text-emerald-300">
+                                Tokopedia
+                              </span>
+                            )}
+                            {product.platforms.tiktokshop && (
+                              <span className="rounded bg-slate-500/20 px-2 py-0.5 text-xs text-slate-300">
+                                TikTok Shop
+                              </span>
+                            )}
+                            {product.platforms.lynk && (
+                              <span className="rounded bg-cyan-500/20 px-2 py-0.5 text-xs text-cyan-300">
+                                Lynk
+                              </span>
+                            )}
+                          </div>
+                        )}
                     </div>
                   </div>
                 ))}

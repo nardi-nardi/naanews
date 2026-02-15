@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/(frontend)/lib/mongodb";
+import { getDb } from "@/app/lib/mongodb";
+import { categorySchema } from "@/app/lib/validate";
 
 export const dynamic = "force-dynamic";
 
@@ -46,7 +47,15 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const body = await request.json();
+    const raw = await request.json();
+    const parsed = categorySchema.partial().safeParse(raw);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Validation failed", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+    const body = parsed.data;
     const db = await getDb();
 
     if (!db) {
@@ -56,14 +65,15 @@ export async function PUT(
       );
     }
 
-    const updatedCategory = {
-      ...body,
-      updatedAt: Date.now(),
-    };
+    const update: Record<string, unknown> = { updatedAt: Date.now() };
+    if (body.name !== undefined) update.name = body.name;
+    if (body.slug !== undefined) update.slug = body.slug;
+    if (body.description !== undefined) update.description = body.description;
+    if (body.icon !== undefined) update.icon = body.icon;
 
     const result = await db
       .collection("categories")
-      .updateOne({ id }, { $set: updatedCategory });
+      .updateOne({ id }, { $set: update });
 
     if (result.matchedCount === 0) {
       return NextResponse.json(
@@ -72,7 +82,8 @@ export async function PUT(
       );
     }
 
-    return NextResponse.json(updatedCategory);
+    const updated = await db.collection("categories").findOne({ id });
+    return NextResponse.json(updated ? { ...updated, _id: updated._id?.toString() } : { success: true });
   } catch (error) {
     console.error("Error updating category:", error);
     return NextResponse.json(

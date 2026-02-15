@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { getDb } from "@/app/(frontend)/lib/mongodb";
+import { getDb } from "@/app/lib/mongodb";
 import { getProductById } from "@/app/(frontend)/toko/products";
 import type { Product } from "@/app/(frontend)/toko/products";
-import { ProductImageGallery } from "@/app/(frontend)/components/product-image-gallery";
+import { ProductImageGallery } from "@/app/components/product-image-gallery";
 
 export const dynamic = "force-dynamic";
 
@@ -14,9 +14,9 @@ async function fetchProduct(id: string): Promise<Product | null> {
     if (!db) return getProductById(id) ?? null;
 
     const data = await db.collection("products").findOne({ id });
-    
+
     if (!data) return getProductById(id) ?? null;
-    
+
     return {
       _id: data._id?.toString(),
       id: data.id,
@@ -68,7 +68,7 @@ export default async function ProductDetailPage({
         {/* Vertical Layout - Shopee Style */}
         <div className="space-y-4">
           {/* Image Gallery Section - Interactive */}
-          <ProductImageGallery 
+          <ProductImageGallery
             images={product.images}
             productName={product.name}
             featured={product.featured}
@@ -91,8 +91,14 @@ export default async function ProductDetailPage({
             <div className="mb-4 flex items-center justify-between border-b border-slate-700/40 pb-4">
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-slate-400">Stok:</span>
-                <span className={product.stock > 0 ? "text-emerald-400" : "text-rose-400"}>
-                  {product.stock > 0 ? `${product.stock} unit tersedia` : "Habis"}
+                <span
+                  className={
+                    product.stock > 0 ? "text-emerald-400" : "text-rose-400"
+                  }
+                >
+                  {product.stock > 0
+                    ? `${product.stock} unit tersedia`
+                    : "Habis"}
                 </span>
               </div>
               <span className="rounded-full bg-slate-700/60 px-3 py-1 text-xs font-medium text-slate-300">
@@ -102,30 +108,42 @@ export default async function ProductDetailPage({
 
             {/* Description - More prominent */}
             <div className="mb-6">
-              <h2 className="mb-3 text-base font-semibold text-slate-100">Deskripsi Produk</h2>
+              <h2 className="mb-3 text-base font-semibold text-slate-100">
+                Deskripsi Produk
+              </h2>
               <div className="rounded-lg bg-slate-900/40 p-4">
-                <p className="text-sm leading-relaxed text-slate-300 whitespace-pre-line">{product.description}</p>
+                <p className="text-sm leading-relaxed text-slate-300 whitespace-pre-line">
+                  {product.description}
+                </p>
               </div>
             </div>
 
             {/* Product Type Badge */}
             <div className="mb-4 flex gap-2">
-              <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                product.productType === "digital" 
-                  ? "bg-purple-500/20 text-purple-300" 
-                  : "bg-blue-500/20 text-blue-300"
-              }`}>
-                {product.productType === "digital" ? "💾 Produk Digital" : "📦 Produk Fisik"}
+              <span
+                className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                  product.productType === "digital"
+                    ? "bg-purple-500/20 text-purple-300"
+                    : "bg-blue-500/20 text-blue-300"
+                }`}
+              >
+                {product.productType === "digital"
+                  ? "💾 Produk Digital"
+                  : "📦 Produk Fisik"}
               </span>
             </div>
 
             {/* Product Details */}
             <div className="mb-4 rounded-lg bg-slate-900/40 p-3">
-              <h3 className="mb-3 text-sm font-semibold text-slate-200">Keterangan Produk</h3>
+              <h3 className="mb-3 text-sm font-semibold text-slate-200">
+                Keterangan Produk
+              </h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-slate-400">Kategori</span>
-                  <span className="font-medium text-slate-200">{product.category}</span>
+                  <span className="font-medium text-slate-200">
+                    {product.category}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Kondisi</span>
@@ -133,11 +151,15 @@ export default async function ProductDetailPage({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Stok</span>
-                  <span className="font-medium text-slate-200">{product.stock} unit</span>
+                  <span className="font-medium text-slate-200">
+                    {product.stock} unit
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">SKU</span>
-                  <span className="font-mono text-xs text-slate-300">{product.id}</span>
+                  <span className="font-mono text-xs text-slate-300">
+                    {product.id}
+                  </span>
                 </div>
               </div>
             </div>
@@ -146,7 +168,9 @@ export default async function ProductDetailPage({
           {/* CTA Buttons - Buy on External Platforms */}
           <div className="glass-panel rounded-xl p-4">
             <h3 className="mb-3 text-sm font-semibold text-slate-200">
-              {product.productType === "digital" ? "Download Produk di:" : "Beli Produk Ini di:"}
+              {product.productType === "digital"
+                ? "Download Produk di:"
+                : "Beli Produk Ini di:"}
             </h3>
             <div className="space-y-2">
               {/* Physical Product Platforms */}
@@ -197,9 +221,9 @@ export default async function ProductDetailPage({
                 </a>
               )}
             </div>
-            
+
             <p className="mt-3 text-center text-xs text-slate-500">
-              {product.productType === "digital" 
+              {product.productType === "digital"
                 ? "Produk digital akan langsung tersedia setelah pembayaran."
                 : "Website ini tidak menyediakan sistem pembayaran. Klik link di atas untuk membeli produk di platform terpercaya."}
             </p>

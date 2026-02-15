@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/(frontend)/lib/mongodb";
+import { getDb } from "@/app/lib/mongodb";
+import { bookSchema } from "@/app/lib/validate";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,10 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 
     const db = await getDb();
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
     const doc = await db.collection("books").findOne({ id: bookId });
 
@@ -29,7 +33,10 @@ export async function GET(_request: NextRequest, context: RouteContext) {
     return NextResponse.json(book);
   } catch (error) {
     console.error("GET /api/books/[id] error:", error);
-    return NextResponse.json({ error: "Failed to fetch book" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch book" },
+      { status: 500 }
+    );
   }
 }
 
@@ -44,26 +51,36 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     const db = await getDb();
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
-    const body = await request.json();
+    const raw = await request.json();
+    const parsed = bookSchema.partial().safeParse(raw);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Validation failed", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+    const body = parsed.data;
+
+    const update: Record<string, unknown> = {};
+    if (body.title !== undefined) update.title = body.title;
+    if (body.author !== undefined) update.author = body.author;
+    if (body.cover !== undefined) update.cover = body.cover;
+    if (body.genre !== undefined) update.genre = body.genre;
+    if (body.pages !== undefined) update.pages = body.pages;
+    if (body.rating !== undefined) update.rating = body.rating;
+    if (body.description !== undefined) update.description = body.description;
+    if (body.chapters !== undefined) update.chapters = body.chapters;
+    if (body.storyId !== undefined) update.storyId = body.storyId;
 
     const result = await db.collection("books").findOneAndUpdate(
       { id: bookId },
-      {
-        $set: {
-          title: body.title,
-          author: body.author,
-          cover: body.cover,
-          genre: body.genre,
-          pages: body.pages,
-          rating: body.rating,
-          description: body.description,
-          chapters: body.chapters,
-          storyId: body.storyId ?? null,
-        },
-      },
-      { returnDocument: "after" },
+      { $set: update },
+      { returnDocument: "after" }
     );
 
     if (!result) {
@@ -75,7 +92,10 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     return NextResponse.json(book);
   } catch (error) {
     console.error("PUT /api/books/[id] error:", error);
-    return NextResponse.json({ error: "Failed to update book" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update book" },
+      { status: 500 }
+    );
   }
 }
 
@@ -90,7 +110,10 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
 
     const db = await getDb();
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
     const result = await db.collection("books").deleteOne({ id: bookId });
 
@@ -101,6 +124,9 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/books/[id] error:", error);
-    return NextResponse.json({ error: "Failed to delete book" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to delete book" },
+      { status: 500 }
+    );
   }
 }

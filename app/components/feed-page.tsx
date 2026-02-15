@@ -6,13 +6,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { BookCard } from "@/app/(frontend)/components/book-card";
-import { FeedTitleCard } from "@/app/(frontend)/components/feed-title-card";
-import { GlobalSearchForm } from "@/app/(frontend)/components/global-search-form";
-import { SiteShell } from "@/app/(frontend)/components/site-shell";
-import { StatusViralSection } from "@/app/(frontend)/components/status-viral-section";
-import { TutorialCard } from "@/app/(frontend)/components/tutorial-card";
-import type { Book, Feed, Story } from "@/app/(frontend)/data/content";
+import { BookCard } from "@/app/components/book-card";
+import { FeedTitleCard } from "@/app/components/feed-title-card";
+import { GlobalSearchForm } from "@/app/components/global-search-form";
+import { SiteShell } from "@/app/components/site-shell";
+import { StatusViralSection } from "@/app/components/status-viral-section";
+import { TutorialCard } from "@/app/components/tutorial-card";
+import type { Book, Feed, Story } from "@/app/data/content";
 
 type HomeCategory = "Semua" | "Berita" | "Tutorial" | "Riset" | "Buku";
 

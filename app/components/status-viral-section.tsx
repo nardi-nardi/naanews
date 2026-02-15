@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { StoryBubble } from "@/app/(frontend)/components/story-bubble";
-import type { Book, ChatLine, Feed, Story } from "@/app/(frontend)/data/content";
+import { StoryBubble } from "@/app/components/story-bubble";
+import type { Book, ChatLine, Feed, Story } from "@/app/data/content";
 
 type StatusViralSectionProps = {
   stories: Story[];
@@ -43,7 +43,8 @@ export function StatusViralSection({
     return map;
   }, [stories, feeds, books]);
 
-  const selectedStory = stories.find((story) => story.id === selectedStoryId) || null;
+  const selectedStory =
+    stories.find((story) => story.id === selectedStoryId) || null;
 
   type StoryContent = {
     kind: "feed" | "book";
@@ -88,7 +89,10 @@ export function StatusViralSection({
         image: b.cover,
         lines: [
           { role: "q", text: b.description || "Ringkasan buku" },
-          { role: "a", text: b.chapters[0]?.lines[0]?.text || "Lihat detail buku" },
+          {
+            role: "a",
+            text: b.chapters[0]?.lines[0]?.text || "Lihat detail buku",
+          },
         ],
         takeaway: `${b.genre} • ${b.pages} halaman • ★ ${b.rating}`,
         detailHref: `/buku/${b.id}`,
@@ -105,7 +109,9 @@ export function StatusViralSection({
   const activeFeed = popularFeeds[currentIndex];
   const prevFeed = currentIndex > 0 ? popularFeeds[currentIndex - 1] : null;
   const nextFeed =
-    currentIndex < popularFeeds.length - 1 ? popularFeeds[currentIndex + 1] : null;
+    currentIndex < popularFeeds.length - 1
+      ? popularFeeds[currentIndex + 1]
+      : null;
   const storyCoverFallback = useMemo(() => {
     if (!selectedStory) return undefined;
     const direct = storyCoverMap.get(selectedStory.id);
@@ -152,7 +158,9 @@ export function StatusViralSection({
         setActiveIndex(0);
       }
       if (event.key === "ArrowRight") {
-        setActiveIndex((current) => Math.min(current + 1, popularFeeds.length - 1));
+        setActiveIndex((current) =>
+          Math.min(current + 1, popularFeeds.length - 1)
+        );
       }
       if (event.key === "ArrowLeft") {
         setActiveIndex((current) => Math.max(current - 1, 0));
@@ -186,7 +194,9 @@ export function StatusViralSection({
               onClick={goPrev}
               className="pointer-events-auto hidden w-[200px] shrink-0 cursor-pointer rounded-2xl border border-slate-700/55 bg-slate-900/70 p-4 text-left opacity-60 backdrop-blur-sm transition hover:opacity-90 hover:border-slate-500/70 xl:block"
             >
-              <p className="text-[10px] uppercase tracking-wider text-slate-500">Sebelumnya</p>
+              <p className="text-[10px] uppercase tracking-wider text-slate-500">
+                Sebelumnya
+              </p>
               <p className="mt-2 overflow-hidden text-sm font-semibold leading-snug text-slate-300 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
                 {prevFeed.title}
               </p>
@@ -210,7 +220,9 @@ export function StatusViralSection({
 
               <div className="mb-4 flex items-center justify-between">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-300">Status Populer</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-300">
+                    Status Populer
+                  </p>
                   <p className="mt-1 text-sm font-medium text-slate-300">
                     {selectedStory.name} • {selectedStory.type}
                   </p>
@@ -242,16 +254,22 @@ export function StatusViralSection({
                   <span className="rounded-full border border-amber-300/40 bg-amber-400/10 px-2.5 py-1 text-[11px] font-semibold text-amber-200">
                     #{currentIndex + 1} Populer
                   </span>
-                  <span className="text-xs font-medium text-cyan-300">Score {activeFeed.popularity}</span>
+                  <span className="text-xs font-medium text-cyan-300">
+                    Score {activeFeed.popularity}
+                  </span>
                 </div>
 
                 <h3 className="mt-4 text-2xl font-bold leading-tight text-slate-50">
                   {activeFeed.title}
                 </h3>
-                <p className="mt-4 text-sm leading-relaxed text-slate-300">{activeFeed.lines[0]?.text}</p>
+                <p className="mt-4 text-sm leading-relaxed text-slate-300">
+                  {activeFeed.lines[0]?.text}
+                </p>
 
                 <div className="mt-5 rounded-xl border border-amber-300/30 bg-amber-400/8 px-3 py-2.5 text-xs leading-relaxed text-amber-100">
-                  <span className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-amber-300/80">Ringkasan</span>
+                  <span className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-amber-300/80">
+                    Ringkasan
+                  </span>
                   {activeFeed.takeaway}
                 </div>
               </div>
@@ -290,7 +308,9 @@ export function StatusViralSection({
               onClick={goNext}
               className="pointer-events-auto hidden w-[200px] shrink-0 cursor-pointer rounded-2xl border border-slate-700/55 bg-slate-900/70 p-4 text-left opacity-60 backdrop-blur-sm transition hover:opacity-90 hover:border-slate-500/70 xl:block"
             >
-              <p className="text-[10px] uppercase tracking-wider text-slate-500">Selanjutnya</p>
+              <p className="text-[10px] uppercase tracking-wider text-slate-500">
+                Selanjutnya
+              </p>
               <p className="mt-2 overflow-hidden text-sm font-semibold leading-snug text-slate-300 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
                 {nextFeed.title}
               </p>
@@ -313,7 +333,9 @@ export function StatusViralSection({
         />
         <div className="relative flex h-full items-center justify-center px-4">
           <div className="w-full max-w-md rounded-2xl border border-slate-500/45 bg-slate-900/70 p-5 text-center">
-            <p className="text-sm text-slate-200">Belum ada konten populer untuk status ini.</p>
+            <p className="text-sm text-slate-200">
+              Belum ada konten populer untuk status ini.
+            </p>
             <button
               type="button"
               onClick={closeStoryViewer}
@@ -328,9 +350,13 @@ export function StatusViralSection({
 
   return (
     <>
-      <div className={standalone ? "" : "mt-6 border-t border-slate-700/70 pt-5"}>
+      <div
+        className={standalone ? "" : "mt-6 border-t border-slate-700/70 pt-5"}
+      >
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-slate-100">Status Viral Hari Ini</h2>
+          <h2 className="text-sm font-semibold text-slate-100">
+            Status Viral Hari Ini
+          </h2>
           <span className="text-xs text-slate-400">klik status</span>
         </div>
         <div className="no-scrollbar flex gap-3 overflow-x-auto pb-2">

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { SiteShell } from "@/app/(frontend)/components/site-shell";
+import { SiteShell } from "@/app/components/site-shell";
 // 👇 Import data fetcher dari lib
-import { getProducts } from "@/app/(frontend)/lib/data";
+import { getProducts } from "@/app/lib/data";
 import type { Product } from "@/app/(frontend)/toko/products";
 
 export const revalidate = 300; // Cache 5 menit
@@ -10,7 +10,7 @@ export const revalidate = 300; // Cache 5 menit
 export default async function TokoPage() {
   // ✅ Panggil fungsi cached dari lib/data
   const products = await getProducts();
-  
+
   const featuredProducts = products.filter((p) => p.featured);
   const categories = Array.from(new Set(products.map((p) => p.category)));
 
@@ -26,14 +26,17 @@ export default async function TokoPage() {
             🛒 Belanja Merchandise
           </h1>
           <p className="max-w-2xl text-sm text-slate-300 sm:text-base">
-            Belanja merchandise dan produk pilihan untuk developer dan tech enthusiast. Kualitas premium dengan harga terjangkau.
+            Belanja merchandise dan produk pilihan untuk developer dan tech
+            enthusiast. Kualitas premium dengan harga terjangkau.
           </p>
         </div>
 
         {/* Featured Products */}
         {featuredProducts.length > 0 && (
           <div className="mb-12">
-            <h2 className="mb-4 text-xl font-semibold text-slate-100">⭐ Produk Unggulan</h2>
+            <h2 className="mb-4 text-xl font-semibold text-slate-100">
+              ⭐ Produk Unggulan
+            </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {featuredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} featured />
@@ -77,8 +80,16 @@ export default async function TokoPage() {
 }
 
 // Sub-komponen (Tetap sama)
-function ProductCard({ product, featured = false }: { product: Product; featured?: boolean }) {
-  const mainImage = product.images[0] || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80";
+function ProductCard({
+  product,
+  featured = false,
+}: {
+  product: Product;
+  featured?: boolean;
+}) {
+  const mainImage =
+    product.images[0] ||
+    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80";
 
   return (
     <Link
@@ -106,7 +117,7 @@ function ProductCard({ product, featured = false }: { product: Product; featured
         <h3 className="line-clamp-2 min-h-[2.5rem] text-sm leading-tight text-slate-50">
           {product.name}
         </h3>
-        
+
         <div className="flex items-baseline gap-1.5">
           <span className="text-base font-bold text-orange-500">
             Rp {product.price.toLocaleString("id-ID")}

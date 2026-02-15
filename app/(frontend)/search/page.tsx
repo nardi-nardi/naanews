@@ -1,17 +1,17 @@
 "use client";
 
-import { FeedTitleCard } from "@/app/(frontend)/components/feed-title-card";
-import { BookCard } from "@/app/(frontend)/components/book-card";
-import { SiteShell } from "@/app/(frontend)/components/site-shell";
+import { FeedTitleCard } from "@/app/components/feed-title-card";
+import { BookCard } from "@/app/components/book-card";
+import { SiteShell } from "@/app/components/site-shell";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useRef, Suspense } from "react";
-import type { Feed, Book } from "@/app/(frontend)/data/content";
+import type { Feed, Book } from "@/app/data/content";
 
 function SearchPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialQuery = searchParams.get("q") || "";
-  
+
   const [query, setQuery] = useState(initialQuery);
   const [feedResults, setFeedResults] = useState<Feed[]>([]);
   const [bookResults, setBookResults] = useState<Book[]>([]);
@@ -41,7 +41,11 @@ function SearchPageContent() {
   // Update URL tanpa navigation
   useEffect(() => {
     if (query.trim()) {
-      window.history.replaceState(null, "", `/search?q=${encodeURIComponent(query.trim())}`);
+      window.history.replaceState(
+        null,
+        "",
+        `/search?q=${encodeURIComponent(query.trim())}`
+      );
     } else {
       window.history.replaceState(null, "", "/search");
     }
@@ -69,19 +73,30 @@ function SearchPageContent() {
         const allFeeds: Feed[] = await feedsRes.json();
         const allBooks: Book[] = await booksRes.json();
 
-        const filteredFeeds = Array.isArray(allFeeds) ? allFeeds.filter((feed) => {
-          const haystack = [feed.title, feed.category, feed.takeaway, ...feed.lines.map((l) => l.text)]
-            .join(" ")
-            .toLowerCase();
-          return tokens.every((t) => haystack.includes(t));
-        }).sort((a, b) => b.createdAt - a.createdAt) : [];
+        const filteredFeeds = Array.isArray(allFeeds)
+          ? allFeeds
+              .filter((feed) => {
+                const haystack = [
+                  feed.title,
+                  feed.category,
+                  feed.takeaway,
+                  ...feed.lines.map((l) => l.text),
+                ]
+                  .join(" ")
+                  .toLowerCase();
+                return tokens.every((t) => haystack.includes(t));
+              })
+              .sort((a, b) => b.createdAt - a.createdAt)
+          : [];
 
-        const filteredBooks = Array.isArray(allBooks) ? allBooks.filter((book) => {
-          const haystack = [book.title, book.description, book.author]
-            .join(" ")
-            .toLowerCase();
-          return tokens.every((t) => haystack.includes(t));
-        }) : [];
+        const filteredBooks = Array.isArray(allBooks)
+          ? allBooks.filter((book) => {
+              const haystack = [book.title, book.description, book.author]
+                .join(" ")
+                .toLowerCase();
+              return tokens.every((t) => haystack.includes(t));
+            })
+          : [];
 
         setFeedResults(filteredFeeds);
         setBookResults(filteredBooks);
@@ -102,8 +117,12 @@ function SearchPageContent() {
   return (
     <SiteShell activePath="/search">
       <section className="glass-panel rounded-3xl p-5 md:p-6">
-        <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">Search</p>
-        <h1 className="mt-2 text-2xl font-bold text-slate-50 md:text-3xl">Hasil Pencarian Global</h1>
+        <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">
+          Search
+        </p>
+        <h1 className="mt-2 text-2xl font-bold text-slate-50 md:text-3xl">
+          Hasil Pencarian Global
+        </h1>
         <p className="mt-2 text-sm text-slate-300">
           {query ? `Kata kunci: "${query}"` : "Ketik untuk mencari..."}
         </p>
@@ -111,7 +130,10 @@ function SearchPageContent() {
 
       <div className="mt-4">
         <div className="glass-panel rounded-2xl p-3 md:p-4">
-          <label htmlFor="global-search" className="mb-2 block text-xs uppercase tracking-[0.2em] text-cyan-300">
+          <label
+            htmlFor="global-search"
+            className="mb-2 block text-xs uppercase tracking-[0.2em] text-cyan-300"
+          >
             Global Search
           </label>
           <input
@@ -138,7 +160,10 @@ function SearchPageContent() {
           </div>
         ) : null}
 
-        {query && !loading && feedResults.length === 0 && bookResults.length === 0 ? (
+        {query &&
+        !loading &&
+        feedResults.length === 0 &&
+        bookResults.length === 0 ? (
           <div className="glass-panel rounded-2xl p-5 text-sm text-slate-300">
             Tidak ada hasil untuk kata kunci tersebut.
           </div>

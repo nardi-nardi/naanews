@@ -1,7 +1,13 @@
 import { Suspense } from "react";
-import { FeedPage } from "@/app/(frontend)/components/feed-page";
+import { FeedPage } from "@/app/components/feed-page";
 // Import semua dari centralized data layer
-import { getFeeds, getStories, getBooks, getRoadmaps, getProducts } from "@/app/(frontend)/lib/data";
+import {
+  getFeeds,
+  getStories,
+  getBooks,
+  getRoadmaps,
+  getProducts,
+} from "@/app/lib/data";
 
 // Revalidate data setiap 5 menit (ISR)
 export const revalidate = 300;
@@ -12,7 +18,7 @@ export default async function HomePage() {
     getFeeds(),
     getStories(),
     getBooks(),
-    getRoadmaps(), 
+    getRoadmaps(),
     getProducts(),
   ]);
 

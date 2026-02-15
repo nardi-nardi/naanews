@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/(frontend)/lib/mongodb";
+import { getDb } from "@/app/lib/mongodb";
+import { productUpdateSchema } from "@/app/lib/validate";
 import { getProductById } from "@/app/(frontend)/toko/products";
 
 // GET /api/products/[id] — get single product
@@ -10,21 +11,27 @@ export async function GET(
   try {
     const { id } = await params;
     const db = await getDb();
-    
+
     if (!db) {
       const product = getProductById(id);
       if (!product) {
-        return NextResponse.json({ error: "Product not found" }, { status: 404 });
+        return NextResponse.json(
+          { error: "Product not found" },
+          { status: 404 }
+        );
       }
       return NextResponse.json(product);
     }
 
     const product = await db.collection("products").findOne({ id });
-    
+
     if (!product) {
       const fallback = getProductById(id);
       if (!fallback) {
-        return NextResponse.json({ error: "Product not found" }, { status: 404 });
+        return NextResponse.json(
+          { error: "Product not found" },
+          { status: 404 }
+        );
       }
       return NextResponse.json(fallback);
     }
@@ -32,7 +39,10 @@ export async function GET(
     return NextResponse.json(product);
   } catch (error) {
     console.error("GET /api/products/[id] error:", error);
-    return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch product" },
+      { status: 500 }
+    );
   }
 }
 
@@ -44,33 +54,41 @@ export async function PUT(
   try {
     const { id } = await params;
     const db = await getDb();
-    
+
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
 
-    const body = await req.json();
-    const { name, description, price, images, category, categoryId, stock, featured, productType, platforms } = body;
+    const raw = await req.json();
+    const parsed = productUpdateSchema.safeParse(raw);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Validation failed", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+    const body = parsed.data;
 
     const updateData: Record<string, unknown> = {
       updatedAt: Date.now(),
     };
+    if (body.name !== undefined) updateData.name = body.name;
+    if (body.description !== undefined) updateData.description = body.description;
+    if (body.price !== undefined) updateData.price = body.price;
+    if (body.images !== undefined) updateData.images = body.images;
+    if (body.category !== undefined) updateData.category = body.category;
+    if (body.categoryId !== undefined) updateData.categoryId = body.categoryId;
+    if (body.stock !== undefined) updateData.stock = body.stock;
+    if (body.featured !== undefined) updateData.featured = body.featured;
+    if (body.productType !== undefined) updateData.productType = body.productType;
+    if (body.platforms !== undefined) updateData.platforms = body.platforms;
 
-    if (name !== undefined) updateData.name = name;
-    if (description !== undefined) updateData.description = description;
-    if (price !== undefined) updateData.price = Number(price);
-    if (images !== undefined) updateData.images = images;
-    if (category !== undefined) updateData.category = category;
-    if (categoryId !== undefined) updateData.categoryId = categoryId;
-    if (stock !== undefined) updateData.stock = Number(stock);
-    if (featured !== undefined) updateData.featured = featured;
-    if (productType !== undefined) updateData.productType = productType;
-    if (platforms !== undefined) updateData.platforms = platforms;
-
-    const result = await db.collection("products").updateOne(
-      { id },
-      { $set: updateData }
-    );
+    const result = await db
+      .collection("products")
+      .updateOne({ id }, { $set: updateData });
 
     if (result.matchedCount === 0) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
@@ -79,7 +97,10 @@ export async function PUT(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("PUT /api/products/[id] error:", error);
-    return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update product" },
+      { status: 500 }
+    );
   }
 }
 
@@ -91,9 +112,12 @@ export async function DELETE(
   try {
     const { id } = await params;
     const db = await getDb();
-    
+
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
 
     const result = await db.collection("products").deleteOne({ id });
@@ -105,6 +129,9 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/products/[id] error:", error);
-    return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to delete product" },
+      { status: 500 }
+    );
   }
 }

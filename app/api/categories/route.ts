@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/(frontend)/lib/mongodb";
+import { getDb } from "@/app/lib/mongodb";
+import { categorySchema } from "@/app/lib/validate";
 import { categories } from "@/app/(frontend)/toko/products";
 
 export const dynamic = "force-dynamic";
@@ -7,13 +8,17 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const db = await getDb();
-    
+
     if (!db) {
       return NextResponse.json(categories);
     }
 
-    const data = await db.collection("categories").find({}).sort({ name: 1 }).toArray();
-    
+    const data = await db
+      .collection("categories")
+      .find({})
+      .sort({ name: 1 })
+      .toArray();
+
     if (data.length === 0) {
       return NextResponse.json(categories);
     }
@@ -32,7 +37,15 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const raw = await request.json();
+    const parsed = categorySchema.safeParse(raw);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Validation failed", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+    const body = parsed.data;
     const db = await getDb();
 
     if (!db) {
@@ -42,10 +55,16 @@ export async function POST(request: Request) {
       );
     }
 
+    const now = Date.now();
+    const slugBase = body.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "") || "category";
     const newCategory = {
-      ...body,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      id: body.id ?? body.slug ?? slugBase,
+      name: body.name,
+      slug: body.slug ?? slugBase,
+      description: body.description ?? "",
+      icon: body.icon ?? "",
+      createdAt: now,
+      updatedAt: now,
     };
 
     const result = await db.collection("categories").insertOne(newCategory);

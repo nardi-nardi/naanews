@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteShell } from "@/app/(frontend)/components/site-shell";
+import { SiteShell } from "@/app/components/site-shell";
 
 export const metadata: Metadata = {
   title: "Tentang Narzza Media Digital - Perusahaan Media Digital Inovatif",
-  description: "Narzza Media Digital adalah perusahaan media digital yang menghadirkan konten teknologi dalam format interaktif dan mudah dicerna.",
+  description:
+    "Narzza Media Digital adalah perusahaan media digital yang menghadirkan konten teknologi dalam format interaktif dan mudah dicerna.",
 };
 
 const highlights = [
@@ -53,17 +54,19 @@ const team = [
 ];
 
 const founders = [
-  { 
-    name: "Nardi", 
-    role: "Founder & CEO", 
+  {
+    name: "Nardi",
+    role: "Founder & CEO",
     avatar: "👨‍💼",
-    description: "Visioner di balik Narzza Media Digital dengan passion untuk mengubah cara orang mengonsumsi konten teknologi."
+    description:
+      "Visioner di balik Narzza Media Digital dengan passion untuk mengubah cara orang mengonsumsi konten teknologi.",
   },
-  { 
-    name: "Nur Azizah Azzahra", 
-    role: "Co-Founder & COO", 
+  {
+    name: "Nur Azizah Azzahra",
+    role: "Co-Founder & COO",
     avatar: "👩‍💼",
-    description: "Mengatur operasional dan strategi bisnis untuk memastikan pertumbuhan perusahaan yang berkelanjutan."
+    description:
+      "Mengatur operasional dan strategi bisnis untuk memastikan pertumbuhan perusahaan yang berkelanjutan.",
   },
 ];
 
@@ -71,11 +74,26 @@ const employees = [
   { name: "GPT-4", role: "Content Writer", avatar: "🤖", team: "Content" },
   { name: "Claude", role: "Technical Writer", avatar: "🧠", team: "Content" },
   { name: "Gemini", role: "Research Analyst", avatar: "💎", team: "Research" },
-  { name: "Perplexity", role: "Search Specialist", avatar: "🔍", team: "Research" },
+  {
+    name: "Perplexity",
+    role: "Search Specialist",
+    avatar: "🔍",
+    team: "Research",
+  },
   { name: "Midjourney", role: "Visual Designer", avatar: "🎨", team: "Design" },
   { name: "DALL-E", role: "Graphic Artist", avatar: "🖼️", team: "Design" },
-  { name: "Copilot", role: "Code Assistant", avatar: "💻", team: "Engineering" },
-  { name: "Cursor", role: "Development Lead", avatar: "⚡", team: "Engineering" },
+  {
+    name: "Copilot",
+    role: "Code Assistant",
+    avatar: "💻",
+    team: "Engineering",
+  },
+  {
+    name: "Cursor",
+    role: "Development Lead",
+    avatar: "⚡",
+    team: "Engineering",
+  },
   { name: "Llama", role: "Data Processor", avatar: "🦙", team: "Data" },
   { name: "Mistral", role: "Analytics Expert", avatar: "🌪️", team: "Data" },
 ];
@@ -100,22 +118,26 @@ const values = [
   {
     icon: "🎯",
     title: "Kualitas Konten",
-    description: "Setiap artikel melalui proses riset dan review mendalam untuk memastikan akurasi dan relevansi."
+    description:
+      "Setiap artikel melalui proses riset dan review mendalam untuk memastikan akurasi dan relevansi.",
   },
   {
     icon: "🚀",
     title: "Inovasi Berkelanjutan",
-    description: "Kami terus berinovasi dalam format penyajian konten untuk pengalaman pembaca yang lebih baik."
+    description:
+      "Kami terus berinovasi dalam format penyajian konten untuk pengalaman pembaca yang lebih baik.",
   },
   {
     icon: "🤝",
     title: "Community First",
-    description: "Membangun komunitas yang saling support dan berbagi pengetahuan untuk tumbuh bersama."
+    description:
+      "Membangun komunitas yang saling support dan berbagi pengetahuan untuk tumbuh bersama.",
   },
   {
     icon: "💡",
     title: "Pembelajaran Praktis",
-    description: "Fokus pada konten yang actionable dan dapat langsung diterapkan dalam pekerjaan sehari-hari."
+    description:
+      "Fokus pada konten yang actionable dan dapat langsung diterapkan dalam pekerjaan sehari-hari.",
   },
 ];
 
@@ -144,11 +166,21 @@ export default function TentangPage() {
         {/* Hero Section */}
         <header className="glass-panel overflow-hidden rounded-3xl shadow-xl shadow-cyan-500/5 ring-1 ring-white/5">
           <div className="bg-gradient-to-br from-cyan-500/10 to-blue-600/10 p-8 md:p-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">Tentang Perusahaan</p>
-            <h1 className="mt-2 text-4xl font-bold text-slate-50 md:text-5xl">Narzza Media Digital</h1>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
+              Tentang Perusahaan
+            </p>
+            <h1 className="mt-2 text-4xl font-bold text-slate-50 md:text-5xl">
+              Narzza Media Digital
+            </h1>
             <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-200">
-              Kami adalah <strong className="text-cyan-300">perusahaan media digital</strong> yang berfokus pada transformasi cara orang mengonsumsi konten teknologi. 
-              Dengan pendekatan inovatif dan format interaktif, Narzza Media Digital menghadirkan pengalaman membaca yang lebih engaging dan efisien.
+              Kami adalah{" "}
+              <strong className="text-cyan-300">
+                perusahaan media digital
+              </strong>{" "}
+              yang berfokus pada transformasi cara orang mengonsumsi konten
+              teknologi. Dengan pendekatan inovatif dan format interaktif,
+              Narzza Media Digital menghadirkan pengalaman membaca yang lebih
+              engaging dan efisien.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
@@ -169,12 +201,19 @@ export default function TentangPage() {
 
         {/* Achievements Section */}
         <section className="glass-panel rounded-2xl p-6 ring-1 ring-white/5">
-          <h2 className="mb-5 text-2xl font-bold text-slate-50">Pencapaian Kami</h2>
+          <h2 className="mb-5 text-2xl font-bold text-slate-50">
+            Pencapaian Kami
+          </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {achievements.map((item) => (
-              <div key={item.label} className="rounded-xl border border-cyan-500/20 bg-gradient-to-br from-cyan-500/5 to-blue-500/5 p-5 text-center">
+              <div
+                key={item.label}
+                className="rounded-xl border border-cyan-500/20 bg-gradient-to-br from-cyan-500/5 to-blue-500/5 p-5 text-center"
+              >
                 <div className="mb-2 text-2xl">{item.icon}</div>
-                <div className="text-3xl font-bold text-cyan-300">{item.number}</div>
+                <div className="text-3xl font-bold text-cyan-300">
+                  {item.number}
+                </div>
                 <div className="mt-1 text-sm text-slate-400">{item.label}</div>
               </div>
             ))}
@@ -184,12 +223,20 @@ export default function TentangPage() {
         {/* Visi, Misi & Highlights */}
         <div className="grid gap-4 md:grid-cols-2">
           {highlights.map((item) => (
-            <section key={item.title} className="glass-panel h-full rounded-2xl p-6 ring-1 ring-white/5">
-              <h2 className="mb-4 text-xl font-bold text-slate-50">{item.title}</h2>
+            <section
+              key={item.title}
+              className="glass-panel h-full rounded-2xl p-6 ring-1 ring-white/5"
+            >
+              <h2 className="mb-4 text-xl font-bold text-slate-50">
+                {item.title}
+              </h2>
               <ul className="space-y-3 text-sm text-slate-300">
                 {item.points.map((point) => (
                   <li key={point} className="flex gap-3">
-                    <span className="mt-[6px] h-2 w-2 shrink-0 rounded-full bg-cyan-400" aria-hidden />
+                    <span
+                      className="mt-[6px] h-2 w-2 shrink-0 rounded-full bg-cyan-400"
+                      aria-hidden
+                    />
                     <span className="leading-relaxed">{point}</span>
                   </li>
                 ))}
@@ -200,13 +247,22 @@ export default function TentangPage() {
 
         {/* Core Values */}
         <section className="glass-panel rounded-2xl p-6 ring-1 ring-white/5">
-          <h2 className="mb-5 text-2xl font-bold text-slate-50">Nilai-Nilai Kami</h2>
+          <h2 className="mb-5 text-2xl font-bold text-slate-50">
+            Nilai-Nilai Kami
+          </h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {values.map((item) => (
-              <div key={item.title} className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-5">
+              <div
+                key={item.title}
+                className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-5"
+              >
                 <div className="mb-3 text-3xl">{item.icon}</div>
-                <h3 className="mb-2 font-semibold text-slate-50">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-400">{item.description}</p>
+                <h3 className="mb-2 font-semibold text-slate-50">
+                  {item.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-slate-400">
+                  {item.description}
+                </p>
               </div>
             ))}
           </div>
@@ -215,24 +271,35 @@ export default function TentangPage() {
         {/* Founders & Team Section */}
         <section className="glass-panel rounded-2xl p-6 ring-1 ring-white/5">
           <h2 className="mb-2 text-2xl font-bold text-slate-50">Tim Kami</h2>
-          <p className="mb-5 text-sm text-slate-400">Orang-orang di balik Narzza Media Digital</p>
-          
+          <p className="mb-5 text-sm text-slate-400">
+            Orang-orang di balik Narzza Media Digital
+          </p>
+
           {/* Founders */}
           <div className="mb-6">
-            <h3 className="mb-4 text-lg font-semibold text-cyan-300">Founders</h3>
+            <h3 className="mb-4 text-lg font-semibold text-cyan-300">
+              Founders
+            </h3>
             <div className="grid gap-4 md:grid-cols-2">
               {founders.map((founder) => (
-                <div key={founder.name} className="rounded-xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 p-5">
+                <div
+                  key={founder.name}
+                  className="rounded-xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 p-5"
+                >
                   <div className="mb-3 flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500/20 text-2xl">
                       {founder.avatar}
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-50">{founder.name}</h4>
+                      <h4 className="font-bold text-slate-50">
+                        {founder.name}
+                      </h4>
                       <p className="text-sm text-cyan-300">{founder.role}</p>
                     </div>
                   </div>
-                  <p className="text-sm leading-relaxed text-slate-300">{founder.description}</p>
+                  <p className="text-sm leading-relaxed text-slate-300">
+                    {founder.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -240,12 +307,19 @@ export default function TentangPage() {
 
           {/* AI Employees */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold text-cyan-300">AI Team Members</h3>
+            <h3 className="mb-4 text-lg font-semibold text-cyan-300">
+              AI Team Members
+            </h3>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
               {employees.map((employee) => (
-                <div key={employee.name} className="rounded-lg border border-slate-700/60 bg-slate-900/40 p-4 text-center transition hover:border-cyan-500/40 hover:bg-slate-800/60">
+                <div
+                  key={employee.name}
+                  className="rounded-lg border border-slate-700/60 bg-slate-900/40 p-4 text-center transition hover:border-cyan-500/40 hover:bg-slate-800/60"
+                >
                   <div className="mb-2 text-3xl">{employee.avatar}</div>
-                  <h4 className="mb-1 font-semibold text-slate-50">{employee.name}</h4>
+                  <h4 className="mb-1 font-semibold text-slate-50">
+                    {employee.name}
+                  </h4>
                   <p className="mb-1 text-xs text-slate-400">{employee.role}</p>
                   <span className="inline-block rounded-full bg-cyan-500/20 px-2 py-0.5 text-xs font-medium text-cyan-300">
                     {employee.team}
@@ -260,8 +334,12 @@ export default function TentangPage() {
         <section className="glass-panel rounded-2xl p-6 ring-1 ring-white/5">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-2xl font-bold text-slate-50">Profil Perusahaan</h2>
-              <p className="text-sm text-slate-400">Informasi lengkap tentang Narzza Media Digital</p>
+              <h2 className="text-2xl font-bold text-slate-50">
+                Profil Perusahaan
+              </h2>
+              <p className="text-sm text-slate-400">
+                Informasi lengkap tentang Narzza Media Digital
+              </p>
             </div>
             <Link
               href="/admin"
@@ -272,12 +350,19 @@ export default function TentangPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {team.map((item) => (
-              <div key={item.label} className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-4">
+              <div
+                key={item.label}
+                className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-4"
+              >
                 <div className="mb-2 flex items-center gap-2">
                   <span className="text-xl">{item.icon}</span>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{item.label}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    {item.label}
+                  </p>
                 </div>
-                <p className="text-base font-semibold text-slate-50">{item.value}</p>
+                <p className="text-base font-semibold text-slate-50">
+                  {item.value}
+                </p>
               </div>
             ))}
           </div>
@@ -285,18 +370,28 @@ export default function TentangPage() {
 
         {/* Contact Section */}
         <section className="glass-panel rounded-2xl p-6 ring-1 ring-white/5">
-          <h2 className="mb-2 text-2xl font-bold text-slate-50">Hubungi Kami</h2>
+          <h2 className="mb-2 text-2xl font-bold text-slate-50">
+            Hubungi Kami
+          </h2>
           <p className="mb-5 text-sm text-slate-400">
-            Tertarik untuk berkolaborasi, partnership, atau punya pertanyaan? Kami siap mendengar Anda.
+            Tertarik untuk berkolaborasi, partnership, atau punya pertanyaan?
+            Kami siap mendengar Anda.
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {contact.map((item) => (
-              <div key={item.label} className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-4">
+              <div
+                key={item.label}
+                className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-4"
+              >
                 <div className="mb-2 flex items-center gap-2">
                   <span className="text-lg">{item.icon}</span>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{item.label}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    {item.label}
+                  </p>
                 </div>
-                <p className="text-sm font-semibold text-cyan-100">{item.value}</p>
+                <p className="text-sm font-semibold text-cyan-100">
+                  {item.value}
+                </p>
               </div>
             ))}
           </div>
@@ -307,7 +402,9 @@ export default function TentangPage() {
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="text-2xl font-bold text-slate-50">Teknologi</h2>
-              <p className="text-sm text-slate-400">Tech stack modern yang kami gunakan untuk membangun platform</p>
+              <p className="text-sm text-slate-400">
+                Tech stack modern yang kami gunakan untuk membangun platform
+              </p>
             </div>
             <Link
               href="https://github.com/naa-news"
@@ -332,8 +429,12 @@ export default function TentangPage() {
 
         {/* Partners */}
         <section className="glass-panel rounded-2xl p-6 ring-1 ring-white/5">
-          <h2 className="mb-2 text-2xl font-bold text-slate-50">Technology Partners</h2>
-          <p className="mb-5 text-sm text-slate-400">Platform dan tools yang mendukung operasional kami</p>
+          <h2 className="mb-2 text-2xl font-bold text-slate-50">
+            Technology Partners
+          </h2>
+          <p className="mb-5 text-sm text-slate-400">
+            Platform dan tools yang mendukung operasional kami
+          </p>
           <div className="flex flex-wrap gap-3">
             {partners.map((partner) => (
               <div
@@ -349,9 +450,13 @@ export default function TentangPage() {
         {/* CTA Footer */}
         <section className="glass-panel overflow-hidden rounded-2xl ring-1 ring-white/5">
           <div className="bg-gradient-to-br from-cyan-500/10 to-blue-600/10 p-8 text-center">
-            <h2 className="text-2xl font-bold text-slate-50">Mari Tumbuh Bersama</h2>
+            <h2 className="text-2xl font-bold text-slate-50">
+              Mari Tumbuh Bersama
+            </h2>
             <p className="mx-auto mt-3 max-w-2xl text-slate-300">
-              Bergabunglah dengan ribuan profesional yang sudah mempercayai Narzza Media Digital sebagai sumber informasi teknologi terpercaya.
+              Bergabunglah dengan ribuan profesional yang sudah mempercayai
+              Narzza Media Digital sebagai sumber informasi teknologi
+              terpercaya.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Link

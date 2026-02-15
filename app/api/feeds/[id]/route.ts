@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/(frontend)/lib/mongodb";
-import type { Feed } from "@/app/(frontend)/data/content";
+import { getDb } from "@/app/lib/mongodb";
+import { feedUpdateSchema } from "@/app/lib/validate";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +19,10 @@ export async function GET(_req: NextRequest, context: RouteContext) {
 
     const db = await getDb();
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
     const feed = await db.collection("feeds").findOne({ id: feedId });
 
@@ -31,18 +34,20 @@ export async function GET(_req: NextRequest, context: RouteContext) {
       id: feed.id,
       title: feed.title,
       category: feed.category,
-      createdAt: feed.createdAt || Date.now(),
+      createdAt: feed.createdAt ?? Date.now(),
       popularity: feed.popularity,
       image: feed.image,
       lines: feed.lines,
       takeaway: feed.takeaway,
-      source: feed.source,
+      source: feed.source ?? undefined,
       storyId: feed.storyId ?? null,
-      _id: feed._id.toString(),
     });
   } catch (error) {
     console.error("GET /api/feeds/[id] error:", error);
-    return NextResponse.json({ error: "Failed to fetch feed" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch feed" },
+      { status: 500 }
+    );
   }
 }
 
@@ -57,19 +62,28 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 
     const db = await getDb();
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
-    const body = (await req.json()) as Partial<Feed>;
+    const raw = await req.json();
+    const parsed = feedUpdateSchema.safeParse(raw);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Validation failed", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+    const updateData = parsed.data;
 
-    // Don't allow changing the id
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id: _removedId, ...updateData } = body;
-
-    const result = await db.collection("feeds").findOneAndUpdate(
-      { id: feedId },
-      { $set: updateData },
-      { returnDocument: "after" },
-    );
+    const result = await db
+      .collection("feeds")
+      .findOneAndUpdate(
+        { id: feedId },
+        { $set: updateData },
+        { returnDocument: "after" }
+      );
 
     if (!result) {
       return NextResponse.json({ error: "Feed not found" }, { status: 404 });
@@ -79,17 +93,20 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       id: result.id,
       title: result.title,
       category: result.category,
-      time: result.time,
+      createdAt: result.createdAt ?? Date.now(),
       popularity: result.popularity,
       image: result.image,
       lines: result.lines,
       takeaway: result.takeaway,
+      source: result.source ?? undefined,
       storyId: result.storyId ?? null,
-      _id: result._id.toString(),
     });
   } catch (error) {
     console.error("PUT /api/feeds/[id] error:", error);
-    return NextResponse.json({ error: "Failed to update feed" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update feed" },
+      { status: 500 }
+    );
   }
 }
 
@@ -104,7 +121,10 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
 
     const db = await getDb();
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
     const result = await db.collection("feeds").deleteOne({ id: feedId });
 
@@ -115,6 +135,9 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/feeds/[id] error:", error);
-    return NextResponse.json({ error: "Failed to delete feed" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to delete feed" },
+      { status: 500 }
+    );
   }
 }

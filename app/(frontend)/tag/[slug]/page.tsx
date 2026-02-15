@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { FeedTitleCard } from "@/app/(frontend)/components/feed-title-card";
-import { SiteShell } from "@/app/(frontend)/components/site-shell";
-import { tags } from "@/app/(frontend)/data/content";
-import { getFeeds } from "@/app/(frontend)/lib/data";
+import { FeedTitleCard } from "@/app/components/feed-title-card";
+import { SiteShell } from "@/app/components/site-shell";
+import { tags } from "@/app/data/content";
+import { getFeeds } from "@/app/lib/data";
 
 export const dynamicParams = false;
 export const revalidate = 300;
@@ -15,7 +15,9 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const tag = `#${slug}`;
   return {
@@ -32,7 +34,12 @@ export default async function TagPage({ params }: PageProps) {
 
   const keyword = slug.toLowerCase().replace(/-/g, " ");
   const filtered = allFeeds.filter((feed) => {
-    const haystack = [feed.title, feed.category, feed.takeaway, ...feed.lines.map((l) => l.text)]
+    const haystack = [
+      feed.title,
+      feed.category,
+      feed.takeaway,
+      ...feed.lines.map((l) => l.text),
+    ]
       .join(" ")
       .toLowerCase();
     return haystack.includes(keyword);
@@ -42,7 +49,9 @@ export default async function TagPage({ params }: PageProps) {
     <SiteShell activePath="/">
       <section className="glass-panel rounded-3xl p-5 md:p-6">
         <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">Tag</p>
-        <h1 className="mt-2 text-2xl font-bold text-slate-50 md:text-3xl">{tag}</h1>
+        <h1 className="mt-2 text-2xl font-bold text-slate-50 md:text-3xl">
+          {tag}
+        </h1>
         <p className="mt-2 text-sm text-slate-300">
           {filtered.length} konten ditemukan dengan tag ini.
         </p>

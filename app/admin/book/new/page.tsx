@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { BookChapter, ChatLine, Story } from "@/app/(frontend)/data/content";
-import { ImageUpload } from "@/app/(frontend)/components/image-upload";
+import type { BookChapter, ChatLine, Story } from "@/app/data/content";
+import { ImageUpload } from "@/app/components/image-upload";
 
 type BookForm = {
   title: string;
@@ -69,34 +69,60 @@ export default function NewBookPage() {
         pages: json.pages || 0,
         rating: json.rating || 0,
         description: json.description || "",
-        chapters: Array.isArray(json.chapters) && json.chapters.length > 0
-          ? json.chapters
-          : [{ title: "", lines: [{ role: "q", text: "" }, { role: "a", text: "" }] }],
+        chapters:
+          Array.isArray(json.chapters) && json.chapters.length > 0
+            ? json.chapters
+            : [
+                {
+                  title: "",
+                  lines: [
+                    { role: "q", text: "" },
+                    { role: "a", text: "" },
+                  ],
+                },
+              ],
         storyId: json.storyId ?? null,
       });
       setShowImport(false);
       setJsonInput("");
       flash("✅ JSON berhasil diimport ke form");
     } catch (err) {
-      flash("❌ Format JSON tidak valid: " + (err instanceof Error ? err.message : "Unknown error"));
+      flash(
+        "❌ Format JSON tidak valid: " +
+          (err instanceof Error ? err.message : "Unknown error")
+      );
     }
   }
 
   function addChapter() {
     setForm((p) => ({
       ...p,
-      chapters: [...p.chapters, { title: "", lines: [{ role: "q", text: "" }, { role: "a", text: "" }] }],
+      chapters: [
+        ...p.chapters,
+        {
+          title: "",
+          lines: [
+            { role: "q", text: "" },
+            { role: "a", text: "" },
+          ],
+        },
+      ],
     }));
   }
 
   function removeChapter(index: number) {
-    setForm((p) => ({ ...p, chapters: p.chapters.filter((_, i) => i !== index) }));
+    setForm((p) => ({
+      ...p,
+      chapters: p.chapters.filter((_, i) => i !== index),
+    }));
   }
 
   function updateChapterTitle(index: number, title: string) {
     setForm((p) => ({
       ...p,
-      chapters: p.chapters.map((ch, i) => (i === index ? { ...ch, title } : ch)),
+      chapters: p.chapters.map((ch, i) =>
+        i === index ? { ...ch, title } : ch
+      ),
     }));
   }
 
@@ -104,7 +130,9 @@ export default function NewBookPage() {
     setForm((p) => ({
       ...p,
       chapters: p.chapters.map((ch, i) =>
-        i === chapterIndex ? { ...ch, lines: [...ch.lines, { role: "q", text: "" }] } : ch
+        i === chapterIndex
+          ? { ...ch, lines: [...ch.lines, { role: "q", text: "" }] }
+          : ch
       ),
     }));
   }
@@ -113,17 +141,29 @@ export default function NewBookPage() {
     setForm((p) => ({
       ...p,
       chapters: p.chapters.map((ch, i) =>
-        i === chapterIndex ? { ...ch, lines: ch.lines.filter((_, li) => li !== lineIndex) } : ch
+        i === chapterIndex
+          ? { ...ch, lines: ch.lines.filter((_, li) => li !== lineIndex) }
+          : ch
       ),
     }));
   }
 
-  function updateChapterLine(chapterIndex: number, lineIndex: number, field: keyof ChatLine, value: string) {
+  function updateChapterLine(
+    chapterIndex: number,
+    lineIndex: number,
+    field: keyof ChatLine,
+    value: string
+  ) {
     setForm((p) => ({
       ...p,
       chapters: p.chapters.map((ch, i) =>
         i === chapterIndex
-          ? { ...ch, lines: ch.lines.map((line, li) => (li === lineIndex ? { ...line, [field]: value } : line)) }
+          ? {
+              ...ch,
+              lines: ch.lines.map((line, li) =>
+                li === lineIndex ? { ...line, [field]: value } : line
+              ),
+            }
           : ch
       ),
     }));
@@ -177,7 +217,9 @@ export default function NewBookPage() {
 
         {showImport && (
           <div className="mb-4 rounded-2xl border border-amber-500/30 bg-slate-900/90 p-5">
-            <h3 className="mb-3 text-sm font-semibold text-amber-200">Paste JSON Book</h3>
+            <h3 className="mb-3 text-sm font-semibold text-amber-200">
+              Paste JSON Book
+            </h3>
             <textarea
               value={jsonInput}
               onChange={(e) => setJsonInput(e.target.value)}
@@ -212,18 +254,23 @@ export default function NewBookPage() {
               <label className="mb-1 block text-xs text-slate-400">Title</label>
               <input
                 value={form.title}
-                onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, title: e.target.value }))
+                }
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-amber-400/60"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs text-slate-400">Assign ke Story (opsional)</label>
+              <label className="mb-1 block text-xs text-slate-400">
+                Assign ke Story (opsional)
+              </label>
               <select
                 value={form.storyId ?? ""}
                 onChange={(e) =>
                   setForm((p) => ({
                     ...p,
-                    storyId: e.target.value === "" ? null : Number(e.target.value),
+                    storyId:
+                      e.target.value === "" ? null : Number(e.target.value),
                   }))
                 }
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
@@ -237,10 +284,14 @@ export default function NewBookPage() {
               </select>
             </div>
             <div>
-              <label className="mb-1 block text-xs text-slate-400">Author</label>
+              <label className="mb-1 block text-xs text-slate-400">
+                Author
+              </label>
               <input
                 value={form.author}
-                onChange={(e) => setForm((p) => ({ ...p, author: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, author: e.target.value }))
+                }
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-amber-400/60"
               />
             </div>
@@ -248,7 +299,9 @@ export default function NewBookPage() {
               <label className="mb-1 block text-xs text-slate-400">Genre</label>
               <input
                 value={form.genre}
-                onChange={(e) => setForm((p) => ({ ...p, genre: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, genre: e.target.value }))
+                }
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-amber-400/60"
               />
             </div>
@@ -257,44 +310,60 @@ export default function NewBookPage() {
               <input
                 type="number"
                 value={form.pages}
-                onChange={(e) => setForm((p) => ({ ...p, pages: Number(e.target.value) }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, pages: Number(e.target.value) }))
+                }
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-amber-400/60"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-slate-400">Rating (0-5)</label>
+              <label className="mb-1 block text-xs text-slate-400">
+                Rating (0-5)
+              </label>
               <input
                 type="number"
                 step="0.1"
                 min="0"
                 max="5"
                 value={form.rating}
-                onChange={(e) => setForm((p) => ({ ...p, rating: Number(e.target.value) }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, rating: Number(e.target.value) }))
+                }
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-amber-400/60"
               />
             </div>
             <div className="sm:col-span-2">
               <ImageUpload
                 currentImageUrl={form.cover}
-                onUploadComplete={(url) => setForm((p) => ({ ...p, cover: url }))}
+                onUploadComplete={(url) =>
+                  setForm((p) => ({ ...p, cover: url }))
+                }
                 label="Cover Image"
                 buttonText="Upload Cover Buku"
               />
               <div className="mt-2">
-                <label className="mb-1 block text-xs text-slate-400">Atau masukkan URL manual</label>
+                <label className="mb-1 block text-xs text-slate-400">
+                  Atau masukkan URL manual
+                </label>
                 <input
                   value={form.cover}
-                  onChange={(e) => setForm((p) => ({ ...p, cover: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, cover: e.target.value }))
+                  }
                   placeholder="https://picsum.photos/seed/book/400/600"
                   className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-amber-400/60"
                 />
               </div>
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs text-slate-400">Description</label>
+              <label className="mb-1 block text-xs text-slate-400">
+                Description
+              </label>
               <textarea
                 value={form.description}
-                onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, description: e.target.value }))
+                }
                 rows={3}
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-amber-400/60"
               />
@@ -315,11 +384,16 @@ export default function NewBookPage() {
 
             <div className="space-y-4">
               {form.chapters.map((chapter, chIdx) => (
-                <div key={chIdx} className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-4">
+                <div
+                  key={chIdx}
+                  className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-4"
+                >
                   <div className="mb-3 flex items-start gap-2">
                     <input
                       value={chapter.title}
-                      onChange={(e) => updateChapterTitle(chIdx, e.target.value)}
+                      onChange={(e) =>
+                        updateChapterTitle(chIdx, e.target.value)
+                      }
                       placeholder={`Chapter ${chIdx + 1} title...`}
                       className="flex-1 rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm font-semibold outline-none focus:border-amber-400/60"
                     />
@@ -343,11 +417,21 @@ export default function NewBookPage() {
 
                   <div className="space-y-2">
                     {chapter.lines.map((line, lineIdx) => (
-                      <div key={lineIdx} className="rounded-lg border border-slate-700/40 bg-slate-800/20 p-2">
+                      <div
+                        key={lineIdx}
+                        className="rounded-lg border border-slate-700/40 bg-slate-800/20 p-2"
+                      >
                         <div className="flex items-start gap-2">
                           <select
                             value={line.role}
-                            onChange={(e) => updateChapterLine(chIdx, lineIdx, "role", e.target.value)}
+                            onChange={(e) =>
+                              updateChapterLine(
+                                chIdx,
+                                lineIdx,
+                                "role",
+                                e.target.value
+                              )
+                            }
                             className="shrink-0 rounded-lg border border-slate-600/50 bg-slate-800/60 px-2 py-1.5 text-xs outline-none"
                           >
                             <option value="q">Q</option>
@@ -355,8 +439,17 @@ export default function NewBookPage() {
                           </select>
                           <input
                             value={line.text}
-                            onChange={(e) => updateChapterLine(chIdx, lineIdx, "text", e.target.value)}
-                            placeholder={line.role === "q" ? "Pertanyaan..." : "Jawaban..."}
+                            onChange={(e) =>
+                              updateChapterLine(
+                                chIdx,
+                                lineIdx,
+                                "text",
+                                e.target.value
+                              )
+                            }
+                            placeholder={
+                              line.role === "q" ? "Pertanyaan..." : "Jawaban..."
+                            }
                             className="min-w-0 flex-1 rounded-lg border border-slate-600/50 bg-slate-800/60 px-2 py-1.5 text-sm outline-none focus:border-amber-400/60"
                           />
                           <button
@@ -369,9 +462,13 @@ export default function NewBookPage() {
                         <div className="mt-2 pl-[38px]">
                           <ImageUpload
                             label="Gambar (opsional)"
-                            buttonText={line.image ? "Ganti Image" : "Tambahkan Image"}
+                            buttonText={
+                              line.image ? "Ganti Image" : "Tambahkan Image"
+                            }
                             currentImageUrl={line.image || undefined}
-                            onUploadComplete={(url) => updateChapterLine(chIdx, lineIdx, "image", url)}
+                            onUploadComplete={(url) =>
+                              updateChapterLine(chIdx, lineIdx, "image", url)
+                            }
                           />
                         </div>
                       </div>

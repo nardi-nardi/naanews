@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { ChatLine, Story } from "@/app/(frontend)/data/content";
-import { ImageUpload } from "@/app/(frontend)/components/image-upload";
+import type { ChatLine, Story } from "@/app/data/content";
+import { ImageUpload } from "@/app/components/image-upload";
 
 type FeedForm = {
   title: string;
@@ -21,7 +21,10 @@ const emptyForm: FeedForm = {
   category: "Berita",
   image: "",
   takeaway: "",
-  lines: [{ role: "q", text: "" }, { role: "a", text: "" }],
+  lines: [
+    { role: "q", text: "" },
+    { role: "a", text: "" },
+  ],
   storyId: null,
 };
 
@@ -53,15 +56,25 @@ export default function NewFeedPage() {
         category: json.category || "Berita",
         image: json.image || "",
         takeaway: json.takeaway || "",
-        lines: Array.isArray(json.lines) ? json.lines : [{ role: "q", text: "" }, { role: "a", text: "" }],
-        source: json.source ? { title: json.source.title || "", url: json.source.url || "" } : undefined,
+        lines: Array.isArray(json.lines)
+          ? json.lines
+          : [
+              { role: "q", text: "" },
+              { role: "a", text: "" },
+            ],
+        source: json.source
+          ? { title: json.source.title || "", url: json.source.url || "" }
+          : undefined,
         storyId: json.storyId ?? null,
       });
       setShowImport(false);
       setJsonInput("");
       flash("✅ JSON berhasil diimport ke form");
     } catch (err) {
-      flash("❌ Format JSON tidak valid: " + (err instanceof Error ? err.message : "Unknown error"));
+      flash(
+        "❌ Format JSON tidak valid: " +
+          (err instanceof Error ? err.message : "Unknown error")
+      );
     }
   }
 
@@ -76,7 +89,9 @@ export default function NewFeedPage() {
   function updateLine(index: number, field: keyof ChatLine, value: string) {
     setForm((p) => ({
       ...p,
-      lines: p.lines.map((line, i) => (i === index ? { ...line, [field]: value } : line)),
+      lines: p.lines.map((line, i) =>
+        i === index ? { ...line, [field]: value } : line
+      ),
     }));
   }
 
@@ -128,7 +143,9 @@ export default function NewFeedPage() {
 
         {showImport && (
           <div className="mb-4 rounded-2xl border border-cyan-500/30 bg-slate-900/90 p-5">
-            <h3 className="mb-3 text-sm font-semibold text-cyan-200">Paste JSON Feed</h3>
+            <h3 className="mb-3 text-sm font-semibold text-cyan-200">
+              Paste JSON Feed
+            </h3>
             <textarea
               value={jsonInput}
               onChange={(e) => setJsonInput(e.target.value)}
@@ -163,15 +180,21 @@ export default function NewFeedPage() {
               <label className="mb-1 block text-xs text-slate-400">Title</label>
               <input
                 value={form.title}
-                onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, title: e.target.value }))
+                }
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs text-slate-400">Category</label>
+              <label className="mb-1 block text-xs text-slate-400">
+                Category
+              </label>
               <select
                 value={form.category}
-                onChange={(e) => setForm((p) => ({ ...p, category: e.target.value as any }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, category: e.target.value as any }))
+                }
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
               >
                 <option value="Berita">Berita</option>
@@ -180,13 +203,16 @@ export default function NewFeedPage() {
               </select>
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs text-slate-400">Assign ke Story (opsional)</label>
+              <label className="mb-1 block text-xs text-slate-400">
+                Assign ke Story (opsional)
+              </label>
               <select
                 value={form.storyId ?? ""}
                 onChange={(e) =>
                   setForm((p) => ({
                     ...p,
-                    storyId: e.target.value === "" ? null : Number(e.target.value),
+                    storyId:
+                      e.target.value === "" ? null : Number(e.target.value),
                   }))
                 }
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
@@ -202,43 +228,71 @@ export default function NewFeedPage() {
             <div className="sm:col-span-2">
               <ImageUpload
                 currentImageUrl={form.image}
-                onUploadComplete={(url) => setForm((p) => ({ ...p, image: url }))}
+                onUploadComplete={(url) =>
+                  setForm((p) => ({ ...p, image: url }))
+                }
                 label="Cover Image"
                 buttonText="Upload Gambar"
               />
               <div className="mt-2">
-                <label className="mb-1 block text-xs text-slate-400">Atau masukkan URL manual</label>
+                <label className="mb-1 block text-xs text-slate-400">
+                  Atau masukkan URL manual
+                </label>
                 <input
                   value={form.image}
-                  onChange={(e) => setForm((p) => ({ ...p, image: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, image: e.target.value }))
+                  }
                   placeholder="https://picsum.photos/seed/your-seed/800/400"
                   className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
                 />
               </div>
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs text-slate-400">Takeaway</label>
+              <label className="mb-1 block text-xs text-slate-400">
+                Takeaway
+              </label>
               <textarea
                 value={form.takeaway}
-                onChange={(e) => setForm((p) => ({ ...p, takeaway: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, takeaway: e.target.value }))
+                }
                 rows={2}
                 className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
               />
             </div>
-            
+
             {/* Source */}
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-xs text-slate-400">Sumber (Opsional)</label>
+              <label className="mb-1 block text-xs text-slate-400">
+                Sumber (Opsional)
+              </label>
               <div className="grid gap-3 sm:grid-cols-2">
                 <input
                   value={form.source?.title || ""}
-                  onChange={(e) => setForm((p) => ({ ...p, source: { title: e.target.value, url: p.source?.url || "" } }))}
+                  onChange={(e) =>
+                    setForm((p) => ({
+                      ...p,
+                      source: {
+                        title: e.target.value,
+                        url: p.source?.url || "",
+                      },
+                    }))
+                  }
                   placeholder="Nama sumber (contoh: Kompas.com)"
                   className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
                 />
                 <input
                   value={form.source?.url || ""}
-                  onChange={(e) => setForm((p) => ({ ...p, source: { title: p.source?.title || "", url: e.target.value } }))}
+                  onChange={(e) =>
+                    setForm((p) => ({
+                      ...p,
+                      source: {
+                        title: p.source?.title || "",
+                        url: e.target.value,
+                      },
+                    }))
+                  }
                   placeholder="URL sumber (contoh: https://...)"
                   className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
                 />
@@ -259,11 +313,16 @@ export default function NewFeedPage() {
             </div>
             <div className="space-y-3">
               {form.lines.map((line, i) => (
-                <div key={i} className="rounded-lg border border-slate-700/40 bg-slate-800/20 p-2.5">
+                <div
+                  key={i}
+                  className="rounded-lg border border-slate-700/40 bg-slate-800/20 p-2.5"
+                >
                   <div className="flex items-start gap-2">
                     <select
                       value={line.role}
-                      onChange={(e) => updateLine(i, "role", e.target.value as "q" | "a")}
+                      onChange={(e) =>
+                        updateLine(i, "role", e.target.value as "q" | "a")
+                      }
                       className="shrink-0 rounded-lg border border-slate-600/50 bg-slate-800/60 px-2 py-2 text-xs outline-none"
                     >
                       <option value="q">Q</option>
@@ -272,7 +331,9 @@ export default function NewFeedPage() {
                     <input
                       value={line.text}
                       onChange={(e) => updateLine(i, "text", e.target.value)}
-                      placeholder={line.role === "q" ? "Pertanyaan..." : "Jawaban..."}
+                      placeholder={
+                        line.role === "q" ? "Pertanyaan..." : "Jawaban..."
+                      }
                       className="min-w-0 flex-1 rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none focus:border-cyan-400/60"
                     />
                     <button
@@ -285,7 +346,9 @@ export default function NewFeedPage() {
                   <div className="mt-2 pl-[42px]">
                     <ImageUpload
                       label="Gambar (opsional)"
-                      buttonText={line.image ? "Ganti Image" : "Tambahkan Image"}
+                      buttonText={
+                        line.image ? "Ganti Image" : "Tambahkan Image"
+                      }
                       currentImageUrl={line.image || undefined}
                       onUploadComplete={(url) => updateLine(i, "image", url)}
                     />

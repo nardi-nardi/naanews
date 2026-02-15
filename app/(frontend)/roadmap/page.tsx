@@ -3,9 +3,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { SiteShell } from "@/app/(frontend)/components/site-shell";
+import { SiteShell } from "@/app/components/site-shell";
 // 👇 Import data dari pu
-import { getRoadmaps } from "@/app/(frontend)/lib/data";
+import { getRoadmaps } from "@/app/lib/data";
 
 export const revalidate = 300;
 

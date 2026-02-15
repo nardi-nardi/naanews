@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/(frontend)/lib/mongodb";
+import { getDb } from "@/app/lib/mongodb";
+import { productCreateSchema } from "@/app/lib/validate";
 import { products } from "@/app/(frontend)/toko/products";
 
 // GET /api/products — list all products
@@ -11,14 +12,21 @@ export async function GET() {
       return NextResponse.json(products);
     }
 
-    const data = await db.collection("products").find({}).sort({ createdAt: -1 }).toArray();
-    
+    const data = await db
+      .collection("products")
+      .find({})
+      .sort({ createdAt: -1 })
+      .toArray();
+
     if (data.length === 0) {
-      // Return seed data if no products in DB
       return NextResponse.json(products);
     }
 
-    return NextResponse.json(data);
+    const mapped = data.map((item) => {
+      const { _id, ...rest } = item;
+      return { ...rest, _id: _id?.toString() };
+    });
+    return NextResponse.json(mapped);
   } catch (error) {
     console.error("GET /api/products error:", error);
     return NextResponse.json(products);
@@ -30,44 +38,54 @@ export async function POST(req: Request) {
   try {
     const db = await getDb();
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
 
-    const body = await req.json();
-    const { id, name, description, price, images, category, categoryId, stock, featured, productType, platforms } = body;
-
-    if (!id || !name || !description || price === undefined || !category || !categoryId || stock === undefined || !productType) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    const raw = await req.json();
+    const parsed = productCreateSchema.safeParse(raw);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Validation failed", details: parsed.error.flatten() },
+        { status: 400 }
+      );
     }
+    const body = parsed.data;
 
-    // Check if product ID already exists
-    const existing = await db.collection("products").findOne({ id });
+    const existing = await db.collection("products").findOne({ id: body.id });
     if (existing) {
-      return NextResponse.json({ error: "Product ID already exists" }, { status: 409 });
+      return NextResponse.json(
+        { error: "Product ID already exists" },
+        { status: 409 }
+      );
     }
 
     const now = Date.now();
     const product = {
-      id,
-      name,
-      description,
-      price: Number(price),
-      images: images || [],
-      category,
-      categoryId,
-      stock: Number(stock),
-      featured: featured || false,
-      productType,
-      platforms: platforms || {},
+      id: body.id,
+      name: body.name,
+      description: body.description,
+      price: body.price,
+      images: body.images.filter(Boolean),
+      category: body.category,
+      categoryId: body.categoryId ?? body.category,
+      stock: body.stock,
+      featured: body.featured,
+      productType: body.productType,
+      platforms: body.platforms ?? {},
       createdAt: now,
       updatedAt: now,
     };
 
-    const result = await db.collection("products").insertOne(product);
-    
-    return NextResponse.json({ success: true, id: result.insertedId });
+    await db.collection("products").insertOne(product);
+    return NextResponse.json({ success: true, id: body.id });
   } catch (error) {
     console.error("POST /api/products error:", error);
-    return NextResponse.json({ error: "Failed to create product" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create product" },
+      { status: 500 }
+    );
   }
 }

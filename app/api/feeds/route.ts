@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/(frontend)/lib/mongodb";
-import type { Feed } from "@/app/(frontend)/data/content";
-import { feeds as dummyFeeds } from "@/app/(frontend)/data/content";
+import { getDb } from "@/app/lib/mongodb";
+import { feedCreateSchema } from "@/app/lib/validate";
+import { feeds as dummyFeeds } from "@/app/data/content";
 
 export const dynamic = "force-dynamic";
 
@@ -9,11 +9,11 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   try {
     const db = await getDb();
-    
+
     if (!db) {
       console.warn("MongoDB not available, using dummy data");
       const category = req.nextUrl.searchParams.get("category");
-      const filtered = category 
+      const filtered = category
         ? dummyFeeds.filter((f) => f.category === category)
         : dummyFeeds;
       return NextResponse.json(filtered);
@@ -46,14 +46,13 @@ export async function GET(req: NextRequest) {
       id: f.id,
       title: f.title,
       category: f.category,
-      createdAt: f.createdAt || Date.now(), // Fallback for old data
+      createdAt: f.createdAt ?? Date.now(),
       popularity: f.popularity,
       image: f.image,
       lines: f.lines,
       takeaway: f.takeaway,
-      source: f.source,
+      source: f.source ?? undefined,
       storyId: f.storyId ?? null,
-      _id: f._id.toString(),
     }));
 
     return NextResponse.json(mapped);
@@ -68,26 +67,49 @@ export async function POST(req: NextRequest) {
   try {
     const db = await getDb();
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
-    const body = (await req.json()) as Omit<Feed, "id" | "createdAt" | "popularity">;
+    const raw = await req.json();
+    const parsed = feedCreateSchema.safeParse(raw);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Validation failed", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+    const body = parsed.data;
 
-    // Auto-increment id
-    const last = await db.collection("feeds").find().sort({ id: -1 }).limit(1).toArray();
+    const last = await db
+      .collection("feeds")
+      .find()
+      .sort({ id: -1 })
+      .limit(1)
+      .toArray();
     const nextId = last.length > 0 ? (last[0].id as number) + 1 : 1;
 
-    const newFeed = { 
-      ...body, 
+    const newFeed = {
+      title: body.title,
+      category: body.category,
+      image: body.image,
+      lines: body.lines,
+      takeaway: body.takeaway,
+      source: body.source,
+      storyId: body.storyId,
       id: nextId,
-      createdAt: Date.now(), // Auto-assign current timestamp
-      popularity: 0, // Start with 0 views
-      storyId: body.storyId ?? null,
+      createdAt: Date.now(),
+      popularity: 0,
     };
     await db.collection("feeds").insertOne(newFeed);
 
     return NextResponse.json({ ...newFeed, id: nextId }, { status: 201 });
   } catch (error) {
     console.error("POST /api/feeds error:", error);
-    return NextResponse.json({ error: "Failed to create feed" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create feed" },
+      { status: 500 }
+    );
   }
 }

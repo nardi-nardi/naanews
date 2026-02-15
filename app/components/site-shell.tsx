@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { MobileNavDrawer } from "@/app/(frontend)/components/mobile-nav-drawer";
-import { navItems, tags } from "@/app/(frontend)/data/content";
+import { MobileNavDrawer } from "@/app/components/mobile-nav-drawer";
+import { navItems, tags } from "@/app/data/content";
 
 type SiteShellProps = {
   activePath: string;
@@ -28,19 +28,44 @@ export function SiteShell({ activePath, children }: SiteShellProps) {
                           : ""
                       }`}
                     >
-                      <p className={`text-sm font-medium ${isActive ? "text-cyan-200" : "text-slate-100"}`}>{item.title}</p>
-                      <p className={`text-xs ${isActive ? "text-cyan-300/70" : "text-slate-400"}`}>{item.note}</p>
+                      <p
+                        className={`text-sm font-medium ${isActive ? "text-cyan-200" : "text-slate-100"}`}
+                      >
+                        {item.title}
+                      </p>
+                      <p
+                        className={`text-xs ${isActive ? "text-cyan-300/70" : "text-slate-400"}`}
+                      >
+                        {item.note}
+                      </p>
                     </Link>
                   );
                 })}
               </div>
             </section>
             <section className="glass-panel rounded-2xl p-4">
-              <h2 className="text-sm font-semibold text-slate-100">Quick Access</h2>
+              <h2 className="text-sm font-semibold text-slate-100">
+                Quick Access
+              </h2>
               <div className="mt-3 flex flex-wrap gap-2 text-xs">
-                <Link href="/berita" className="rounded-full bg-slate-700/70 px-3 py-1 text-slate-200 hover:bg-slate-600/70 transition">#berita</Link>
-                <Link href="/tutorial" className="rounded-full bg-slate-700/70 px-3 py-1 text-slate-200 hover:bg-slate-600/70 transition">#tutorial</Link>
-                <Link href="/riset" className="rounded-full bg-slate-700/70 px-3 py-1 text-slate-200 hover:bg-slate-600/70 transition">#riset</Link>
+                <Link
+                  href="/berita"
+                  className="rounded-full bg-slate-700/70 px-3 py-1 text-slate-200 hover:bg-slate-600/70 transition"
+                >
+                  #berita
+                </Link>
+                <Link
+                  href="/tutorial"
+                  className="rounded-full bg-slate-700/70 px-3 py-1 text-slate-200 hover:bg-slate-600/70 transition"
+                >
+                  #tutorial
+                </Link>
+                <Link
+                  href="/riset"
+                  className="rounded-full bg-slate-700/70 px-3 py-1 text-slate-200 hover:bg-slate-600/70 transition"
+                >
+                  #riset
+                </Link>
               </div>
             </section>
             <Link
@@ -52,14 +77,14 @@ export function SiteShell({ activePath, children }: SiteShellProps) {
           </div>
         </aside>
 
-        <main className="mx-auto w-full max-w-3xl">
-          {children}
-        </main>
+        <main className="mx-auto w-full max-w-3xl">{children}</main>
 
         <aside className="hidden w-64 shrink-0 xl:block">
           <div className="sticky top-6 space-y-4">
             <div className="glass-panel rounded-2xl p-4">
-              <p className="text-sm font-semibold text-slate-200">Google Ads Slot</p>
+              <p className="text-sm font-semibold text-slate-200">
+                Google Ads Slot
+              </p>
               <div className="mt-3 rounded-xl border border-dashed border-slate-500/50 bg-slate-900/40 p-4 text-center text-xs text-slate-400">
                 300 x 250
                 <br />
@@ -73,7 +98,9 @@ export function SiteShell({ activePath, children }: SiteShellProps) {
               </div>
             </div>
             <div className="glass-panel rounded-2xl p-4">
-              <h2 className="text-sm font-semibold text-slate-100">Trending Keywords</h2>
+              <h2 className="text-sm font-semibold text-slate-100">
+                Trending Keywords
+              </h2>
               <div className="mt-3 flex flex-wrap gap-2 text-xs">
                 {tags.map((tag) => (
                   <Link

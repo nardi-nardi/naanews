@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/(frontend)/lib/mongodb";
-import type { Story } from "@/app/(frontend)/data/content";
+import { getDb } from "@/app/lib/mongodb";
+import type { Story } from "@/app/data/content";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +19,10 @@ export async function GET(_req: NextRequest, context: RouteContext) {
 
     const db = await getDb();
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
     const story = await db.collection("stories").findOne({ id: storyId });
 
@@ -39,7 +42,10 @@ export async function GET(_req: NextRequest, context: RouteContext) {
     });
   } catch (error) {
     console.error("GET /api/stories/[id] error:", error);
-    return NextResponse.json({ error: "Failed to fetch story" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch story" },
+      { status: 500 }
+    );
   }
 }
 
@@ -54,17 +60,22 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 
     const db = await getDb();
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
     const body = (await req.json()) as Partial<Story>;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: _removedId, ...updateData } = body;
 
-    const result = await db.collection("stories").findOneAndUpdate(
-      { id: storyId },
-      { $set: updateData },
-      { returnDocument: "after" },
-    );
+    const result = await db
+      .collection("stories")
+      .findOneAndUpdate(
+        { id: storyId },
+        { $set: updateData },
+        { returnDocument: "after" }
+      );
 
     if (!result) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
@@ -82,7 +93,10 @@ export async function PUT(req: NextRequest, context: RouteContext) {
     });
   } catch (error) {
     console.error("PUT /api/stories/[id] error:", error);
-    return NextResponse.json({ error: "Failed to update story" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update story" },
+      { status: 500 }
+    );
   }
 }
 
@@ -97,7 +111,10 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
 
     const db = await getDb();
     if (!db) {
-      return NextResponse.json({ error: "Database connection failed" }, { status: 503 });
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
     }
     const result = await db.collection("stories").deleteOne({ id: storyId });
 
@@ -108,6 +125,9 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/stories/[id] error:", error);
-    return NextResponse.json({ error: "Failed to delete story" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to delete story" },
+      { status: 500 }
+    );
   }
 }

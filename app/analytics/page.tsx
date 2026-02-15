@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { SiteShell } from "@/app/(frontend)/components/site-shell";
-import type { Feed, Book } from "@/app/(frontend)/data/content";
+import { SiteShell } from "@/app/components/site-shell";
+import type { Feed, Book } from "@/app/data/content";
 import {
   BarChart,
   Bar,
@@ -22,7 +22,14 @@ import {
   Area,
 } from "recharts";
 
-const COLORS = ["#06b6d4", "#f59e0b", "#10b981", "#8b5cf6", "#ef4444", "#ec4899"];
+const COLORS = [
+  "#06b6d4",
+  "#f59e0b",
+  "#10b981",
+  "#8b5cf6",
+  "#ef4444",
+  "#ec4899",
+];
 
 type Product = {
   id: string;
@@ -50,13 +57,14 @@ export default function AnalyticsPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [feedsRes, booksRes, roadmapsRes, productsRes] = await Promise.all([
-          fetch("/api/feeds"),
-          fetch("/api/books"),
-          fetch("/api/roadmaps"),
-          fetch("/api/products"),
-        ]);
-        
+        const [feedsRes, booksRes, roadmapsRes, productsRes] =
+          await Promise.all([
+            fetch("/api/feeds"),
+            fetch("/api/books"),
+            fetch("/api/roadmaps"),
+            fetch("/api/products"),
+          ]);
+
         if (feedsRes.ok) {
           const data = await feedsRes.json();
           setFeeds(data.sort((a: Feed, b: Feed) => b.createdAt - a.createdAt));
@@ -80,10 +88,12 @@ export default function AnalyticsPage() {
   };
 
   const avgChatLength =
-    feeds.reduce((acc, item) => acc + item.lines.length, 0) / (feeds.length || 1);
+    feeds.reduce((acc, item) => acc + item.lines.length, 0) /
+    (feeds.length || 1);
 
   // Total content across all types
-  const totalContent = feeds.length + books.length + roadmaps.length + products.length;
+  const totalContent =
+    feeds.length + books.length + roadmaps.length + products.length;
 
   // Content type distribution
   const contentTypeData = [
@@ -94,9 +104,15 @@ export default function AnalyticsPage() {
   ];
 
   // Product stats
-  const totalProductValue = products.reduce((acc, p) => acc + p.price * p.stock, 0);
-  const productCategories = Array.from(new Set(products.map((p) => p.category)));
-  const avgProductPrice = products.reduce((acc, p) => acc + p.price, 0) / (products.length || 1);
+  const totalProductValue = products.reduce(
+    (acc, p) => acc + p.price * p.stock,
+    0
+  );
+  const productCategories = Array.from(
+    new Set(products.map((p) => p.category))
+  );
+  const avgProductPrice =
+    products.reduce((acc, p) => acc + p.price, 0) / (products.length || 1);
 
   // Roadmap stats
   const roadmapLevels = {
@@ -127,7 +143,10 @@ export default function AnalyticsPage() {
       return feedDate.toDateString() === date.toDateString();
     });
     return {
-      date: date.toLocaleDateString("id-ID", { day: "2-digit", month: "short" }),
+      date: date.toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "short",
+      }),
       berita: dayFeeds.filter((f) => f.category === "Berita").length,
       tutorial: dayFeeds.filter((f) => f.category === "Tutorial").length,
       riset: dayFeeds.filter((f) => f.category === "Riset").length,
@@ -191,33 +210,57 @@ export default function AnalyticsPage() {
       </div>
 
       {loading ? (
-        <div className="glass-panel rounded-xl p-12 text-center text-slate-400">Loading...</div>
+        <div className="glass-panel rounded-xl p-12 text-center text-slate-400">
+          Loading...
+        </div>
       ) : (
         <>
           {/* Stats Cards */}
           <div className="mb-4 sm:mb-8 grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
             <div className="glass-panel rounded-lg sm:rounded-xl p-3 sm:p-5">
-              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Total Konten</p>
-              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-slate-100">{totalContent}</p>
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">
+                Total Konten
+              </p>
+              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-slate-100">
+                {totalContent}
+              </p>
             </div>
             <div className="glass-panel rounded-lg sm:rounded-xl p-3 sm:p-5">
-              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Feed</p>
-              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-cyan-400">{feeds.length}</p>
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">
+                Feed
+              </p>
+              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-cyan-400">
+                {feeds.length}
+              </p>
             </div>
             <div className="glass-panel rounded-lg sm:rounded-xl p-3 sm:p-5">
-              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Buku</p>
-              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-amber-400">{books.length}</p>
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">
+                Buku
+              </p>
+              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-amber-400">
+                {books.length}
+              </p>
             </div>
             <div className="glass-panel rounded-lg sm:rounded-xl p-3 sm:p-5">
-              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Roadmap</p>
-              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-emerald-400">{roadmaps.length}</p>
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">
+                Roadmap
+              </p>
+              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-emerald-400">
+                {roadmaps.length}
+              </p>
             </div>
             <div className="glass-panel rounded-lg sm:rounded-xl p-3 sm:p-5">
-              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Produk</p>
-              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-purple-400">{products.length}</p>
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">
+                Produk
+              </p>
+              <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-purple-400">
+                {products.length}
+              </p>
             </div>
             <div className="glass-panel rounded-lg sm:rounded-xl p-3 sm:p-5">
-              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Rata-rata Q&A</p>
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">
+                Rata-rata Q&A
+              </p>
               <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-pink-400">
                 {avgChatLength.toFixed(1)}
               </p>
@@ -246,7 +289,10 @@ export default function AnalyticsPage() {
                     dataKey="value"
                   >
                     {contentTypeData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -274,7 +320,10 @@ export default function AnalyticsPage() {
                     dataKey="value"
                   >
                     {categoryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -401,14 +450,20 @@ export default function AnalyticsPage() {
           {/* Additional Stats */}
           <div className="mb-4 sm:mb-8 grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-5">
-              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Total Nilai Inventori</p>
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">
+                Total Nilai Inventori
+              </p>
               <p className="mt-1 sm:mt-2 text-xl sm:text-2xl font-bold text-emerald-400">
                 Rp {totalProductValue.toLocaleString("id-ID")}
               </p>
-              <p className="mt-1 text-[10px] sm:text-xs text-slate-500">Dari {products.length} produk</p>
+              <p className="mt-1 text-[10px] sm:text-xs text-slate-500">
+                Dari {products.length} produk
+              </p>
             </div>
             <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-5">
-              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Kategori Produk</p>
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">
+                Kategori Produk
+              </p>
               <p className="mt-1 sm:mt-2 text-xl sm:text-2xl font-bold text-purple-400">
                 {productCategories.length}
               </p>
@@ -417,11 +472,18 @@ export default function AnalyticsPage() {
               </p>
             </div>
             <div className="glass-panel rounded-lg sm:rounded-xl p-4 sm:p-5">
-              <p className="text-[10px] sm:text-xs font-medium text-slate-400">Rata-rata Harga Produk</p>
-              <p className="mt-1 sm:mt-2 text-xl sm:text-2xl font-bold text-amber-400">
-                Rp {avgProductPrice.toLocaleString("id-ID", { maximumFractionDigits: 0 })}
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400">
+                Rata-rata Harga Produk
               </p>
-              <p className="mt-1 text-[10px] sm:text-xs text-slate-500">Per item</p>
+              <p className="mt-1 sm:mt-2 text-xl sm:text-2xl font-bold text-amber-400">
+                Rp{" "}
+                {avgProductPrice.toLocaleString("id-ID", {
+                  maximumFractionDigits: 0,
+                })}
+              </p>
+              <p className="mt-1 text-[10px] sm:text-xs text-slate-500">
+                Per item
+              </p>
             </div>
           </div>
 
@@ -443,8 +505,12 @@ export default function AnalyticsPage() {
                       {index + 1}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-slate-100">{feed.title}</p>
-                      <p className="text-xs text-slate-500">Pop: {feed.popularity}</p>
+                      <p className="truncate text-sm font-medium text-slate-100">
+                        {feed.title}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        Pop: {feed.popularity}
+                      </p>
                     </div>
                   </Link>
                 ))}
@@ -464,7 +530,9 @@ export default function AnalyticsPage() {
                     className="flex items-center gap-3 rounded-lg border border-slate-700/50 bg-slate-900/40 p-3 transition hover:border-amber-400/50 hover:bg-slate-800/60"
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-slate-100">{book.title}</p>
+                      <p className="truncate text-sm font-medium text-slate-100">
+                        {book.title}
+                      </p>
                       <p className="text-xs text-slate-500">
                         {book.author} • {book.pages} hal • ⭐ {book.rating}
                       </p>
@@ -475,7 +543,9 @@ export default function AnalyticsPage() {
                   </Link>
                 ))}
                 {books.length === 0 && (
-                  <p className="text-center text-sm text-slate-500">Belum ada buku</p>
+                  <p className="text-center text-sm text-slate-500">
+                    Belum ada buku
+                  </p>
                 )}
               </div>
             </div>
@@ -496,7 +566,9 @@ export default function AnalyticsPage() {
                       <p className="truncate text-sm font-medium text-slate-100">
                         {roadmap.title}
                       </p>
-                      <p className="text-xs text-slate-500">{roadmap.duration}</p>
+                      <p className="text-xs text-slate-500">
+                        {roadmap.duration}
+                      </p>
                     </div>
                     <span className="shrink-0 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
                       {roadmap.level}
@@ -504,7 +576,9 @@ export default function AnalyticsPage() {
                   </Link>
                 ))}
                 {roadmaps.length === 0 && (
-                  <p className="text-center text-sm text-slate-500">Belum ada roadmap</p>
+                  <p className="text-center text-sm text-slate-500">
+                    Belum ada roadmap
+                  </p>
                 )}
               </div>
             </div>
@@ -526,7 +600,8 @@ export default function AnalyticsPage() {
                         {product.name}
                       </p>
                       <p className="text-xs text-slate-500">
-                        Rp {product.price.toLocaleString("id-ID")} • Stok: {product.stock}
+                        Rp {product.price.toLocaleString("id-ID")} • Stok:{" "}
+                        {product.stock}
                       </p>
                     </div>
                     <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-semibold text-purple-300">
@@ -535,7 +610,9 @@ export default function AnalyticsPage() {
                   </Link>
                 ))}
                 {products.length === 0 && (
-                  <p className="text-center text-sm text-slate-500">Belum ada produk</p>
+                  <p className="text-center text-sm text-slate-500">
+                    Belum ada produk
+                  </p>
                 )}
               </div>
             </div>
@@ -554,10 +631,12 @@ export default function AnalyticsPage() {
                   className="flex items-center gap-3 rounded-lg border border-slate-700/50 bg-slate-900/40 p-3 transition hover:border-cyan-400/50 hover:bg-slate-800/60"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-slate-100">{feed.title}</p>
+                    <p className="truncate text-sm font-medium text-slate-100">
+                      {feed.title}
+                    </p>
                     <p className="text-xs text-slate-500">
-                      {new Date(feed.createdAt).toLocaleDateString("id-ID")} • {feed.lines.length}{" "}
-                      Q&A
+                      {new Date(feed.createdAt).toLocaleDateString("id-ID")} •{" "}
+                      {feed.lines.length} Q&A
                     </p>
                   </div>
                   <span
@@ -571,7 +650,9 @@ export default function AnalyticsPage() {
                   >
                     {feed.category}
                   </span>
-                  <div className="shrink-0 text-xs text-slate-500">Pop: {feed.popularity}</div>
+                  <div className="shrink-0 text-xs text-slate-500">
+                    Pop: {feed.popularity}
+                  </div>
                 </Link>
               ))}
             </div>

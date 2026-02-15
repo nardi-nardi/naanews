@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getRelativeTime } from "@/app/(frontend)/lib/time-utils";
+import { getRelativeTime } from "@/app/lib/time-utils";
 
 type RelativeTimeProps = {
   timestamp: number;
