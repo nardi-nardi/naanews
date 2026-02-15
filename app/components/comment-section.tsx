@@ -36,7 +36,9 @@ export function CommentSection({ feedId }: CommentSectionProps) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/comments?feedId=" + encodeURIComponent(String(feedId)));
+      const res = await fetch(
+        "/api/comments?feedId=" + encodeURIComponent(String(feedId))
+      );
       if (!res.ok) throw new Error("Gagal memuat komentar");
       const data = await res.json();
       setComments(Array.isArray(data) ? data : []);
@@ -74,7 +76,10 @@ export function CommentSection({ feedId }: CommentSectionProps) {
       const data = await res.json();
 
       if (!res.ok) {
-        const msg = data?.error ?? data?.details?.formErrors?.[0] ?? "Gagal mengirim komentar";
+        const msg =
+          data?.error ??
+          data?.details?.formErrors?.[0] ??
+          "Gagal mengirim komentar";
         throw new Error(msg);
       }
 
@@ -94,7 +99,10 @@ export function CommentSection({ feedId }: CommentSectionProps) {
         Komentar ({comments.length})
       </h2>
 
-      <form onSubmit={handleSubmit} className="glass-panel mb-4 rounded-2xl p-5">
+      <form
+        onSubmit={handleSubmit}
+        className="glass-panel mb-4 rounded-2xl p-5"
+      >
         {error ? (
           <div className="mb-3 rounded-lg border border-amber-500/50 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
             {error}
@@ -135,7 +143,7 @@ export function CommentSection({ feedId }: CommentSectionProps) {
         <h3 className="mb-3 text-sm font-semibold text-slate-200">
           Komentar Berita Lainnya
         </h3>
-        
+
         {loading ? (
           <div className="py-8 text-center text-sm text-slate-400">
             Memuat komentar...
@@ -147,7 +155,10 @@ export function CommentSection({ feedId }: CommentSectionProps) {
         ) : (
           <div className="scrollbar-hide max-h-[500px] space-y-3 overflow-y-auto pr-2">
             {comments.map((comment) => (
-              <div key={comment.id} className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-4">
+              <div
+                key={comment.id}
+                className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-4"
+              >
                 <div className="mb-2 flex items-center justify-between">
                   <span className="font-semibold text-slate-100">
                     {comment.author}
