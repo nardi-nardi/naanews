@@ -14,8 +14,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
-      <body className="antialiased">
+    <html lang="id" className="bg-canvas">
+      <body className="antialiased bg-canvas min-h-screen">
         <LightboxProvider>{children}</LightboxProvider>
       </body>
     </html>

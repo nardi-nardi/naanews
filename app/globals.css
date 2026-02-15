@@ -41,13 +41,18 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: "Gill Sans", "Trebuchet MS", "Franklin Gothic Medium", sans-serif;
+  font-family:
+    "Gill Sans", "Trebuchet MS", "Franklin Gothic Medium", sans-serif;
 }
 
 .bg-canvas {
   background:
     radial-gradient(circle at 10% 0%, rgba(34, 211, 238, 0.2), transparent 35%),
-    radial-gradient(circle at 90% 10%, rgba(249, 115, 22, 0.15), transparent 30%),
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(249, 115, 22, 0.15),
+      transparent 30%
+    ),
     linear-gradient(140deg, #020617 0%, #0f172a 48%, #0b1120 100%);
 }
 
@@ -105,7 +110,11 @@ h4 {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(110deg, rgba(56, 189, 248, 0.08), transparent 45%);
+  background: linear-gradient(
+    110deg,
+    rgba(56, 189, 248, 0.08),
+    transparent 45%
+  );
 }
 
 .feed-card:hover {
@@ -171,4 +180,20 @@ h4 {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Smooth page transitions to prevent black flash */
+html {
+  background: var(--background);
+}
+
+body {
+  background: var(--background);
+  transition: opacity 0.15s ease-in-out;
+}
+
+/* Prevent flash during page navigation */
+#__next,
+main {
+  background: transparent;
 }
