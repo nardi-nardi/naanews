@@ -99,8 +99,8 @@ const employees = [
 ];
 
 const contact = [
-  { label: "Email Bisnis", value: "business@narzza.media", icon: "📧" },
-  { label: "Email Umum", value: "halo@narzza.media", icon: "✉️" },
+  { label: "Email Bisnis", value: "contact@narzza.com", icon: "📧" },
+  { label: "Email Umum", value: "narzzaofficial@gmail.com", icon: "✉️" },
   { label: "GitHub", value: "github.com/narzza-media", icon: "💻" },
   { label: "LinkedIn", value: "linkedin.com/company/narzza-media", icon: "🔗" },
   { label: "Twitter/X", value: "@narzzamedia", icon: "🐦" },

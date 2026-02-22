@@ -74,7 +74,7 @@ type FeedPageProps = {
   badge: string;
   title: string;
   description: string;
-  category?: string;
+  category?: Feed["category"];
   showStories?: boolean;
   initialFeeds: Feed[];
   initialStories: Story[];
@@ -142,6 +142,8 @@ export function FeedPage({
       : activeCategory === "Semua"
         ? feeds
         : feeds.filter((f) => f.category === activeCategory);
+  const pageFeeds =
+    !isHome && category ? feeds.filter((f) => f.category === category) : feeds;
 
   const showBooks =
     isHome && (activeCategory === "Buku" || activeCategory === "Semua");
@@ -195,8 +197,16 @@ export function FeedPage({
       ) : null}
 
       {isHome ? (
-        <div className="mt-5 -mx-3 md:-mx-5">
-          <div className="flex items-center gap-2 overflow-x-auto px-3 pb-2 md:px-5 scrollbar-hide">
+        <div className="mt-5">
+          <div
+            className="scrollbar-hide flex w-full max-w-full items-center gap-2 overflow-x-auto pb-2"
+            style={{
+              paddingLeft: "max(0.25rem, env(safe-area-inset-left))",
+              paddingRight: "max(0.25rem, env(safe-area-inset-right))",
+              scrollPaddingLeft: "max(0.25rem, env(safe-area-inset-left))",
+              scrollPaddingRight: "max(0.25rem, env(safe-area-inset-right))",
+            }}
+          >
             {categoryButtons.map((cat) => (
               <button
                 key={cat.key}
@@ -446,8 +456,8 @@ export function FeedPage({
 
       {!isHome ? (
         <section className="mt-5 grid gap-4">
-          {feeds.length > 0 ? (
-            feeds.map((feed, index) =>
+          {pageFeeds.length > 0 ? (
+            pageFeeds.map((feed, index) =>
               category === "Tutorial" ? (
                 <TutorialCard key={feed.id} feed={feed} index={index} />
               ) : (

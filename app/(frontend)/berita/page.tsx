@@ -18,7 +18,7 @@ async function getInternalData(endpoint: string) {
 
 export default async function BeritaPage() {
   const [feeds, stories, books, roadmaps, products] = await Promise.all([
-    getFeeds(), // Bisa dioptimalkan: getFeeds("Berita") jika API mendukung filter di DB
+    getFeeds("Berita"),
     getStories(),
     getBooks(),
     getInternalData("roadmaps"),
@@ -32,7 +32,7 @@ export default async function BeritaPage() {
         badge="BERITA"
         title="Berita Teknologi"
         description="Update teknologi terkini dan tren industri."
-        category="Berita" // Filter otomatis di FeedPage
+        category="Berita"
         initialFeeds={feeds}
         initialStories={stories}
         initialBooks={books}

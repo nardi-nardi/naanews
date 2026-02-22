@@ -17,7 +17,7 @@ async function getInternalData(endpoint: string) {
 
 export default async function TutorialPage() {
   const [feeds, stories, books, roadmaps, products] = await Promise.all([
-    getFeeds(),
+    getFeeds("Tutorial"),
     getStories(),
     getBooks(),
     getInternalData("roadmaps"),

@@ -17,7 +17,7 @@ async function getInternalData(endpoint: string) {
 
 export default async function RisetPage() {
   const [feeds, stories, books, roadmaps, products] = await Promise.all([
-    getFeeds(),
+    getFeeds("Riset"),
     getStories(),
     getBooks(),
     getInternalData("roadmaps"),
