@@ -4,11 +4,10 @@ export type {
   Feed,
   BookChapter,
   Book,
-  NavItem,
   FeedCategory,
 } from "@/app/types/content";
 
-import type { Story, Feed, Book, BookChapter, ChatLine, NavItem } from "@/app/types/content";
+import type { Story, Feed, Book, BookChapter, ChatLine, } from "@/app/types/content";
 
 export const stories: Story[] = [
   {
@@ -408,16 +407,7 @@ export const feeds: Feed[] = [
   },
 ];
 
-export const navItems: NavItem[] = [
-  { title: "Home Feed", note: "Semua update terbaru", href: "/" },
-  { title: "Berita", note: "Tren dan breaking tech", href: "/berita" },
-  { title: "Tutorial", note: "Step-by-step praktis", href: "/tutorial" },
-  { title: "Roadmap", note: "Urutan belajar terpandu", href: "/roadmap" },
-  { title: "Riset", note: "Hasil eksperimen tim", href: "/riset" },
-  { title: "Buku", note: "Belajar lewat Q&A", href: "/buku" },
-  { title: "Toko", note: "Belanja merchandise", href: "/toko" },
-  { title: "Tentang", note: "Misi, tim, kontak", href: "/tentang" },
-];
+
 
 export const books: Book[] = [
   {
@@ -715,7 +705,7 @@ export const books: Book[] = [
   },
 ];
 
-export const tags = ["#ai-local", "#nextjs16", "#cache-api", "#ux-chatfeed"];
+
 
 export function searchFeeds(query: string): Feed[] {
   const normalized = query.trim().toLowerCase();

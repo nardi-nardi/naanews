@@ -51,9 +51,3 @@ export type Book = {
   chapters: BookChapter[];
   storyId?: number | null;
 };
-
-export type NavItem = {
-  title: string;
-  note: string;
-  href: "/" | "/berita" | "/tutorial" | "/riset" | "/buku" | "/roadmap" | "/toko" | "/tentang";
-};

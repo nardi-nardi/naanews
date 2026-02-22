@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
-import { LightboxProvider } from "@/app/components/chat-image";
 import "./globals.css";
+import { Inter } from "next/font/google";
 
 export const metadata: Metadata = {
   title: "Narzza Media Digital",
   description:
     "Portal berita, tutorial, dan hasil eksperimen dengan format chat",
 };
+
+const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -15,8 +17,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className="bg-canvas">
-      <body className="antialiased bg-canvas min-h-screen">
-        <LightboxProvider>{children}</LightboxProvider>
+      <body className={`${inter.className} antialiased bg-canvas min-h-screen`}>
+        {children}
       </body>
     </html>
   );
