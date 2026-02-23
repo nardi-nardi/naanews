@@ -5,6 +5,7 @@ import MenuButton from "./MenuButton";
 import NavigationSection from "./NavigationSection";
 import QuickAccessSection from "./QuickAccessSection";
 import TrendingSection from "./TrendingSection";
+import { MobileNavDrawer } from "./MobileNavDrawer";
 
 export {
   AdminLink,
@@ -14,4 +15,5 @@ export {
   NavigationSection,
   QuickAccessSection,
   TrendingSection,
+  MobileNavDrawer
 };

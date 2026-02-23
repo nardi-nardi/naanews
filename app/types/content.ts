@@ -1,8 +1,3 @@
-/**
- * Shared types untuk konten (feed, book, story).
- * Dipakai di server dan client; bebas dari data besar.
- */
-
 export type FeedCategory = "Berita" | "Tutorial" | "Riset";
 
 export type Story = {
@@ -50,4 +45,12 @@ export type Book = {
   description: string;
   chapters: BookChapter[];
   storyId?: number | null;
+};
+
+export type Product = {
+  id: string;
+  name: string;
+  price: number;
+  images: string[];
+  category: string;
 };

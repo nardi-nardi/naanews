@@ -16,13 +16,13 @@ import {
   roadmaps as seedRoadmaps,
   type Roadmap,
   type RoadmapStep,
-} from "@/app/data/roadmaps";
+} from "@/app/types/roadmaps";
 import {
   categories as seedCategories,
   products as seedProducts,
   type Category,
   type Product,
-} from "@/app/(frontend)/toko/products";
+} from "@/app/types/products";
 
 /** Max 2 seed per IP per jam — hanya untuk setup/restore */
 const SEED_RATE_LIMIT = { max: 2, windowMs: 60 * 60 * 1000 };

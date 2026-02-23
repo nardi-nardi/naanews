@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { DrawerHeader, MenuButton, NavigationSection } from "./navigation";
+import { DrawerHeader, MenuButton, NavigationSection } from ".";
 
 // Helper agar class Tailwind lebih enak dibaca
 function cn(...inputs: ClassValue[]) {
@@ -81,5 +81,3 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
     </>
   );
 }
-
-

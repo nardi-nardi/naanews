@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/app/lib/mongodb";
 import { categorySchema } from "@/app/lib/validate";
-import { categories } from "@/app/(frontend)/toko/products";
+import { categories } from "@/app/types/products";
 
 export const dynamic = "force-dynamic";
 
@@ -56,7 +56,11 @@ export async function POST(request: Request) {
     }
 
     const now = Date.now();
-    const slugBase = body.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "") || "category";
+    const slugBase =
+      body.name
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "") || "category";
     const newCategory = {
       id: body.id ?? body.slug ?? slugBase,
       name: body.name,

@@ -1,11 +1,11 @@
-import { MobileNavDrawer } from "@/app/components/mobile-nav-drawer";
 import {
   AdminLink,
   AdsPlaceholder,
+  MobileNavDrawer,
   NavigationSection,
   QuickAccessSection,
   TrendingSection,
-} from "./navigation";
+} from ".";
 
 type SiteShellProps = {
   activePath: string;

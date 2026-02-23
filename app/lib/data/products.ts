@@ -1,9 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { getDb } from "@/app/lib/mongodb";
-import {
-  products as dummyProducts,
-  type Product,
-} from "@/app/(frontend)/toko/products";
+import { products as dummyProducts, type Product } from "@/app/types/products";
 import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "./constants";
 
 async function loadProducts(): Promise<Product[]> {

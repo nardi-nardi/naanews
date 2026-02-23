@@ -9,10 +9,10 @@ import { useSearchParams } from "next/navigation";
 import { BookCard } from "@/app/components/book-card";
 import { FeedTitleCard } from "@/app/components/feed-title-card";
 import { GlobalSearchForm } from "@/app/components/global-search-form";
-import { SiteShell } from "@/app/components/site-shell";
 import { StatusViralSection } from "@/app/components/status-viral-section";
 import { TutorialCard } from "@/app/components/tutorial-card";
 import type { Book, Feed, Story } from "@/app/data/content";
+import { SiteShell } from "./navigation/SiteShell";
 
 type HomeCategory = "Semua" | "Berita" | "Tutorial" | "Riset" | "Buku";
 

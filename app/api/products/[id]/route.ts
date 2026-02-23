@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/app/lib/mongodb";
 import { productUpdateSchema } from "@/app/lib/validate";
-import { getProductById } from "@/app/(frontend)/toko/products";
+import { getProductById } from "@/app/types/products";
 
 // GET /api/products/[id] — get single product
 export async function GET(
@@ -76,14 +76,16 @@ export async function PUT(
       updatedAt: Date.now(),
     };
     if (body.name !== undefined) updateData.name = body.name;
-    if (body.description !== undefined) updateData.description = body.description;
+    if (body.description !== undefined)
+      updateData.description = body.description;
     if (body.price !== undefined) updateData.price = body.price;
     if (body.images !== undefined) updateData.images = body.images;
     if (body.category !== undefined) updateData.category = body.category;
     if (body.categoryId !== undefined) updateData.categoryId = body.categoryId;
     if (body.stock !== undefined) updateData.stock = body.stock;
     if (body.featured !== undefined) updateData.featured = body.featured;
-    if (body.productType !== undefined) updateData.productType = body.productType;
+    if (body.productType !== undefined)
+      updateData.productType = body.productType;
     if (body.platforms !== undefined) updateData.platforms = body.platforms;
 
     const result = await db

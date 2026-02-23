@@ -1,5 +1,5 @@
 import { BookCard } from "@/app/components/book-card";
-import { SiteShell } from "@/app/components/site-shell";
+import { SiteShell } from "@/app/components/navigation/SiteShell";
 import { getBooks } from "@/app/lib/data";
 
 export const revalidate = 300;

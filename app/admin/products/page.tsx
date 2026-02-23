@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { ImageUpload } from "@/app/components/image-upload";
-import type { Product, Category } from "@/app/(frontend)/toko/products";
+import type { Product, Category } from "@/app/types/products";
 
 type ProductForm = {
   id: string;

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { SiteShell } from "@/app/components/site-shell";
+import { SiteShell } from "@/app/components/navigation/site-shell";
 import type { Feed, Book } from "@/app/data/content";
 import {
   BarChart,

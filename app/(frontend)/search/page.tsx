@@ -2,7 +2,7 @@
 
 import { FeedTitleCard } from "@/app/components/feed-title-card";
 import { BookCard } from "@/app/components/book-card";
-import { SiteShell } from "@/app/components/site-shell";
+import { SiteShell } from "@/app/components/navigation/site-shell";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useRef, Suspense } from "react";
 import type { Feed, Book } from "@/app/data/content";

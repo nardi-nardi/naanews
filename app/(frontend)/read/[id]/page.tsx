@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFeedIds, getFeeds, getProducts } from "@/app/lib/data";
 import { CommentSection } from "@/app/components/comment-section";
-import { ReadArticleHeader } from "./_components/read-article-header";
-import { ReadArticleBody } from "./_components/read-article-body";
-import { SimilarFeedsSection } from "./_components/similar-feeds-section";
-import { StorePreviewSection } from "./_components/store-preview-section";
+import { ReadArticleHeader } from "../../../components/reads/read-article-header";
+import { ReadArticleBody } from "../../../components/reads/read-article-body";
+import { SimilarFeedsSection } from "../../../components/reads/similar-feeds-section";
+import { StorePreviewSection } from "../../../components/reads/store-preview-section";
 
 export const revalidate = 300;
 

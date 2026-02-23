@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { getDb } from "@/app/lib/mongodb";
-import { roadmaps as dummyRoadmaps, type Roadmap } from "@/app/data/roadmaps";
+import { roadmaps as dummyRoadmaps, type Roadmap } from "@/app/types/roadmaps";
 import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "./constants";
 
 async function loadRoadmaps(): Promise<Roadmap[]> {
