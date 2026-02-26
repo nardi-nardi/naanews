@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { productUpdateSchema } from "@/app/lib/validate";
-import { getProductById } from "@/app/types/products";
+import { getDb } from "@/lib/mongodb";
+import { productUpdateSchema } from "@/lib/validate";
+import { getProductById } from "@/types/products";
 
 // GET /api/products/[id] — get single product
 export async function GET(

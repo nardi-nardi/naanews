@@ -1,4 +1,4 @@
-import { SiteShell } from "@/app/components/navigation/SiteShell";
+import { SiteShell } from "@/components/navigation/SiteShell";
 import {
   HeroTentang,
   AchievementTentang,
@@ -10,7 +10,7 @@ import {
   TechnologyStack,
   Partners,
   CTAFooter,
-} from "@/app/components/tentang";
+} from "@/components/tentang";
 
 import type { Metadata } from "next";
 

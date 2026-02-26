@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { requireSeedAuth } from "@/app/lib/api-auth";
-import { rateLimit } from "@/app/lib/rate-limit";
+import { getDb } from "@/lib/mongodb";
+import { requireSeedAuth } from "@/lib/api-auth";
+import { rateLimit } from "@/lib/rate-limit";
 import {
   books as seedBooks,
   feeds as seedFeeds,
@@ -11,18 +11,18 @@ import {
   type ChatLine,
   type Feed,
   type Story,
-} from "@/app/data/content";
+} from "@/data/content";
 import {
   roadmaps as seedRoadmaps,
   type Roadmap,
   type RoadmapStep,
-} from "@/app/types/roadmaps";
+} from "@/types/roadmaps";
 import {
   categories as seedCategories,
   products as seedProducts,
   type Category,
   type Product,
-} from "@/app/types/products";
+} from "@/types/products";
 
 /** Max 2 seed per IP per jam — hanya untuk setup/restore */
 const SEED_RATE_LIMIT = { max: 2, windowMs: 60 * 60 * 1000 };

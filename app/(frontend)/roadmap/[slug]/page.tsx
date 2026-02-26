@@ -4,7 +4,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getRoadmaps } from "@/app/lib/data"; // Import dari pusat data
+import { getRoadmaps } from "@/lib/data"; // Import dari pusat data
 
 export const revalidate = 300;
 

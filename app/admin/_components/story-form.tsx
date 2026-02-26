@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
-import { ImageUpload } from "@/app/components/image-upload";
+import { ImageUpload } from "@/components/ImageUpload";
 import {
   StoryForm as StoryFormType,
   emptyStoryForm,
   paletteOptions,
 } from "@/app/admin/_types";
-import type { Story } from "@/app/data/content";
+import type { Story } from "@/data/content";
 
 interface Props {
   initialData?: Story | null;

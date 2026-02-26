@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type { Roadmap, RoadmapStep, RoadmapVideo } from "@/app/types/roadmaps";
-import { ImageUpload } from "@/app/components/image-upload";
+import { ImageUpload } from "@/components/ImageUpload";
 
 const emptyForm: Roadmap = {
   slug: "",

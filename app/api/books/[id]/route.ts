@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { bookSchema } from "@/app/lib/validate";
+import { getDb } from "@/lib/mongodb";
+import { bookSchema } from "@/lib/validate";
 
 export const dynamic = "force-dynamic";
 
@@ -77,11 +77,13 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     if (body.chapters !== undefined) update.chapters = body.chapters;
     if (body.storyId !== undefined) update.storyId = body.storyId;
 
-    const result = await db.collection("books").findOneAndUpdate(
-      { id: bookId },
-      { $set: update },
-      { returnDocument: "after" }
-    );
+    const result = await db
+      .collection("books")
+      .findOneAndUpdate(
+        { id: bookId },
+        { $set: update },
+        { returnDocument: "after" }
+      );
 
     if (!result) {
       return NextResponse.json({ error: "Book not found" }, { status: 404 });

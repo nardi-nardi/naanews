@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getFeedIds, getFeeds, getProducts } from "@/app/lib/data";
-import { CommentSection } from "@/app/components/comment-section";
-import { ReadArticleHeader } from "../../../components/reads/read-article-header";
-import { ReadArticleBody } from "../../../components/reads/read-article-body";
-import { SimilarFeedsSection } from "../../../components/reads/similar-feeds-section";
-import { StorePreviewSection } from "../../../components/reads/store-preview-section";
+import { getFeedIds, getFeeds, getProducts } from "@/lib/data";
+import { CommentSection } from "@/components/comment/comment-section";
+import { ReadArticleHeader } from "../../../../components/reads/read-article-header";
+import { ReadArticleBody } from "../../../../components/reads/read-article-body";
+import { SimilarFeedsSection } from "../../../../components/reads/similar-feeds-section";
+import { StorePreviewSection } from "../../../../components/reads/store-preview-section";
 
 export const revalidate = 300;
 
@@ -25,8 +25,7 @@ export async function generateMetadata({
     return { title: "Konten tidak ditemukan | Narzza Media Digital" };
   const feeds = await getFeeds();
   const feed = feeds.find((item) => item.id === feedId);
-  if (!feed)
-    return { title: "Konten tidak ditemukan | Narzza Media Digital" };
+  if (!feed) return { title: "Konten tidak ditemukan | Narzza Media Digital" };
   return {
     title: `${feed.title} | Narzza Media Digital`,
     description: feed.takeaway,

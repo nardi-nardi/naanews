@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import type { Story } from "@/app/data/content";
+import type { Story } from "@/data/content";
 import { StoryForm } from "./story-form";
 
 export function StoryTab({ stories, onRefresh, onDelete, flash }: any) {

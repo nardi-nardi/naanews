@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { FeedPage } from "@/app/components/feed-page";
+import { FeedPage } from "@/components/feedpages/FeedPage";
 // Import semua dari centralized data layer
 import {
   getFeeds,
@@ -7,7 +7,7 @@ import {
   getBooks,
   getRoadmaps,
   getProducts,
-} from "@/app/lib/data";
+} from "@/lib/data";
 
 // Revalidate data setiap 5 menit (ISR)
 export const revalidate = 300;

@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 // 👇 Import data dari pu
-import { getRoadmaps } from "@/app/lib/data";
-import { SiteShell } from "@/app/components/navigation/SiteShell";
+import { getRoadmaps } from "@/lib/data";
+import { SiteShell } from "@/components/navigation/SiteShell";
 
 export const revalidate = 300;
 
@@ -49,9 +49,7 @@ export default async function RoadmapListPage() {
             <Link
               key={item.slug}
               href={`/roadmap/${item.slug}`}
-              // 👇 TAMBAHKAN class 'feed-card' di sini agar animasi CSS jalan
               className="feed-card glass-panel group block h-full overflow-hidden rounded-2xl ring-1 ring-white/5 transition hover:border-cyan-300/50"
-              // 👇 TAMBAHKAN style animationDelay agar muncul berurutan
               style={
                 { animationDelay: `${index * 110}ms` } as React.CSSProperties
               }

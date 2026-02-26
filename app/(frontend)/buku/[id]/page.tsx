@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ShareButton } from "@/app/components/share-button";
-import { BookCard } from "@/app/components/book-card";
-import { getBookIds, getBooks, getBookById } from "@/app/lib/data";
-import { BookHero } from "@/app/components/books/book-hero";
-import { ChapterView } from "@/app/components/books/chapter-view";
-import { TableOfContents } from "@/app/components/books/table-of-content";
+import type { Book } from "@/types/content";
+import { ShareButton } from "@/components/share-button";
+import { BookCard } from "@/components/books/book-card";
+import { getBookIds, getBooks, getBookById } from "@/lib/data";
+import { BookHero } from "@/components/books/book-hero";
+import { ChapterView } from "@/components/books/chapter-view";
+import { TableOfContents } from "@/components/books/table-of-content";
 
 export const revalidate = 300;
 
@@ -35,7 +36,8 @@ export default async function ReadBookPage({ params }: PageProps) {
   const [book, allBooks] = await Promise.all([getBookById(bookId), getBooks()]);
   if (!book) notFound();
 
-  const otherBooks = allBooks.filter((item) => item.id !== book.id).slice(0, 3);
+  const otherBooks = allBooks.filter((item: Book) => item.id !== book.id).slice(0, 3);
+  
 
   return (
     <div className="bg-canvas min-h-screen px-3 py-4 text-slate-100 md:px-5 md:py-6">
@@ -46,7 +48,7 @@ export default async function ReadBookPage({ params }: PageProps) {
             href="/buku"
             className="rounded-full border border-slate-400/40 bg-slate-900/40 px-4 py-2 text-sm transition hover:border-cyan-300/50"
           >
-            ← Semua Buku
+            Semua Buku
           </Link>
           <div className="flex items-center gap-3">
             <ShareButton title={book.title} />

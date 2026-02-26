@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getDb } from "@/app/lib/mongodb";
-import { getProductById } from "@/app/types/products";
-import type { Product } from "@/app/types/products";
-import { ProductImageGallery } from "@/app/components/product-image-gallery";
-import { ProductActions } from "@/app/components/toko/product-actions";
-import { ProductInfo } from "@/app/components/toko/product-info";
+import { getDb } from "@/lib/mongodb";
+
+import { ProductImageGallery } from "@/components/product-image-gallery";
+import { ProductActions } from "@/components/toko/product-actions";
+import { ProductInfo } from "@/components/toko/product-info";
+import { getProductById, Product } from "@/types/products";
 
 export const dynamic = "force-dynamic";
 

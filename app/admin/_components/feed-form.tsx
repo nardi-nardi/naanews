@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { ImageUpload } from "@/app/components/image-upload";
+import { ImageUpload } from "@/components/ImageUpload";
 import {
   Feed,
   FeedForm as FeedFormType,

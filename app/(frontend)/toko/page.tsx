@@ -1,6 +1,6 @@
-import { getProducts } from "@/app/lib/data";
-import { SiteShell } from "@/app/components/navigation/SiteShell";
-import { ProductCard } from "@/app/components/toko/product-card";
+import { getProducts } from "@/lib/data";
+import { SiteShell } from "@/components/navigation/SiteShell";
+import { ProductCard } from "@/components/toko/product-card";
 
 export const revalidate = 300;
 

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getDb } from "@/app/lib/mongodb";
-import { rateLimit } from "@/app/lib/rate-limit";
-import { commentCreateSchema } from "@/app/lib/validate";
+import { getDb } from "@/lib/mongodb";
+import { rateLimit } from "@/lib/rate-limit";
+import { commentCreateSchema } from "@/lib/validate";
 
 export const dynamic = "force-dynamic";
 
@@ -81,7 +81,9 @@ export async function POST(request: NextRequest) {
     }
     const { feedId, author, text } = parsed.data;
 
-    const feedExists = await db.collection("feeds").findOne({ id: feedId }, { projection: { _id: 1 } });
+    const feedExists = await db
+      .collection("feeds")
+      .findOne({ id: feedId }, { projection: { _id: 1 } });
     if (!feedExists) {
       return NextResponse.json(
         { error: "Artikel tidak ditemukan" },

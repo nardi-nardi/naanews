@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { storyCreateSchema } from "@/app/lib/validate";
-import { stories as dummyStories } from "@/app/data/content";
+import { getDb } from "@/lib/mongodb";
+import { storyCreateSchema } from "@/lib/validate";
+import { stories as dummyStories } from "@/data/content";
 
 export const dynamic = "force-dynamic";
 

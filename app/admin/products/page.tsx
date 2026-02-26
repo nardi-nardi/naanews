@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { ImageUpload } from "@/app/components/image-upload";
+import { ImageUpload } from "@/components/ImageUpload";
 import type { Product, Category } from "@/app/types/products";
 
 type ProductForm = {

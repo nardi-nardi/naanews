@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { feedUpdateSchema } from "@/app/lib/validate";
+import { getDb } from "@/lib/mongodb";
+import { feedUpdateSchema } from "@/lib/validate";
 
 export const dynamic = "force-dynamic";
 
