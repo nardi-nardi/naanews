@@ -1,4 +1,4 @@
-import type { BookChapter } from "@/app/types/content";
+import type { BookChapter } from "@/types/content";
 import { ChatImage } from "../chats/chat-image";
 
 interface ChapterViewProps {

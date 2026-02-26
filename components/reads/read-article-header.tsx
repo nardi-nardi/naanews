@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ShareButton } from "@/components/share-button";
-import type { FeedCategory } from "@/app/types/content";
+import type { FeedCategory } from "@/types/content";
 
 type ReadArticleHeaderProps = {
   title: string;

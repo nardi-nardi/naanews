@@ -42,7 +42,7 @@ export function StoryForm({ initialData, onSave, onCancel }: Props) {
 
         <select
           value={form.type}
-          onChange={(e) => setForm({ ...form, type: e.target.value as Form })}
+            onChange={(e) => setForm({ ...form, type: e.target.value as StoryFormType["type"] })}
           className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
         >
           <option value="Berita">Berita</option>

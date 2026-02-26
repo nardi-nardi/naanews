@@ -1,4 +1,4 @@
-import type { Product } from "@/app/types/products";
+import type { Product } from "@/types/products";
 
 export function ProductInfo({ product }: { product: Product }) {
   return (

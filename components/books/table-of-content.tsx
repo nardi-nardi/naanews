@@ -1,4 +1,4 @@
-import type { BookChapter } from "@/app/types/content";
+import type { BookChapter } from "@/types/content";
 import { ChevronRightIcon } from "./icons";
 
 export function TableOfContents({ chapters }: { chapters: BookChapter[] }) {

@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { getDb } from "@/lib/mongodb";
-import type { Book, BookChapter, ChatLine } from "@/app/types/content";
+import type { Book, BookChapter, ChatLine } from "@/types/content";
 import { books as dummyBooks } from "@/data/content";
 import { CONTENT_REVALIDATE_SECONDS, CACHE_TAGS } from "./constants";
 

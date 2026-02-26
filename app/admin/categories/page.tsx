@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import type { Category } from "@/app/types/products";
+import type { Category } from "@/types/products";
 
 type CategoryForm = {
   id: string;

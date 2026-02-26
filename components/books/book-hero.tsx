@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Book } from "@/app/types/content";
+import type { Book } from "@/types/content";
 import { StarIcon } from "./icons";
 
 export function BookHero({ book }: { book: Book }) {

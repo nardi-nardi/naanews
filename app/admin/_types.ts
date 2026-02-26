@@ -1,5 +1,5 @@
 import type { ChatLine, Feed, Story, Book, BookChapter } from "@/data/content";
-import type { Product, Category } from "@/app/types/products";
+import type { Product, Category } from "@/types/products";
 
 export type AdminTab =
   | "feeds"

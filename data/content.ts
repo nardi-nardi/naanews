@@ -5,9 +5,9 @@ export type {
   BookChapter,
   Book,
   FeedCategory,
-} from "@/app/types/content";
+} from "@/types/content";
 
-import type { Story, Feed, Book, BookChapter, ChatLine, } from "@/app/types/content";
+import type { Story, Feed, Book, BookChapter, ChatLine, } from "@/types/content";
 
 export const stories: Story[] = [
   {

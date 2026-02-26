@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ChatImage } from "@/components/chats/chat-image";
 import { RelativeTime } from "@/components/relative-time";
-import type { Feed } from "@/app/types/content";
+import type { Feed } from "@/types/content";
 
 type ReadArticleBodyProps = {
   feed: Feed;

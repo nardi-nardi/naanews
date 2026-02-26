@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { RelativeTime } from "@/components/relative-time";
-import type { Feed } from "@/app/types/content";
-import type { FeedCategory } from "@/app/types/content";
+import type { Feed } from "@/types/content";
+import type { FeedCategory } from "@/types/content";
 
 type SimilarFeedsSectionProps = {
   feeds: Feed[];
