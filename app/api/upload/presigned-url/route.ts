@@ -1,8 +1,8 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextRequest, NextResponse } from "next/server";
-import { rateLimit } from "@/app/lib/rate-limit";
-import { presignedUrlSchema } from "@/app/lib/validate";
+import { rateLimit } from "@/lib/rate-limit";
+import { presignedUrlSchema } from "@/lib/validate";
 
 /** Max 10 presigned URL per IP per menit — lindungi object storage dari spam */
 const UPLOAD_RATE_LIMIT = { max: 10, windowMs: 60_000 };

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import type { Feed, Book } from "@/app/data/content";
+import type { Feed, Book } from "@/data/content";
 import {
   BarChart,
   Bar,

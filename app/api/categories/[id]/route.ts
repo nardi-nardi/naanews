@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { categorySchema } from "@/app/lib/validate";
+import { getDb } from "@/lib/mongodb";
+import { categorySchema } from "@/lib/validate";
 
 export const dynamic = "force-dynamic";
 
@@ -83,7 +83,9 @@ export async function PUT(
     }
 
     const updated = await db.collection("categories").findOne({ id });
-    return NextResponse.json(updated ? { ...updated, _id: updated._id?.toString() } : { success: true });
+    return NextResponse.json(
+      updated ? { ...updated, _id: updated._id?.toString() } : { success: true }
+    );
   } catch (error) {
     console.error("Error updating category:", error);
     return NextResponse.json(

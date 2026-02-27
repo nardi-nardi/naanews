@@ -199,4 +199,16 @@ main {
   background: transparent;
 }
 
+@layer utilities {
+  /* Class untuk padding biasa */
+  .px-safe {
+    padding-left: max(0.25rem, env(safe-area-inset-left));
+    padding-right: max(0.25rem, env(safe-area-inset-right));
+  }
 
+  /* Class untuk scroll padding (sesuai yang ada di kodemu) */
+  .scroll-px-safe {
+    scroll-padding-left: max(0.25rem, env(safe-area-inset-left));
+    scroll-padding-right: max(0.25rem, env(safe-area-inset-right));
+  }
+}

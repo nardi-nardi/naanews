@@ -1,8 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
-import type { Feed, Story, Book } from "@/app/data/content";
-import { Category, Product } from "@/app/types/products";
-import { Roadmap } from "@/app/types/roadmaps";
-
+import type { Feed, Story, Book } from "@/data/content";
+import { Category, Product } from "@/types/products";
+import { Roadmap } from "@/types/roadmaps";
 
 export function useAdmin() {
   const [data, setData] = useState({

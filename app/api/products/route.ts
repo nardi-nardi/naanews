@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { productCreateSchema } from "@/app/lib/validate";
-import { products } from "@/app/types/products";
+import { getDb } from "@/lib/mongodb";
+import { productCreateSchema } from "@/lib/validate";
+import { products } from "@/types/products";
 
 // GET /api/products — list all products
 export async function GET() {

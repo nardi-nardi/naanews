@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import type { Story } from "@/app/data/content";
+import { getDb } from "@/lib/mongodb";
+import type { Story } from "@/data/content";
 
 export const dynamic = "force-dynamic";
 

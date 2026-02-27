@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import type { Book } from "@/app/data/content";
+import type { Book } from "@/data/content";
 import { BookForm } from "./book-form";
 
 export function BookTab({ books, onRefresh, onDelete, flash }: any) {

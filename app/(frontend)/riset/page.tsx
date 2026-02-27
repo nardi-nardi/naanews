@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { FeedPage } from "@/app/components/feed-page";
-import { getFeeds, getStories, getBooks } from "@/app/lib/data";
+import { FeedPage } from "@/components/feedpages/FeedPage";
+import { getFeeds, getStories, getBooks } from "@/lib/data";
 
 async function getInternalData(endpoint: string) {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";

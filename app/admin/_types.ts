@@ -1,11 +1,5 @@
-import type {
-  ChatLine,
-  Feed,
-  Story,
-  Book,
-  BookChapter,
-} from "@/app/data/content";
-import type { Product, Category } from "@/app/types/products";
+import type { ChatLine, Feed, Story, Book, BookChapter } from "@/data/content";
+import type { Product, Category } from "@/types/products";
 
 export type AdminTab =
   | "feeds"
@@ -153,5 +147,3 @@ export const paletteOptions = [
 
 // Re-export for use in tab components
 export type { Feed, Story, Book, Product, Category };
-
-

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { FeedTitleCard } from "@/app/components/feed-title-card";
+import { FeedTitleCard } from "@/components/feedpages/FeedTitleCard";
 
-import { getFeeds } from "@/app/lib/data";
+import { getFeeds } from "@/lib/data";
 import { tags } from "@/constants";
-import { SiteShell } from "@/app/components/navigation/SiteShell";
+import { SiteShell } from "@/components/navigation/SiteShell";
 
 export const dynamicParams = false;
 export const revalidate = 300;

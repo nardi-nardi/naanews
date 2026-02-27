@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { bookSchema, sanitizeSearchQuery } from "@/app/lib/validate";
-import { books as dummyBooks } from "@/app/data/content";
+import { getDb } from "@/lib/mongodb";
+import { bookSchema, sanitizeSearchQuery } from "@/lib/validate";
+import { books as dummyBooks } from "@/data/content";
 
 export const dynamic = "force-dynamic";
 

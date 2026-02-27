@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Category, Product } from "../_types";
-import { Roadmap } from "@/app/types/roadmaps";
+import { Roadmap } from "@/types/roadmaps";
 
 export function RoadmapTab({ roadmaps }: { roadmaps: Roadmap[] }) {
   return (

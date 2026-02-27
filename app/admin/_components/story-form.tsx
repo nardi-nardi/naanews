@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
-import { ImageUpload } from "@/app/components/image-upload";
+import { ImageUpload } from "@/components/ImageUpload";
 import {
   StoryForm as StoryFormType,
   emptyStoryForm,
   paletteOptions,
 } from "@/app/admin/_types";
-import type { Story } from "@/app/data/content";
+import type { Story } from "@/data/content";
 
 interface Props {
   initialData?: Story | null;
@@ -42,7 +42,9 @@ export function StoryForm({ initialData, onSave, onCancel }: Props) {
 
         <select
           value={form.type}
-          onChange={(e) => setForm({ ...form, type: e.target.value as Form })}
+          onChange={(e) =>
+            setForm({ ...form, type: e.target.value as StoryFormType["type"] })
+          }
           className="w-full rounded-lg border border-slate-600/50 bg-slate-800/60 px-3 py-2 text-sm outline-none"
         >
           <option value="Berita">Berita</option>

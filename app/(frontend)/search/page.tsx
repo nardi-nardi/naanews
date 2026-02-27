@@ -1,11 +1,11 @@
 "use client";
 
-import { FeedTitleCard } from "@/app/components/feed-title-card";
-import { BookCard } from "@/app/components/book-card";
-import { SiteShell } from "@/app/components/navigation/site-shell";
+import { FeedTitleCard } from "@/components/feedpages/FeedTitleCard";
+import { BookCard } from "@/components/books/book-card";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useRef, Suspense } from "react";
-import type { Feed, Book } from "@/app/data/content";
+import type { Feed, Book } from "@/data/content";
+import { SiteShell } from "@/components/navigation/SiteShell";
 
 function SearchPageContent() {
   const searchParams = useSearchParams();

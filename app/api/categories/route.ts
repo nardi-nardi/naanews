@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/lib/mongodb";
-import { categorySchema } from "@/app/lib/validate";
-import { categories } from "@/app/types/products";
+import { getDb } from "@/lib/mongodb";
+import { categorySchema } from "@/lib/validate";
+import { categories } from "@/types/products";
 
 export const dynamic = "force-dynamic";
 

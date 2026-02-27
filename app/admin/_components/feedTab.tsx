@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { RelativeTime } from "@/app/components/relative-time";
-import type { Feed } from "@/app/data/content";
+import { RelativeTime } from "@/components/relative-time";
+import type { Feed } from "@/data/content";
 import { FeedForm } from "./feed-form";
 
 export function FeedTab({ feeds, onRefresh, onDelete, flash }: any) {

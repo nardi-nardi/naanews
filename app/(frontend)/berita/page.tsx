@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { FeedPage } from "@/app/components/feed-page";
-import { getFeeds, getStories, getBooks } from "@/app/lib/data";
+import { FeedPage } from "@/components/feedpages/FeedPage";
+import { getFeeds, getStories, getBooks } from "@/lib/data";
 
 // Helper fetch data (sama seperti di Home)
 async function getInternalData(endpoint: string) {
