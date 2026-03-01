@@ -26,27 +26,44 @@ export function useStoryViewer({ stories, feeds, books }: UseStoryViewerProps) {
 
   // 1. Mapping Cover Image
   const storyCoverMap = useMemo(() => {
+    // Pre-build O(1) lookup maps to avoid O(n×m) nested searches per story
+    const feedImageByStoryId = new Map<number, string>();
+    feeds.forEach((f) => {
+      if (f.storyId != null && f.image && !feedImageByStoryId.has(f.storyId)) {
+        feedImageByStoryId.set(f.storyId, f.image);
+      }
+    });
+
+    const bookCoverByStoryId = new Map<number, string>();
+    books.forEach((b) => {
+      if (b.storyId != null && b.cover && !bookCoverByStoryId.has(b.storyId)) {
+        bookCoverByStoryId.set(b.storyId, b.cover);
+      }
+    });
+
     const map = new Map<number, string>();
     stories.forEach((story) => {
       if (story.image) {
         map.set(story.id, story.image);
         return;
       }
-      const assignedFeed = feeds.find((f) => f.storyId === story.id && f.image);
-      if (assignedFeed) {
-        map.set(story.id, assignedFeed.image);
+      const feedImage = feedImageByStoryId.get(story.id);
+      if (feedImage) {
+        map.set(story.id, feedImage);
         return;
       }
-      const assignedBook = books.find((b) => b.storyId === story.id && b.cover);
-      if (assignedBook) {
-        map.set(story.id, assignedBook.cover);
+      const bookCover = bookCoverByStoryId.get(story.id);
+      if (bookCover) {
+        map.set(story.id, bookCover);
       }
     });
     return map;
   }, [stories, feeds, books]);
 
-  const selectedStory =
-    stories.find((story) => story.id === selectedStoryId) || null;
+  const selectedStory = useMemo(
+    () => stories.find((story) => story.id === selectedStoryId) ?? null,
+    [stories, selectedStoryId]
+  );
 
   // 2. Generate Popular Feeds
   const popularFeeds = useMemo<StoryContent[]>(() => {
