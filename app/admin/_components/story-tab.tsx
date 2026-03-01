@@ -1,28 +1,11 @@
 "use client";
-import { useState } from "react";
 import type { Story } from "@/data/content";
 import { StoryForm } from "./story-form";
+import { useAdminTab } from "@/hooks/useAdminTab";
 
 export function StoryTab({ stories, onRefresh, onDelete, flash }: any) {
-  const [editingStory, setEditingStory] = useState<Story | null>(null);
-  const [showForm, setShowForm] = useState(false);
-
-  const handleSave = async (formData: any) => {
-    const res = await fetch(
-      editingStory ? `/api/stories/${editingStory.id}` : "/api/stories",
-      {
-        method: editingStory ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      }
-    );
-    if (res.ok) {
-      flash("✅ Story Tersimpan!");
-      setShowForm(false);
-      setEditingStory(null);
-      onRefresh();
-    } else flash("❌ Gagal simpan");
-  };
+  const { editingItem: editingStory, showForm, handleSave, startEdit, startCreate, cancelForm } =
+    useAdminTab<Story>("/api/stories", "✅ Story Tersimpan!", flash, onRefresh);
 
   return (
     <div>
@@ -30,10 +13,7 @@ export function StoryTab({ stories, onRefresh, onDelete, flash }: any) {
         <h2 className="text-lg font-semibold">Daftar Story</h2>
         {!showForm && (
           <button
-            onClick={() => {
-              setEditingStory(null);
-              setShowForm(true);
-            }}
+            onClick={startCreate}
             className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold"
           >
             + Tambah Story
@@ -45,10 +25,7 @@ export function StoryTab({ stories, onRefresh, onDelete, flash }: any) {
         <StoryForm
           initialData={editingStory}
           onSave={handleSave}
-          onCancel={() => {
-            setShowForm(false);
-            setEditingStory(null);
-          }}
+          onCancel={cancelForm}
         />
       )}
 
@@ -83,10 +60,7 @@ export function StoryTab({ stories, onRefresh, onDelete, flash }: any) {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => {
-                  setEditingStory(story);
-                  setShowForm(true);
-                }}
+                onClick={() => startEdit(story)}
                 className="text-xs bg-slate-700 px-3 py-1.5 rounded-lg"
               >
                 Edit

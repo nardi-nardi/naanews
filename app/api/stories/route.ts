@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { storyCreateSchema } from "@/lib/validate";
 import { stories as dummyStories } from "@/data/content";
+import {
+  dbUnavailableResponse,
+  validationErrorResponse,
+} from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 
@@ -42,20 +46,10 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const db = await getDb();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
     const raw = await req.json();
     const parsed = storyCreateSchema.safeParse(raw);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Validation failed", details: parsed.error.flatten() },
-        { status: 400 }
-      );
-    }
+    if (!parsed.success) return validationErrorResponse(parsed.error);
     const body = parsed.data;
 
     const last = await db

@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import type { Story } from "@/data/content";
+import {
+  dbUnavailableResponse,
+  invalidIdResponse,
+} from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 
@@ -13,17 +17,10 @@ export async function GET(_req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const storyId = Number(id);
-    if (Number.isNaN(storyId)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-    }
+    if (Number.isNaN(storyId)) return invalidIdResponse();
 
     const db = await getDb();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
     const story = await db.collection("stories").findOne({ id: storyId });
 
     if (!story) {
@@ -54,17 +51,10 @@ export async function PUT(req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const storyId = Number(id);
-    if (Number.isNaN(storyId)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-    }
+    if (Number.isNaN(storyId)) return invalidIdResponse();
 
     const db = await getDb();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
     const body = (await req.json()) as Partial<Story>;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: _removedId, ...updateData } = body;
@@ -105,17 +95,10 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const storyId = Number(id);
-    if (Number.isNaN(storyId)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-    }
+    if (Number.isNaN(storyId)) return invalidIdResponse();
 
     const db = await getDb();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
     const result = await db.collection("stories").deleteOne({ id: storyId });
 
     if (result.deletedCount === 0) {

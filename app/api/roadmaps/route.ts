@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { roadmaps as seedRoadmaps } from "@/types/roadmaps";
+import { dbUnavailableResponse } from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 
@@ -40,11 +41,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const db = await getDb();
-    if (!db)
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
+    if (!db) return dbUnavailableResponse();
 
     const slug = body.slug?.trim() || slugify(body.title ?? "");
     if (!slug)

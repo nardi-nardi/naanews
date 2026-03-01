@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { categorySchema } from "@/lib/validate";
+import {
+  dbUnavailableResponse,
+  validationErrorResponse,
+} from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 
@@ -11,13 +15,7 @@ export async function GET(
   try {
     const { id } = await params;
     const db = await getDb();
-
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database not available" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
 
     const category = await db.collection("categories").findOne({ id });
 
@@ -49,21 +47,10 @@ export async function PUT(
     const { id } = await params;
     const raw = await request.json();
     const parsed = categorySchema.partial().safeParse(raw);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Validation failed", details: parsed.error.flatten() },
-        { status: 400 }
-      );
-    }
+    if (!parsed.success) return validationErrorResponse(parsed.error);
     const body = parsed.data;
     const db = await getDb();
-
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database not available" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
 
     const update: Record<string, unknown> = { updatedAt: Date.now() };
     if (body.name !== undefined) update.name = body.name;
@@ -102,13 +89,7 @@ export async function DELETE(
   try {
     const { id } = await params;
     const db = await getDb();
-
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database not available" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
 
     const result = await db.collection("categories").deleteOne({ id });
 
