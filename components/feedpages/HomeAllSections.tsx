@@ -19,9 +19,15 @@ export function HomeAllSections({
   products: Product[];
   books: Book[];
 }) {
-  const berita = feeds.filter((f) => f.category === "Berita").slice(0, 4);
-  const tutorial = feeds.filter((f) => f.category === "Tutorial").slice(0, 4);
-  const riset = feeds.filter((f) => f.category === "Riset").slice(0, 4);
+  const berita: Feed[] = [];
+  const tutorial: Feed[] = [];
+  const riset: Feed[] = [];
+  for (const f of feeds) {
+    if (f.category === "Berita" && berita.length < 4) berita.push(f);
+    else if (f.category === "Tutorial" && tutorial.length < 4) tutorial.push(f);
+    else if (f.category === "Riset" && riset.length < 4) riset.push(f);
+    if (berita.length >= 4 && tutorial.length >= 4 && riset.length >= 4) break;
+  }
 
   return (
     <>
