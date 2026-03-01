@@ -1,28 +1,11 @@
 "use client";
-import { useState } from "react";
 import type { Book } from "@/data/content";
 import { BookForm } from "./book-form";
+import { useAdminTab } from "@/hooks/useAdminTab";
 
 export function BookTab({ books, onRefresh, onDelete, flash }: any) {
-  const [editingBook, setEditingBook] = useState<Book | null>(null);
-  const [showForm, setShowForm] = useState(false);
-
-  const handleSave = async (formData: any) => {
-    const res = await fetch(
-      editingBook ? `/api/books/${editingBook.id}` : "/api/books",
-      {
-        method: editingBook ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      }
-    );
-    if (res.ok) {
-      flash("✅ Buku Tersimpan!");
-      setShowForm(false);
-      setEditingBook(null);
-      onRefresh();
-    } else flash("❌ Gagal simpan");
-  };
+  const { editingItem: editingBook, showForm, handleSave, startEdit, startCreate, cancelForm } =
+    useAdminTab<Book>("/api/books", "✅ Buku Tersimpan!", flash, onRefresh);
 
   return (
     <div>
@@ -30,10 +13,7 @@ export function BookTab({ books, onRefresh, onDelete, flash }: any) {
         <h2 className="text-lg font-semibold">Daftar Buku</h2>
         {!showForm && (
           <button
-            onClick={() => {
-              setEditingBook(null);
-              setShowForm(true);
-            }}
+            onClick={startCreate}
             className="rounded-xl bg-amber-600/80 hover:bg-amber-500 px-4 py-2 text-sm font-semibold text-white"
           >
             + Tambah Buku
@@ -45,10 +25,7 @@ export function BookTab({ books, onRefresh, onDelete, flash }: any) {
         <BookForm
           initialData={editingBook}
           onSave={handleSave}
-          onCancel={() => {
-            setShowForm(false);
-            setEditingBook(null);
-          }}
+          onCancel={cancelForm}
         />
       )}
 
@@ -72,10 +49,7 @@ export function BookTab({ books, onRefresh, onDelete, flash }: any) {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => {
-                  setEditingBook(book);
-                  setShowForm(true);
-                }}
+                onClick={() => startEdit(book)}
                 className="text-xs bg-slate-700 px-3 py-1.5 rounded-lg"
               >
                 Edit

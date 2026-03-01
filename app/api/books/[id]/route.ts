@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { bookSchema } from "@/lib/validate";
+import {
+  dbUnavailableResponse,
+  validationErrorResponse,
+  invalidIdResponse,
+} from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 
@@ -11,17 +16,10 @@ export async function GET(_request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const bookId = Number(id);
-    if (Number.isNaN(bookId)) {
-      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
-    }
+    if (Number.isNaN(bookId)) return invalidIdResponse();
 
     const db = await getDb();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
     const doc = await db.collection("books").findOne({ id: bookId });
 
     if (!doc) {
@@ -45,25 +43,13 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const bookId = Number(id);
-    if (Number.isNaN(bookId)) {
-      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
-    }
+    if (Number.isNaN(bookId)) return invalidIdResponse();
 
     const db = await getDb();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
     const raw = await request.json();
     const parsed = bookSchema.partial().safeParse(raw);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Validation failed", details: parsed.error.flatten() },
-        { status: 400 }
-      );
-    }
+    if (!parsed.success) return validationErrorResponse(parsed.error);
     const body = parsed.data;
 
     const update: Record<string, unknown> = {};
@@ -106,17 +92,10 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const bookId = Number(id);
-    if (Number.isNaN(bookId)) {
-      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
-    }
+    if (Number.isNaN(bookId)) return invalidIdResponse();
 
     const db = await getDb();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
     const result = await db.collection("books").deleteOne({ id: bookId });
 
     if (result.deletedCount === 0) {

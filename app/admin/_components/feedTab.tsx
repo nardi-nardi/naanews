@@ -1,29 +1,12 @@
 "use client";
-import { useState } from "react";
 import { RelativeTime } from "@/components/relative-time";
 import type { Feed } from "@/data/content";
 import { FeedForm } from "./feed-form";
+import { useAdminTab } from "@/hooks/useAdminTab";
 
 export function FeedTab({ feeds, onRefresh, onDelete, flash }: any) {
-  const [editingFeed, setEditingFeed] = useState<Feed | null>(null);
-  const [showForm, setShowForm] = useState(false);
-
-  const handleSave = async (formData: any) => {
-    const res = await fetch(
-      editingFeed ? `/api/feeds/${editingFeed.id}` : "/api/feeds",
-      {
-        method: editingFeed ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      }
-    );
-    if (res.ok) {
-      flash("✅ Feed Tersimpan!");
-      setShowForm(false);
-      setEditingFeed(null);
-      onRefresh();
-    } else flash("❌ Gagal simpan");
-  };
+  const { editingItem: editingFeed, showForm, handleSave, startEdit, startCreate, cancelForm } =
+    useAdminTab<Feed>("/api/feeds", "✅ Feed Tersimpan!", flash, onRefresh);
 
   return (
     <div>
@@ -31,10 +14,7 @@ export function FeedTab({ feeds, onRefresh, onDelete, flash }: any) {
         <h2 className="text-lg font-semibold">Daftar Feed</h2>
         {!showForm && (
           <button
-            onClick={() => {
-              setEditingFeed(null);
-              setShowForm(true);
-            }}
+            onClick={startCreate}
             className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold"
           >
             + Tambah Feed
@@ -46,10 +26,7 @@ export function FeedTab({ feeds, onRefresh, onDelete, flash }: any) {
         <FeedForm
           initialData={editingFeed}
           onSave={handleSave}
-          onCancel={() => {
-            setShowForm(false);
-            setEditingFeed(null);
-          }}
+          onCancel={cancelForm}
         />
       )}
 
@@ -68,10 +45,7 @@ export function FeedTab({ feeds, onRefresh, onDelete, flash }: any) {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => {
-                  setEditingFeed(feed);
-                  setShowForm(true);
-                }}
+                onClick={() => startEdit(feed)}
                 className="text-xs bg-slate-700 px-3 py-1.5 rounded-lg"
               >
                 Edit

@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { productCreateSchema } from "@/lib/validate";
 import { products } from "@/types/products";
+import {
+  dbUnavailableResponse,
+  validationErrorResponse,
+} from "@/lib/api-helpers";
 
 // GET /api/products — list all products
 export async function GET() {
@@ -37,21 +41,11 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const db = await getDb();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
 
     const raw = await req.json();
     const parsed = productCreateSchema.safeParse(raw);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Validation failed", details: parsed.error.flatten() },
-        { status: 400 }
-      );
-    }
+    if (!parsed.success) return validationErrorResponse(parsed.error);
     const body = parsed.data;
 
     const existing = await db.collection("products").findOne({ id: body.id });

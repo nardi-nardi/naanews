@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { categorySchema } from "@/lib/validate";
 import { categories } from "@/types/products";
+import {
+  dbUnavailableResponse,
+  validationErrorResponse,
+} from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 
@@ -39,21 +43,10 @@ export async function POST(request: Request) {
   try {
     const raw = await request.json();
     const parsed = categorySchema.safeParse(raw);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Validation failed", details: parsed.error.flatten() },
-        { status: 400 }
-      );
-    }
+    if (!parsed.success) return validationErrorResponse(parsed.error);
     const body = parsed.data;
     const db = await getDb();
-
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database not available" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
 
     const now = Date.now();
     const slugBase =

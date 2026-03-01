@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { feedUpdateSchema } from "@/lib/validate";
+import {
+  dbUnavailableResponse,
+  validationErrorResponse,
+  invalidIdResponse,
+} from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 
@@ -13,17 +18,10 @@ export async function GET(_req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const feedId = Number(id);
-    if (Number.isNaN(feedId)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-    }
+    if (Number.isNaN(feedId)) return invalidIdResponse();
 
     const db = await getDb();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
     const feed = await db.collection("feeds").findOne({ id: feedId });
 
     if (!feed) {
@@ -56,25 +54,13 @@ export async function PUT(req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const feedId = Number(id);
-    if (Number.isNaN(feedId)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-    }
+    if (Number.isNaN(feedId)) return invalidIdResponse();
 
     const db = await getDb();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
     const raw = await req.json();
     const parsed = feedUpdateSchema.safeParse(raw);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Validation failed", details: parsed.error.flatten() },
-        { status: 400 }
-      );
-    }
+    if (!parsed.success) return validationErrorResponse(parsed.error);
     const updateData = parsed.data;
 
     const result = await db
@@ -115,17 +101,10 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const feedId = Number(id);
-    if (Number.isNaN(feedId)) {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-    }
+    if (Number.isNaN(feedId)) return invalidIdResponse();
 
     const db = await getDb();
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
     const result = await db.collection("feeds").deleteOne({ id: feedId });
 
     if (result.deletedCount === 0) {

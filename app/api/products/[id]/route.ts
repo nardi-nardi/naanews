@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { productUpdateSchema } from "@/lib/validate";
 import { getProductById } from "@/types/products";
+import {
+  dbUnavailableResponse,
+  validationErrorResponse,
+} from "@/lib/api-helpers";
 
 // GET /api/products/[id] — get single product
 export async function GET(
@@ -54,22 +58,11 @@ export async function PUT(
   try {
     const { id } = await params;
     const db = await getDb();
-
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
 
     const raw = await req.json();
     const parsed = productUpdateSchema.safeParse(raw);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Validation failed", details: parsed.error.flatten() },
-        { status: 400 }
-      );
-    }
+    if (!parsed.success) return validationErrorResponse(parsed.error);
     const body = parsed.data;
 
     const updateData: Record<string, unknown> = {
@@ -114,13 +107,7 @@ export async function DELETE(
   try {
     const { id } = await params;
     const db = await getDb();
-
-    if (!db) {
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
-    }
+    if (!db) return dbUnavailableResponse();
 
     const result = await db.collection("products").deleteOne({ id });
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { roadmaps as seedRoadmaps } from "@/types/roadmaps";
+import { dbUnavailableResponse } from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 
@@ -39,11 +40,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     const { slug } = await context.params;
     const body = await request.json();
     const db = await getDb();
-    if (!db)
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
+    if (!db) return dbUnavailableResponse();
 
     const update = {
       title: body.title,
@@ -91,11 +88,7 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
   try {
     const { slug } = await context.params;
     const db = await getDb();
-    if (!db)
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 503 }
-      );
+    if (!db) return dbUnavailableResponse();
 
     const result = await db.collection("roadmaps").deleteOne({ slug });
     if (result.deletedCount === 0)
