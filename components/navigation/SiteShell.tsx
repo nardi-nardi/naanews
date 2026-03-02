@@ -9,6 +9,7 @@ import {
   QuickAccessSection,
   TrendingSection,
 } from ".";
+import { ThemeToggle } from "@/components/navigation/ThemeToggle";
 
 type SiteShellProps = {
   children: React.ReactNode;
@@ -24,8 +25,11 @@ export function SiteShell({ children }: SiteShellProps) {
         <aside className="hidden w-72 shrink-0 xl:block sidebar-sticky">
           <div className="space-y-4">
             <NavigationSection activePath={activePath} />
-            <QuickAccessSection />
             <AdminLink />
+            {/* Theme toggle — bottom of left sidebar */}
+            <div className="sidebar-widget">
+              <ThemeToggle />
+            </div>
           </div>
         </aside>
 
@@ -35,6 +39,7 @@ export function SiteShell({ children }: SiteShellProps) {
         {/* Sidebar Kanan */}
         <aside className="hidden w-64 shrink-0 xl:block sidebar-sticky">
           <div className="space-y-4">
+            <QuickAccessSection />
             <AdsPlaceholder label="Google Ads Slot" size="300 x 250" />
             <AdsPlaceholder label="Sponsored" size="Native Promo Block" />
             <TrendingSection />

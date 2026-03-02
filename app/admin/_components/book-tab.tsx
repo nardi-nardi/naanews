@@ -27,8 +27,14 @@ const BOOK_SCHEMA = `[
 ]`;
 
 export function BookTab({ books, onRefresh, onDelete, flash }: any) {
-  const { editingItem: editingBook, showForm, handleSave, startEdit, startCreate, cancelForm } =
-    useAdminTab<Book>("/api/books", "✅ Buku Tersimpan!", flash, onRefresh);
+  const {
+    editingItem: editingBook,
+    showForm,
+    handleSave,
+    startEdit,
+    startCreate,
+    cancelForm,
+  } = useAdminTab<Book>("/api/books", "✅ Buku Tersimpan!", flash, onRefresh);
   const [showJsonModal, setShowJsonModal] = useState(false);
 
   async function handleJsonImport(items: unknown[]) {
@@ -41,7 +47,8 @@ export function BookTab({ books, onRefresh, onDelete, flash }: any) {
       });
       if (!res.ok) failCount++;
     }
-    if (failCount > 0) return `${failCount} dari ${items.length} buku gagal disimpan.`;
+    if (failCount > 0)
+      return `${failCount} dari ${items.length} buku gagal disimpan.`;
     flash(`✅ ${items.length} Buku berhasil diimport!`);
     onRefresh();
     return null;

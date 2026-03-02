@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { DrawerHeader, MenuButton, NavigationSection } from ".";
+import { ThemeToggle } from "@/components/navigation/ThemeToggle";
 
 // Helper agar class Tailwind lebih enak dibaca
 function cn(...inputs: ClassValue[]) {
@@ -39,7 +40,10 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
           <p className="text-sm font-semibold tracking-wide text-slate-100">
             Narzza Media Digital
           </p>
-          <MenuButton onClick={toggleDrawer} />
+          <div className="flex items-center gap-2">
+            <ThemeToggle compact />
+            <MenuButton onClick={toggleDrawer} />
+          </div>
         </div>
       </header>
 

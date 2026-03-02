@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* ─── Design tokens ──────────────────────────────────────────────── */
+/* ─── Design tokens — Dark (default) ────────────────────────────── */
 :root {
   --background: #050b17;
   --foreground: #e2e8f0;
@@ -8,6 +8,26 @@
   --surface-border: rgba(148, 163, 184, 0.28);
   --bubble-q: #11203f;
   --bubble-a: #143c2f;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-accent: #67e8f9;
+  --input-bg: rgba(30, 41, 59, 0.6);
+  --input-border: rgba(100, 116, 139, 0.5);
+}
+
+/* ─── Design tokens — Light ──────────────────────────────────────── */
+[data-theme="light"] {
+  --background: #f1f5f9;
+  --foreground: #0f172a;
+  --surface: rgba(255, 255, 255, 0.88);
+  --surface-border: rgba(148, 163, 184, 0.45);
+  --bubble-q: #dbeafe;
+  --bubble-a: #d1fae5;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-accent: #0e7490;
+  --input-bg: rgba(248, 250, 252, 0.9);
+  --input-border: rgba(148, 163, 184, 0.6);
 }
 
 @theme inline {
@@ -326,4 +346,543 @@
     scroll-padding-left: max(0.25rem, env(safe-area-inset-left));
     scroll-padding-right: max(0.25rem, env(safe-area-inset-right));
   }
+}
+
+/* ─── Light mode overrides ───────────────────────────────────────── */
+
+/* Background & layout shells */
+[data-theme="light"] html,
+[data-theme="light"] body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+[data-theme="light"] .bg-canvas {
+  background: linear-gradient(140deg, #bfdbfe 0%, #dbeafe 50%, #e0f2fe 100%);
+}
+
+[data-theme="light"] .page-shell {
+  background: linear-gradient(140deg, #bfdbfe 0%, #dbeafe 60%, #e0f2fe 100%);
+  color: #0f172a;
+}
+
+/* Glass panels & surfaces */
+[data-theme="light"] .glass-panel {
+  background: #ffffff;
+  border-color: #c7d4e4;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.1);
+}
+
+[data-theme="light"] .sidebar-widget {
+  background: #ffffff;
+  border-color: #c7d4e4;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.1);
+}
+
+[data-theme="light"] .page-hero {
+  background: #ffffff;
+  border-color: #c7d4e4;
+  box-shadow: 0 2px 16px rgba(15, 23, 42, 0.1);
+}
+
+/* Widget heading — strong contrast */
+[data-theme="light"] .widget-heading {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Feed card */
+[data-theme="light"] .feed-card {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.07);
+}
+
+[data-theme="light"] .feed-card::after {
+  background: none;
+}
+
+[data-theme="light"] .feed-card:hover {
+  background: #f0f7ff;
+  border-color: #2563eb;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.13);
+}
+
+/* Card title */
+[data-theme="light"] .card-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .group:hover .card-title {
+  color: #1d4ed8;
+}
+
+/* Inti Cepat box */
+[data-theme="light"] .inti-cepat-box {
+  background: linear-gradient(135deg, #eff6ff, #f0f9ff);
+  border-color: #93c5fd;
+  box-shadow: 0 1px 4px rgba(37, 99, 235, 0.08);
+}
+
+/* Takeaway text */
+[data-theme="light"] .inti-cepat-box p {
+  color: #1e3a5f;
+}
+
+/* "Inti Cepat" label */
+[data-theme="light"] .inti-cepat-box .text-cyan-300 {
+  color: #1d4ed8;
+}
+
+[data-theme="light"] .inti-cepat-box .text-cyan-400 {
+  color: #1d4ed8;
+}
+
+/* Dot separator */
+[data-theme="light"] .text-slate-600 {
+  color: #94a3b8;
+}
+
+/* Timestamp & subtexts inside feed cards */
+[data-theme="light"] .feed-card .text-slate-400 {
+  color: #64748b;
+}
+
+/* "Buka Chat Q&A" CTA and icons */
+[data-theme="light"] .feed-card .text-cyan-400 {
+  color: #1d4ed8;
+}
+
+/* Category badge — Berita (sky) */
+[data-theme="light"] .bg-sky-500\/20 {
+  background-color: #dbeafe;
+}
+
+[data-theme="light"] .text-sky-300 {
+  color: #1d4ed8;
+}
+
+/* Category badge — Tutorial (emerald) */
+[data-theme="light"] .bg-emerald-500\/20 {
+  background-color: #d1fae5;
+}
+
+[data-theme="light"] .text-emerald-300 {
+  color: #065f46;
+}
+
+/* Category badge — Riset (fuchsia) */
+[data-theme="light"] .bg-fuchsia-500\/20 {
+  background-color: #fae8ff;
+}
+
+[data-theme="light"] .text-fuchsia-300 {
+  color: #7e22ce;
+}
+
+/* Image thumbnail bg */
+[data-theme="light"] .feed-card .bg-slate-900 {
+  background-color: #e2e8f0;
+}
+
+/* Empty state */
+[data-theme="light"] .empty-state {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+/* ── Tutorial card ─────────────────────────────────────────────── */
+
+/* Card container — override the dark gradient */
+[data-theme="light"] .tutorial-card {
+  background: #ffffff !important;
+  background-image: none !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.07) !important;
+}
+
+[data-theme="light"] .tutorial-card:hover {
+  border-color: #2563eb !important;
+  background: #f0f7ff !important;
+  background-image: none !important;
+  box-shadow: 0 6px 24px rgba(37, 99, 235, 0.14) !important;
+}
+
+/* Step badge on thumbnail (bg-black/70) */
+[data-theme="light"] .tutorial-card .bg-black\/70 {
+  background-color: rgba(15, 23, 42, 0.7) !important;
+  color: #ffffff !important;
+}
+
+/* Step badge icon */
+[data-theme="light"] .tutorial-card .bg-black\/70 .text-cyan-400 {
+  color: #60c7f0 !important;
+}
+
+/* "TUTORIAL" badge */
+[data-theme="light"] .tutorial-card .bg-cyan-500\/15 {
+  background-color: #dbeafe !important;
+}
+
+[data-theme="light"] .tutorial-card .text-cyan-300 {
+  color: #1d4ed8 !important;
+}
+
+[data-theme="light"] .tutorial-card .ring-cyan-500\/25 {
+  --tw-ring-color: rgba(37, 99, 235, 0.3) !important;
+}
+
+/* Dot separator */
+[data-theme="light"] .tutorial-card .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+/* Timestamp */
+[data-theme="light"] .tutorial-card .text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Title */
+[data-theme="light"] .tutorial-card h3 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .tutorial-card:hover h3 {
+  color: #1d4ed8 !important;
+}
+
+/* Q bubble */
+[data-theme="light"] .tutorial-card .bg-blue-500\/20 {
+  background-color: #dbeafe !important;
+}
+
+[data-theme="light"] .tutorial-card .text-blue-300 {
+  color: #1d4ed8 !important;
+}
+
+/* A bubble */
+[data-theme="light"] .tutorial-card .bg-emerald-500\/20 {
+  background-color: #d1fae5 !important;
+}
+
+[data-theme="light"] .tutorial-card .text-emerald-300 {
+  color: #065f46 !important;
+}
+
+/* Q/A preview text */
+[data-theme="light"] .tutorial-card .text-slate-400 {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .tutorial-card .text-slate-300 {
+  color: #334155 !important;
+}
+
+/* Bottom divider */
+[data-theme="light"] .tutorial-card .border-slate-700\/50 {
+  border-color: #cbd5e1 !important;
+}
+
+/* Step dot indicators */
+[data-theme="light"] .tutorial-card .bg-cyan-400\/60 {
+  background-color: rgba(37, 99, 235, 0.45) !important;
+}
+
+[data-theme="light"] .tutorial-card:hover .bg-cyan-400\/60 {
+  background-color: #2563eb !important;
+}
+
+/* "Mulai belajar" CTA */
+[data-theme="light"] .tutorial-card .text-cyan-300 {
+  color: #1d4ed8 !important;
+}
+
+[data-theme="light"] .tutorial-card:hover .text-cyan-300,
+[data-theme="light"] .tutorial-card:hover .text-cyan-200 {
+  color: #1e40af !important;
+}
+
+/* ── Read page header buttons (Kembali & Bagikan) ─────────────── */
+
+[data-theme="light"] .read-header-btn,
+[data-theme="light"]
+  a.rounded-full.border.border-slate-400\/40.bg-slate-900\/40,
+[data-theme="light"]
+  button.rounded-full.border.border-slate-400\/40.bg-slate-900\/40 {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"]
+  a.rounded-full.border.border-slate-400\/40.bg-slate-900\/40:hover,
+[data-theme="light"]
+  button.rounded-full.border.border-slate-400\/40.bg-slate-900\/40:hover {
+  background-color: #eff6ff !important;
+  border-color: #3b82f6 !important;
+  color: #1d4ed8 !important;
+}
+
+/* ── Comment section ──────────────────────────────────────────── */
+
+[data-theme="light"] section.mt-6 h2 {
+  color: #0f172a !important;
+}
+
+/* Error box */
+[data-theme="light"] .border-amber-500\/50.bg-amber-500\/10 {
+  background-color: #fef3c7 !important;
+  border-color: #f59e0b !important;
+  color: #92400e !important;
+}
+
+/* Name input & textarea */
+[data-theme="light"] .border-slate-600\/50.bg-slate-800\/50 {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .border-slate-600\/50.bg-slate-800\/50::placeholder {
+  color: #94a3b8 !important;
+}
+
+[data-theme="light"] .border-slate-600\/50.bg-slate-800\/50:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+/* "Komentar Berita Lainnya" heading */
+[data-theme="light"] .glass-panel h3.text-slate-200 {
+  color: #0f172a !important;
+}
+
+/* Empty / loading state text */
+[data-theme="light"] .glass-panel .text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Individual comment items */
+[data-theme="light"] .border-slate-700\/50.bg-slate-800\/30 {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .border-slate-700\/50.bg-slate-800\/30 .text-slate-100 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .border-slate-700\/50.bg-slate-800\/30 .text-slate-300 {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .border-slate-700\/50.bg-slate-800\/30 .text-slate-400 {
+  color: #64748b !important;
+}
+
+[data-theme="light"] input[type="text"],
+[data-theme="light"] input[type="search"] {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] input[type="text"]:focus,
+[data-theme="light"] input[type="search"]:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+[data-theme="light"] input[type="text"]::placeholder,
+[data-theme="light"] input[type="search"]::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* "GLOBAL SEARCH" label above input */
+[data-theme="light"] .glass-panel label.text-cyan-300 {
+  color: #2563eb !important;
+}
+
+/* ── Ads / promo placeholder boxes ────────────────────────────── */
+
+[data-theme="light"] .sidebar-widget .border-slate-500\/50 {
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .sidebar-widget .bg-slate-900\/40 {
+  background-color: #f1f5f9 !important;
+}
+
+[data-theme="light"] .sidebar-widget .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+/* Chat bubbles */
+[data-theme="light"] .chat-bubble-left {
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+[data-theme="light"] .chat-bubble-right {
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+/* Navigation */
+[data-theme="light"] .nav-link {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+[data-theme="light"] .nav-link:hover {
+  background: #eff6ff;
+  border-color: #60a5fa;
+  color: #1e3a5f;
+}
+
+[data-theme="light"] .nav-link-active {
+  background: #dbeafe;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
+}
+
+/* Active nav text colours */
+[data-theme="light"] .nav-link-active .text-cyan-200 {
+  color: #1d4ed8;
+}
+
+[data-theme="light"] .nav-link-active .text-slate-100 {
+  color: #1d4ed8;
+}
+
+/* Override cyan-300/70 opacity class inside active items */
+[data-theme="light"] .nav-link-active p:last-child {
+  color: #2563eb;
+  opacity: 0.75;
+}
+
+/* Mobile top bar & drawer */
+[data-theme="light"] .mobile-topbar {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #c7d4e4;
+}
+
+[data-theme="light"] .mobile-drawer {
+  background: #f1f5f9;
+  border-right-color: #c7d4e4;
+}
+
+/* Tag pills */
+[data-theme="light"] .tag-pill {
+  background: #dbeafe;
+  border: 1px solid #93c5fd;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+[data-theme="light"] .tag-pill:hover {
+  background: #bfdbfe;
+  border-color: #3b82f6;
+  color: #1e3a5f;
+}
+
+/* Category tab button */
+[data-theme="light"] .category-tab-btn {
+  color: #334155;
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+/* Text color overrides — Tailwind hardcoded classes */
+[data-theme="light"] .text-slate-50 {
+  color: #0f172a;
+}
+[data-theme="light"] .text-slate-100 {
+  color: #1e293b;
+}
+[data-theme="light"] .text-slate-200 {
+  color: #334155;
+}
+[data-theme="light"] .text-slate-300 {
+  color: #475569;
+}
+[data-theme="light"] .text-slate-400 {
+  color: #64748b;
+}
+[data-theme="light"] .text-slate-500 {
+  color: #64748b;
+}
+
+/* Accent colours — vivid and readable on white */
+[data-theme="light"] .text-cyan-300 {
+  color: #0284c7;
+}
+[data-theme="light"] .text-cyan-200 {
+  color: #1d4ed8;
+}
+[data-theme="light"] .text-cyan-400 {
+  color: #0284c7;
+}
+[data-theme="light"] .text-cyan-500 {
+  color: #0369a1;
+}
+
+/* Background overrides for common dark panels */
+[data-theme="light"] .bg-slate-900\/90,
+[data-theme="light"] .bg-slate-900 {
+  background-color: #f8fafc;
+}
+
+[data-theme="light"] .bg-slate-800\/60,
+[data-theme="light"] .bg-slate-800 {
+  background-color: #f1f5f9;
+}
+
+[data-theme="light"] .bg-slate-700\/60,
+[data-theme="light"] .bg-slate-700 {
+  background-color: #e2e8f0;
+}
+
+/* Borders */
+[data-theme="light"] .border-slate-600\/50,
+[data-theme="light"] .border-slate-700\/50 {
+  border-color: #c7d4e4;
+}
+
+/* Inti-cepat box */
+[data-theme="light"] .inti-cepat-box {
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.07),
+    rgba(14, 116, 144, 0.05)
+  );
+  border-color: rgba(37, 99, 235, 0.25);
+}
+
+/* Story ring bg fix */
+[data-theme="light"] .story-ring::before {
+  background: #dbeafe;
+}
+
+/* Drawer border */
+[data-theme="light"] .border-slate-700\/50 {
+  border-color: #c7d4e4;
+}
+
+/* Theme toggle button */
+[data-theme="light"] .theme-toggle-btn {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+[data-theme="light"] .theme-toggle-btn:hover {
+  background: #eff6ff;
+  border-color: #0284c7;
+}
+
+/* Smooth theme transition */
+html {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }

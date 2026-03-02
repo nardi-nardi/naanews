@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "Narzza Media Digital",
@@ -16,9 +17,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className="bg-canvas">
+    <html
+      lang="id"
+      className="bg-canvas"
+      data-theme="dark"
+      suppressHydrationWarning
+    >
+      <head>
+        {/* Prevent flash of wrong theme before React hydrates */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var t=localStorage.getItem('narzza-theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');})();`,
+          }}
+        />
+      </head>
       <body className={`${inter.className} antialiased bg-canvas min-h-screen`}>
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
