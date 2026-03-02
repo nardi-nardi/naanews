@@ -18,8 +18,8 @@ const NavigationSection = ({
   onNavigate,
 }: NavigationSectionProps) => {
   return (
-    <section className="glass-panel rounded-2xl p-4">
-      <h2 className="text-sm font-semibold text-slate-100">Navigasi</h2>
+    <section className="sidebar-widget">
+      <h2 className="widget-heading">Navigasi</h2>
       <div className="mt-3 space-y-2">
         {navLink.map((item) => {
           const isActive = activePath === item.href;
@@ -28,11 +28,7 @@ const NavigationSection = ({
               key={item.href}
               href={item.href}
               onClick={onNavigate} // Panggil fungsi tutup drawer jika ada
-              className={cn(
-                "nav-pill block w-full rounded-xl px-3 py-2 text-left transition hover:border-cyan-300/50 hover:bg-cyan-500/10",
-                isActive &&
-                  "border-cyan-400/70 bg-cyan-500/15 ring-1 ring-cyan-400/30"
-              )}
+              className={cn("nav-link", isActive && "nav-link-active")}
             >
               <p
                 className={cn(

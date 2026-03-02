@@ -53,9 +53,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
         <div className="p-4">
           {/* Badge & Time */}
           <div className="mb-2.5 flex items-center gap-2">
-            <span
-              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${categoryConfig.badge}`}
-            >
+            <span className={`category-badge ${categoryConfig.badge}`}>
               <span className="text-sm">{categoryConfig.icon}</span>
               {feed.category}
             </span>
@@ -79,12 +77,10 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
           </div>
 
           {/* Title */}
-          <h2 className="mb-2.5 line-clamp-2 text-base font-bold leading-tight text-slate-50 transition-colors group-hover:text-cyan-300">
-            {feed.title}
-          </h2>
+          <h2 className="card-title">{feed.title}</h2>
 
           {/* Inti Cepat Box */}
-          <div className="mb-3 rounded-lg border border-cyan-500/20 bg-gradient-to-br from-cyan-500/5 to-blue-500/5 p-2.5 shadow-sm">
+          <div className="inti-cepat-box mb-3">
             <div className="mb-1.5 flex items-center gap-1.5">
               <svg
                 className="h-3.5 w-3.5 text-cyan-400"
@@ -150,9 +146,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
           {/* Top Section: Badge & Time */}
           <div>
             <div className="mb-2.5 flex items-center gap-2">
-              <span
-                className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${categoryConfig.badge}`}
-              >
+              <span className={`category-badge ${categoryConfig.badge}`}>
                 <span className="text-sm">{categoryConfig.icon}</span>
                 {feed.category}
               </span>
@@ -176,12 +170,10 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
             </div>
 
             {/* Title */}
-            <h2 className="mb-2.5 line-clamp-2 text-base font-bold leading-tight text-slate-50 transition-colors group-hover:text-cyan-300 md:text-lg">
-              {feed.title}
-            </h2>
+            <h2 className="card-title md:text-lg">{feed.title}</h2>
 
             {/* Main Content Box */}
-            <div className="rounded-lg border border-cyan-500/20 bg-gradient-to-br from-cyan-500/5 to-blue-500/5 p-2.5 shadow-sm">
+            <div className="inti-cepat-box">
               <div className="mb-1.5 flex items-center gap-1.5">
                 <svg
                   className="h-3.5 w-3.5 text-cyan-400"

@@ -18,9 +18,7 @@ const SectionHeader = ({
   };
   return (
     <div className="mb-4 flex items-center gap-3">
-      <div
-        className={`flex h-8 w-8 items-center justify-center rounded-lg ring-1 ${bgColors[colorClass]}`}
-      >
+      <div className={`section-icon-badge ${bgColors[colorClass]}`}>
         <span className="text-lg">{icon}</span>
       </div>
       <div>

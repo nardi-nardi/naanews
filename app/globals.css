@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* ─── Design tokens ──────────────────────────────────────────────── */
 :root {
   --background: #050b17;
   --foreground: #e2e8f0;
@@ -14,154 +15,7 @@
   --color-foreground: var(--foreground);
 }
 
-html,
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: "Trebuchet MS", "Segoe UI", Tahoma, Verdana, sans-serif;
-  overflow-x: hidden;
-  -ms-overflow-style: none !important;
-  scrollbar-width: none !important;
-}
-
-* {
-  -ms-overflow-style: none !important;
-  scrollbar-width: none !important;
-}
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar,
-*::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  display: none !important;
-  background: transparent !important;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  font-family:
-    "Gill Sans", "Trebuchet MS", "Franklin Gothic Medium", sans-serif;
-}
-
-.bg-canvas {
-  background:
-    radial-gradient(circle at 10% 0%, rgba(34, 211, 238, 0.2), transparent 35%),
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(249, 115, 22, 0.15),
-      transparent 30%
-    ),
-    linear-gradient(140deg, #020617 0%, #0f172a 48%, #0b1120 100%);
-}
-
-.glass-panel {
-  background: var(--surface);
-  border: 1px solid var(--surface-border);
-  backdrop-filter: blur(16px);
-}
-
-.story-ring {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 72px;
-  height: 72px;
-  border-radius: 9999px;
-  background: conic-gradient(#f97316, #fb7185, #38bdf8, #f97316);
-}
-
-.story-ring::before {
-  content: "";
-  width: 62px;
-  height: 62px;
-  border-radius: 9999px;
-  background: #060f24;
-}
-
-.story-core {
-  position: absolute;
-  width: 56px;
-  height: 56px;
-  border-radius: 9999px;
-}
-
-.story-live {
-  animation: pulse-ring 2.4s ease-in-out infinite;
-}
-
-.feed-card {
-  position: relative;
-  overflow: hidden;
-  animation: card-rise 0.55s ease-out both;
-  transition:
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    background 0.2s ease;
-}
-
-.tutorial-card {
-  animation: card-rise 0.55s ease-out both;
-}
-
-.feed-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    110deg,
-    rgba(56, 189, 248, 0.08),
-    transparent 45%
-  );
-}
-
-.feed-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(56, 189, 248, 0.45);
-  background: rgba(15, 23, 42, 0.82);
-}
-
-.chat-bubble-left {
-  background: var(--bubble-q);
-  border: 1px solid rgba(59, 130, 246, 0.35);
-}
-
-.chat-bubble-right {
-  background: var(--bubble-a);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-}
-
-.nav-pill {
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  background: rgba(15, 23, 42, 0.52);
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  display: none;
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  scroll-behavior: smooth;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  display: none;
-}
-
+/* ─── Keyframes (outside layers — not part of the cascade) ──────── */
 @keyframes pulse-ring {
   0%,
   100% {
@@ -183,30 +37,291 @@ h4 {
   }
 }
 
-/* Smooth page transitions to prevent black flash */
-html {
-  background: var(--background);
+/* ─── Base: element selectors, resets, typography defaults ──────── */
+@layer base {
+  *,
+  html,
+  body {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none !important;
+    background: transparent !important;
+  }
+
+  html,
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: "Trebuchet MS", "Segoe UI", Tahoma, Verdana, sans-serif;
+    @apply overflow-x-hidden;
+  }
+
+  /* Smooth page transitions to prevent black flash */
+  body {
+    transition: opacity 0.15s ease-in-out;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family:
+      "Gill Sans", "Trebuchet MS", "Franklin Gothic Medium", sans-serif;
+  }
+
+  /* Prevent flash during page navigation */
+  #__next,
+  main {
+    @apply bg-transparent;
+  }
 }
 
-body {
-  background: var(--background);
-  transition: opacity 0.15s ease-in-out;
+/* ─── Components: reusable UI classes ───────────────────────────── */
+@layer components {
+  .bg-canvas {
+    background:
+      radial-gradient(
+        circle at 10% 0%,
+        rgba(34, 211, 238, 0.2),
+        transparent 35%
+      ),
+      radial-gradient(
+        circle at 90% 10%,
+        rgba(249, 115, 22, 0.15),
+        transparent 30%
+      ),
+      linear-gradient(140deg, #020617 0%, #0f172a 48%, #0b1120 100%);
+  }
+
+  .glass-panel {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    @apply backdrop-blur-[16px];
+  }
+
+  .story-ring {
+    @apply relative grid place-items-center w-[72px] h-[72px] rounded-full;
+    background: conic-gradient(#f97316, #fb7185, #38bdf8, #f97316);
+  }
+
+  .story-ring::before {
+    content: "";
+    @apply w-[62px] h-[62px] rounded-full;
+    background: #060f24;
+  }
+
+  .story-core {
+    @apply absolute w-14 h-14 rounded-full;
+  }
+
+  .feed-card {
+    @apply relative overflow-hidden;
+    animation: card-rise 0.55s ease-out both;
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .tutorial-card {
+    animation: card-rise 0.55s ease-out both;
+  }
+
+  .feed-card::after {
+    content: "";
+    @apply absolute inset-0 pointer-events-none;
+    background: linear-gradient(
+      110deg,
+      rgba(56, 189, 248, 0.08),
+      transparent 45%
+    );
+  }
+
+  .feed-card:hover {
+    @apply -translate-y-0.5;
+    border-color: rgba(56, 189, 248, 0.45);
+    background: rgba(15, 23, 42, 0.82);
+  }
+
+  .chat-bubble-left {
+    background: var(--bubble-q);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+  }
+
+  .chat-bubble-right {
+    background: var(--bubble-a);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+  }
+
+  .nav-pill {
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: rgba(15, 23, 42, 0.52);
+  }
+
+  /* ─── Sidebar widgets ────────────────────────────────────────── */
+  .sidebar-widget {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    @apply rounded-2xl p-4 backdrop-blur-[16px];
+  }
+
+  .widget-heading {
+    @apply text-sm font-semibold text-slate-100;
+  }
+
+  .tag-pill {
+    @apply rounded-full bg-slate-700/70 px-3 py-1 text-slate-200 transition
+      hover:bg-slate-600/70;
+  }
+
+  /* ─── Navigation links ───────────────────────────────────────── */
+  .nav-link {
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: rgba(15, 23, 42, 0.52);
+    @apply block w-full rounded-xl px-3 py-2 text-left transition
+      hover:border-cyan-300/50 hover:bg-cyan-500/10;
+  }
+
+  .nav-link-active {
+    @apply border-cyan-400/70 bg-cyan-500/15 ring-1 ring-cyan-400/30;
+  }
+
+  /* ─── Mobile navigation ──────────────────────────────────────── */
+  .mobile-topbar {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    @apply fixed inset-x-3 top-3 z-30 rounded-2xl px-4 py-3 backdrop-blur-[16px]
+      xl:hidden;
+  }
+
+  .hamburger-btn {
+    @apply flex flex-col gap-1 rounded-lg border border-slate-500/60
+      bg-slate-900/45 px-2.5 py-2.5;
+  }
+
+  .drawer-close-btn {
+    @apply rounded-lg border border-slate-500/60 px-3 py-1 text-xs
+      text-slate-200 hover:bg-slate-800;
+  }
+
+  .drawer-overlay {
+    @apply absolute inset-0 bg-black/65 transition-opacity duration-300;
+  }
+
+  .mobile-drawer {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    @apply absolute inset-y-0 left-0 w-[86%] max-w-[320px] backdrop-blur-[16px]
+      border-r border-slate-600/50 p-4 transition-transform duration-300
+      ease-in-out;
+  }
+
+  /* ─── Layout shell ───────────────────────────────────────────── */
+  .page-shell {
+    background:
+      radial-gradient(
+        circle at 10% 0%,
+        rgba(34, 211, 238, 0.2),
+        transparent 35%
+      ),
+      radial-gradient(
+        circle at 90% 10%,
+        rgba(249, 115, 22, 0.15),
+        transparent 30%
+      ),
+      linear-gradient(140deg, #020617 0%, #0f172a 48%, #0b1120 100%);
+    @apply min-h-screen pb-6 pt-20 text-slate-100 xl:pt-0;
+  }
+
+  .content-grid {
+    @apply mx-auto flex w-full min-w-0 max-w-375 gap-4 px-3 py-4
+      md:px-5 md:py-6;
+  }
+
+  .sidebar-sticky {
+    @apply sticky top-6 self-start h-fit;
+  }
+
+  /* ─── Feed / content components ─────────────────────────────── */
+  .page-hero {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    @apply rounded-3xl p-5 backdrop-blur-[16px] md:p-6;
+  }
+
+  .empty-state {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    @apply rounded-2xl p-5 text-sm text-slate-300 backdrop-blur-[16px];
+  }
+
+  .category-badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs
+      font-semibold;
+  }
+
+  .inti-cepat-box {
+    @apply rounded-lg border border-cyan-500/20 bg-gradient-to-br
+      from-cyan-500/5 to-blue-500/5 p-2.5 shadow-sm;
+  }
+
+  .card-title {
+    @apply mb-2.5 line-clamp-2 text-base font-bold leading-tight text-slate-50
+      transition-colors group-hover:text-cyan-300;
+  }
+
+  .category-tab-btn {
+    @apply shrink-0 whitespace-nowrap rounded-full border px-5 py-2.5 text-sm
+      font-semibold transition-colors duration-300 focus:outline-none;
+  }
+
+  .section-icon-badge {
+    @apply flex h-8 w-8 items-center justify-center rounded-lg ring-1;
+  }
 }
 
-/* Prevent flash during page navigation */
-#__next,
-main {
-  background: transparent;
-}
-
+/* ─── Utilities: single-purpose helpers ─────────────────────────── */
 @layer utilities {
-  /* Class untuk padding biasa */
+  .story-live {
+    animation: pulse-ring 2.4s ease-in-out infinite;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    @apply scroll-smooth;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  /* Safe-area inset helpers */
   .px-safe {
     padding-left: max(0.25rem, env(safe-area-inset-left));
     padding-right: max(0.25rem, env(safe-area-inset-right));
   }
 
-  /* Class untuk scroll padding (sesuai yang ada di kodemu) */
   .scroll-px-safe {
     scroll-padding-left: max(0.25rem, env(safe-area-inset-left));
     scroll-padding-right: max(0.25rem, env(safe-area-inset-right));

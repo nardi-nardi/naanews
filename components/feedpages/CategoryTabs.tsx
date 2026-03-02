@@ -48,7 +48,7 @@ export function CategoryTabs({
             key={cat.key}
             onClick={() => onChange(cat.key)}
             // Tambahkan 'border' sebagai class dasar, dan 'focus:outline-none'
-            className={`shrink-0 whitespace-nowrap rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors duration-300 focus:outline-none ${
+            className={`category-tab-btn ${
               activeCategory === cat.key
                 ? cat.activeColor
                 : "border-slate-700/50 bg-transparent text-slate-400 hover:border-slate-500 hover:text-slate-200"

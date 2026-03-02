@@ -34,7 +34,7 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
   return (
     <>
       {/* 1. Mobile Top Bar */}
-      <header className="glass-panel fixed inset-x-3 top-3 z-30 rounded-2xl px-4 py-3 xl:hidden">
+      <header className="mobile-topbar">
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold tracking-wide text-slate-100">
             Narzza Media Digital
@@ -54,17 +54,14 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
       >
         {/* Dark Background Overlay */}
         <div
-          className={cn(
-            "absolute inset-0 bg-black/65 transition-opacity duration-300",
-            isOpen ? "opacity-100" : "opacity-0"
-          )}
+          className={cn("drawer-overlay", isOpen ? "opacity-100" : "opacity-0")}
           onClick={closeDrawer}
         />
 
         {/* Sidebar Panel */}
         <aside
           className={cn(
-            "glass-panel absolute inset-y-0 left-0 w-[86%] max-w-[320px] border-r border-slate-600/50 p-4 transition-transform duration-300 ease-in-out",
+            "mobile-drawer",
             isOpen ? "translate-x-0" : "-translate-x-full"
           )}
         >

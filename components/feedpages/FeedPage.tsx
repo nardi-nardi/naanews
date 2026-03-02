@@ -71,7 +71,7 @@ export function FeedPage({
   const renderFeedList = (feeds: Feed[], targetCategory?: string) => {
     if (feeds.length === 0) {
       return (
-        <div className="glass-panel mt-4 rounded-2xl p-5 text-sm text-slate-300">
+        <div className="empty-state mt-4">
           Belum ada konten untuk kategori ini.
         </div>
       );
@@ -92,7 +92,7 @@ export function FeedPage({
   return (
     <SiteShell activePath={activePath}>
       {/* HEADER HERO */}
-      <section className="glass-panel rounded-3xl p-5 md:p-6">
+      <section className="page-hero">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">
@@ -121,7 +121,7 @@ export function FeedPage({
       {isHome && (
         <div className="mt-4 flex flex-col gap-4">
           {showStories && initialStories.length > 0 && (
-            <section className="glass-panel rounded-3xl p-5 xl:hidden">
+            <section className="page-hero xl:hidden">
               <StatusViralSection
                 stories={initialStories}
                 feeds={initialFeeds}
@@ -160,9 +160,7 @@ export function FeedPage({
                 <BookCard key={book.id} book={book} index={index} />
               ))
             ) : (
-              <div className="glass-panel rounded-2xl p-5 text-sm text-slate-300">
-                Belum ada buku.
-              </div>
+              <div className="empty-state">Belum ada buku.</div>
             )}
           </section>
         ) : (
