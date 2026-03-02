@@ -1,5 +1,4 @@
 import { BookCard } from "@/components/books/book-card";
-import { SiteShell } from "@/components/navigation/SiteShell";
 import { getBooks } from "@/lib/data";
 
 export const revalidate = 300;
@@ -8,7 +7,7 @@ export default async function BukuPage() {
   const books = await getBooks();
 
   return (
-    <SiteShell activePath="/buku">
+    <>
       <section className="glass-panel rounded-3xl p-5 md:p-6">
         <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">
           Perpustakaan Narzza
@@ -27,6 +26,6 @@ export default async function BukuPage() {
           <BookCard key={book.id} book={book} index={index} />
         ))}
       </section>
-    </SiteShell>
+    </>
   );
 }

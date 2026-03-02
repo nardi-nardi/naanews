@@ -3,7 +3,6 @@ import { FeedTitleCard } from "@/components/feedpages/FeedTitleCard";
 
 import { getFeeds } from "@/lib/data";
 import { tags } from "@/constants";
-import { SiteShell } from "@/components/navigation/SiteShell";
 
 export const dynamicParams = false;
 export const revalidate = 300;
@@ -47,7 +46,7 @@ export default async function TagPage({ params }: PageProps) {
   });
 
   return (
-    <SiteShell activePath="/">
+    <>
       <section className="glass-panel rounded-3xl p-5 md:p-6">
         <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">Tag</p>
         <h1 className="mt-2 text-2xl font-bold text-slate-50 md:text-3xl">
@@ -69,6 +68,6 @@ export default async function TagPage({ params }: PageProps) {
           </div>
         )}
       </section>
-    </SiteShell>
+    </>
   );
 }

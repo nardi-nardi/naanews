@@ -1,4 +1,3 @@
-import { SiteShell } from "@/components/navigation/SiteShell";
 import {
   HeroTentang,
   AchievementTentang,
@@ -22,38 +21,36 @@ export const metadata: Metadata = {
 
 export default function TentangPage() {
   return (
-    <SiteShell activePath="/tentang">
-      <div className="space-y-6">
-        {/* Hero Section */}
-        <HeroTentang />
+    <div className="space-y-6">
+      {/* Hero Section */}
+      <HeroTentang />
 
-        {/* Achievements Section */}
-        <AchievementTentang />
+      {/* Achievements Section */}
+      <AchievementTentang />
 
-        {/* Visi, Misi & Highlights */}
-        <VisiMisi />
+      {/* Visi, Misi & Highlights */}
+      <VisiMisi />
 
-        {/* Core Values */}
-        <CoreValues />
+      {/* Core Values */}
+      <CoreValues />
 
-        {/* Founders & Team Section */}
-        <FounderAndTeam />
+      {/* Founders & Team Section */}
+      <FounderAndTeam />
 
-        {/* Company Info */}
-        <CompanyInfo />
+      {/* Company Info */}
+      <CompanyInfo />
 
-        {/* Contact Section */}
-        <ContactSection />
+      {/* Contact Section */}
+      <ContactSection />
 
-        {/* Technology Stack */}
-        <TechnologyStack />
+      {/* Technology Stack */}
+      <TechnologyStack />
 
-        {/* Partners */}
-        <Partners />
+      {/* Partners */}
+      <Partners />
 
-        {/* CTA Footer */}
-        <CTAFooter />
-      </div>
-    </SiteShell>
+      {/* CTA Footer */}
+      <CTAFooter />
+    </div>
   );
 }

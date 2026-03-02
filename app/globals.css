@@ -60,7 +60,7 @@
     background: var(--background);
     color: var(--foreground);
     font-family: "Trebuchet MS", "Segoe UI", Tahoma, Verdana, sans-serif;
-    @apply overflow-x-hidden;
+    @apply overflow-x-clip;
   }
 
   /* Smooth page transitions to prevent black flash */

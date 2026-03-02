@@ -55,14 +55,12 @@ export default async function ReadPage({ params }: PageProps) {
   const storePreview = products.slice(0, 8);
 
   return (
-    <div className="bg-canvas min-h-screen px-3 py-4 text-slate-100 md:px-5 md:py-6">
-      <div className="mx-auto w-full max-w-4xl">
-        <ReadArticleHeader title={feed.title} category={feed.category} />
-        <ReadArticleBody feed={feed} />
-        <CommentSection feedId={feed.id} />
-        <SimilarFeedsSection feeds={similarFeeds} category={feed.category} />
-        <StorePreviewSection products={storePreview} />
-      </div>
-    </div>
+    <>
+      <ReadArticleHeader title={feed.title} category={feed.category} />
+      <ReadArticleBody feed={feed} />
+      <CommentSection feedId={feed.id} />
+      <SimilarFeedsSection feeds={similarFeeds} category={feed.category} />
+      <StorePreviewSection products={storePreview} />
+    </>
   );
 }

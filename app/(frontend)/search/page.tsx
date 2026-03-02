@@ -5,7 +5,6 @@ import { BookCard } from "@/components/books/book-card";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useRef, Suspense } from "react";
 import type { Feed, Book } from "@/data/content";
-import { SiteShell } from "@/components/navigation/SiteShell";
 
 function SearchPageContent() {
   const searchParams = useSearchParams();
@@ -115,7 +114,7 @@ function SearchPageContent() {
   }, [query]);
 
   return (
-    <SiteShell activePath="/search">
+    <>
       <section className="glass-panel rounded-3xl p-5 md:p-6">
         <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">
           Search
@@ -184,7 +183,7 @@ function SearchPageContent() {
           </div>
         </section>
       ) : null}
-    </SiteShell>
+    </>
   );
 }
 

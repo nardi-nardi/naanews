@@ -7,7 +7,6 @@ import { GlobalSearchForm } from "@/components/GlobalSearchForm";
 import { TutorialCard } from "@/components/tutorial-card";
 import type { Book, Feed, Story } from "@/data/content";
 import { useGlobalSearchFocus } from "@/hooks/useGlobalSearchFocus";
-import { SiteShell } from "../navigation/SiteShell";
 import { StatusViralSection } from "../status-bubble/StatusViralSection";
 import { CategoryTabs } from "./CategoryTabs";
 import { HomeAllSections } from "./HomeAllSections";
@@ -90,7 +89,7 @@ export function FeedPage({
   };
 
   return (
-    <SiteShell activePath={activePath}>
+    <>
       {/* HEADER HERO */}
       <section className="page-hero">
         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -171,6 +170,6 @@ export function FeedPage({
         // Jika bukan di halaman Home (misal langsung masuk /berita)
         renderFeedList(pageFeeds, category)
       )}
-    </SiteShell>
+    </>
   );
 }

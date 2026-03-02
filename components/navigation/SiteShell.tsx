@@ -1,3 +1,6 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import {
   AdminLink,
   AdsPlaceholder,
@@ -8,11 +11,12 @@ import {
 } from ".";
 
 type SiteShellProps = {
-  activePath: string;
   children: React.ReactNode;
 };
 
-export function SiteShell({ activePath, children }: SiteShellProps) {
+export function SiteShell({ children }: SiteShellProps) {
+  const activePath = usePathname();
+
   return (
     <div className="page-shell">
       <div className="content-grid">
