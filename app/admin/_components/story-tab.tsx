@@ -1,23 +1,69 @@
 "use client";
+import { useState } from "react";
 import type { Story } from "@/data/content";
 import { StoryForm } from "./story-form";
 import { useAdminTab } from "@/hooks/useAdminTab";
+import { JsonImportModal } from "@/components/JsonImportModal";
+
+const STORY_SCHEMA = `[
+  {
+    "name": "AI Corner",
+    "label": "AI",
+    "type": "Berita",
+    "palette": "from-sky-400 to-blue-500",
+    "image": "https://...",
+    "viral": false
+  }
+]`;
 
 export function StoryTab({ stories, onRefresh, onDelete, flash }: any) {
   const { editingItem: editingStory, showForm, handleSave, startEdit, startCreate, cancelForm } =
     useAdminTab<Story>("/api/stories", "✅ Story Tersimpan!", flash, onRefresh);
+  const [showJsonModal, setShowJsonModal] = useState(false);
+
+  async function handleJsonImport(items: unknown[]) {
+    let failCount = 0;
+    for (const item of items) {
+      const res = await fetch("/api/stories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item),
+      });
+      if (!res.ok) failCount++;
+    }
+    if (failCount > 0) return `${failCount} dari ${items.length} story gagal disimpan.`;
+    flash(`✅ ${items.length} Story berhasil diimport!`);
+    onRefresh();
+    return null;
+  }
 
   return (
     <div>
+      {showJsonModal && (
+        <JsonImportModal
+          title="Story"
+          schemaHint={STORY_SCHEMA}
+          onImport={handleJsonImport}
+          onClose={() => setShowJsonModal(false)}
+        />
+      )}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Daftar Story</h2>
         {!showForm && (
-          <button
-            onClick={startCreate}
-            className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold"
-          >
-            + Tambah Story
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowJsonModal(true)}
+              className="rounded-xl bg-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-600"
+            >
+              + Tambah JSON
+            </button>
+            <button
+              onClick={startCreate}
+              className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold"
+            >
+              + Tambah Story
+            </button>
+          </div>
         )}
       </div>
 

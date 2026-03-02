@@ -5,6 +5,29 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type { Roadmap, RoadmapStep, RoadmapVideo } from "@/types/roadmaps";
 import { ImageUpload } from "@/components/ImageUpload";
+import { JsonImportModal } from "@/components/JsonImportModal";
+
+const ROADMAP_SCHEMA = `[
+  {
+    "slug": "react-specialist",
+    "title": "React Specialist",
+    "summary": "Deskripsi singkat roadmap...",
+    "duration": "3-6 bulan",
+    "level": "Pemula",
+    "tags": ["React", "JavaScript"],
+    "image": "https://...",
+    "steps": [
+      {
+        "title": "Dasar React",
+        "description": "Belajar JSX, props, state...",
+        "focus": "Komponen dasar",
+        "videos": [
+          { "id": "VIDEO_ID_YOUTUBE", "author": "Nama Channel" }
+        ]
+      }
+    ]
+  }
+]`;
 
 const emptyForm: Roadmap = {
   slug: "",
@@ -38,6 +61,23 @@ function RoadmapAdminContent() {
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [showJsonModal, setShowJsonModal] = useState(false);
+
+  async function handleJsonImport(items: unknown[]) {
+    let failCount = 0;
+    for (const item of items) {
+      const res = await fetch("/api/roadmaps", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item),
+      });
+      if (!res.ok) failCount++;
+    }
+    if (failCount > 0) return `${failCount} dari ${items.length} roadmap gagal disimpan.`;
+    await loadData();
+    setMessage(`✅ ${items.length} Roadmap berhasil diimport!`);
+    return null;
+  }
 
   const hasChanges = useMemo(() => {
     return (
@@ -248,6 +288,14 @@ function RoadmapAdminContent() {
 
   return (
     <div className="bg-canvas min-h-screen px-4 py-6 text-slate-100">
+      {showJsonModal && (
+        <JsonImportModal
+          title="Roadmap"
+          schemaHint={ROADMAP_SCHEMA}
+          onImport={handleJsonImport}
+          onClose={() => setShowJsonModal(false)}
+        />
+      )}
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
         <div className="mb-4">
           <Link
@@ -272,15 +320,24 @@ function RoadmapAdminContent() {
             <h2 className="text-lg font-semibold text-slate-50">
               {editingSlug ? "Edit Roadmap" : "Tambah Roadmap"}
             </h2>
-            {editingSlug && (
+            <div className="flex gap-2">
               <button
                 type="button"
-                className="text-sm text-amber-200 hover:text-amber-100"
-                onClick={resetForm}
+                className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-600"
+                onClick={() => setShowJsonModal(true)}
               >
-                + Baru
+                + Tambah JSON
               </button>
-            )}
+              {editingSlug && (
+                <button
+                  type="button"
+                  className="text-sm text-amber-200 hover:text-amber-100"
+                  onClick={resetForm}
+                >
+                  + Baru
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="mt-3 space-y-3 text-sm text-slate-200">
